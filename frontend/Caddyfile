@@ -1,11 +1,12 @@
 :3000 {
     root * /usr/share/caddy
-    file_server
     
-    # Proxy ke backend via network internal Docker
-    handle /api/* {
+    # API routes - must be handled first
+    route /api/* {
         reverse_proxy api-preventive-tahuna:3000
     }
-
+    
+    # SPA fallback for all other routes
+    file_server
     try_files {path} /index.html
 }
