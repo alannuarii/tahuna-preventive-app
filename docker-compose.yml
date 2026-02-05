@@ -21,13 +21,13 @@ services:
   # Backend Service
   backend:
     build: ./backend
-    container_name: api-tahuna-preventive
+    container_name: api-preventive-tahuna
     restart: always
     ports:
       - "8001:8000"
     environment:
       - PORT=8000
-      - DB_HOST=host.docker.internal
+      - DB_HOST=10.10.10.150
       - DB_PORT=5432
       - DB_USER=alannuarii
       - DB_PASSWORD=${DB_PASSWORD:-Al4nNu4r1}
@@ -40,7 +40,7 @@ services:
   # Frontend Service
   frontend:
     build: ./frontend
-    container_name: tahuna-preventive
+    container_name: preventive-tahuna
     restart: always
     ports:
       - "3006:3000"
