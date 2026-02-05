@@ -7,7 +7,6 @@ pipeline {
         JWT_SECRET           = credentials('preventive-tahuna-jwt-secret')
         GOOGLE_CLIENT_ID     = credentials('google-client-id')
         GOOGLE_CLIENT_SECRET = credentials('google-client-secret')
-        GOOGLE_REDIRECT_URI  = credentials('preventive-tahuna-google-redirect-uri')
     }
 
     stages {

@@ -9,7 +9,7 @@ services:
       - PORT=3000
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-      - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}
+      - GOOGLE_REDIRECT_URI=https://auth.preventive-tahuna.serveer.biz.id/auth/callback/google
       - JWT_SECRET=${JWT_SECRET}
       - FRONTEND_URL=https://preventive-tahuna.serveer.biz.id
     networks:
