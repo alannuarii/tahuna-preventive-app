@@ -39,7 +39,7 @@ services:
       context: ./frontend
       args:
         - VITE_API_URL=/api
-        - VITE_AUTH_URL=https://preventive-tahuna.serveer.biz.id
+        - VITE_AUTH_URL=https://loadmonitoring.serveer.biz.id
     container_name: preventive-tahuna
     restart: always
     ports:
