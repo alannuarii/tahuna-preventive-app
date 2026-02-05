@@ -26,13 +26,11 @@ services:
       - "8001:3000" 
     environment:
       - PORT=3000
-      - DB_HOST=host.docker.internal
+      - DB_HOST=10.10.10.150
       - DB_PORT=5432
       - DB_USER=alannuarii
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=db_tahuna
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     networks:
       - preventive-net
 
