@@ -5,11 +5,13 @@ services:
     build: ./auth
     container_name: simple-auth-service
     restart: always
+    ports:
+      - "8002:3000" 
     environment:
       - PORT=3000
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-      - GOOGLE_REDIRECT_URI=https://auth.preventive-tahuna.serveer.biz.id/auth/callback/google
+      - GOOGLE_REDIRECT_URI=https://simple-auth.serveer.biz.id/auth/callback/google
       - JWT_SECRET=${JWT_SECRET}
       - FRONTEND_URL=https://preventive-tahuna.serveer.biz.id
     networks:
@@ -39,7 +41,7 @@ services:
       context: ./frontend
       args:
         - VITE_API_URL=/api
-        - VITE_AUTH_URL=https://loadmonitoring.serveer.biz.id
+        - VITE_AUTH_URL=https://simple-auth.serveer.biz.id
     container_name: preventive-tahuna
     restart: always
     ports:
