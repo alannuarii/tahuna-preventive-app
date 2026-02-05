@@ -14,7 +14,7 @@
         <p class="login-instruction">Sign in to access the dashboard</p>
         
         <a 
-          href="http://localhost:3002/auth/google" 
+          :href="authUrl" 
           class="btn-google"
         >
           <span class="icon-google">
@@ -39,11 +39,17 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 const router = useRouter();
 const route = useRoute();
+
+// Auth URL dari environment variable, fallback ke localhost untuk development
+const authUrl = computed(() => {
+    const baseUrl = import.meta.env.VITE_AUTH_URL || 'http://localhost:3002';
+    return `${baseUrl}/auth/google`;
+});
 
 onMounted(() => {
     // Check if we have an error
