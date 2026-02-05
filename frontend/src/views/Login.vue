@@ -48,7 +48,7 @@ const route = useRoute();
 // Auth URL dari environment variable, fallback ke localhost untuk development
 const authUrl = computed(() => {
     const baseUrl = import.meta.env.VITE_AUTH_URL || 'http://localhost:3002';
-    return `${baseUrl}/api/auth/callback/google`;
+    return `${baseUrl}/auth/callback/google`;
 });
 
 onMounted(() => {
