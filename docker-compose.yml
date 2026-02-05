@@ -1,14 +1,12 @@
 version: '3.8'
 
 services:
-  # Auth Service
   auth:
     build: ./auth
     container_name: simple-auth-service
     restart: always
-    # Tidak ada port yang diexpose ke host
     environment:
-      - PORT=8000
+      - PORT=3000
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}
@@ -17,15 +15,16 @@ services:
     networks:
       - preventive-net
 
-  # Backend Service
   backend:
     build: ./backend
     container_name: api-preventive-tahuna
     restart: always
-    # Tidak ada port yang diexpose ke host
+    # Port 3001 diexpose agar Caddy Host bisa meneruskan trafik (opsional jika lewat frontend)
+    ports:
+      - "3001:3000" 
     environment:
-      - PORT=8000
-      - DB_HOST=10.10.10.150
+      - PORT=3000
+      - DB_HOST=host.docker.internal
       - DB_PORT=5432
       - DB_USER=alannuarii
       - DB_PASSWORD=${DB_PASSWORD}
@@ -35,7 +34,6 @@ services:
     networks:
       - preventive-net
 
-  # Frontend Service (Vue)
   frontend:
     build:
       context: ./frontend
@@ -44,7 +42,7 @@ services:
     container_name: preventive-tahuna
     restart: always
     ports:
-      - "3006:3000" # Diakses Caddy Host via port 3006
+      - "3006:3000"
     depends_on:
       - backend
       - auth
