@@ -7,5 +7,10 @@
         reverse_proxy api-preventive-tahuna:3000
     }
 
+    # Proxy ke auth service untuk Google OAuth
+    handle /auth/* {
+        reverse_proxy simple-auth-service:3000
+    }
+
     try_files {path} /index.html
 }
