@@ -6,15 +6,14 @@ services:
     build: ./auth
     container_name: simple-auth-service
     restart: always
-    ports:
-      - "8002:8000"
+    # Tidak ada port yang diexpose ke host
     environment:
       - PORT=8000
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}
       - JWT_SECRET=${JWT_SECRET}
-      - FRONTEND_URL=${FRONTEND_URL}
+      - FRONTEND_URL=https://preventive-tahuna.serveer.biz.id
     networks:
       - preventive-net
 
@@ -23,27 +22,29 @@ services:
     build: ./backend
     container_name: api-preventive-tahuna
     restart: always
-    ports:
-      - "8001:8000"
+    # Tidak ada port yang diexpose ke host
     environment:
       - PORT=8000
       - DB_HOST=10.10.10.150
       - DB_PORT=5432
       - DB_USER=alannuarii
-      - DB_PASSWORD=${DB_PASSWORD:-Al4nNu4r1}
+      - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=db_tahuna
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
       - preventive-net
 
-  # Frontend Service
+  # Frontend Service (Vue)
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        - VITE_API_URL=/api
     container_name: preventive-tahuna
     restart: always
     ports:
-      - "3006:3000"
+      - "3006:3000" # Diakses Caddy Host via port 3006
     depends_on:
       - backend
       - auth
