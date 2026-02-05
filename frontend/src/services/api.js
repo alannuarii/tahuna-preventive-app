@@ -1,138 +1,87 @@
-import { engines } from '../data/static'
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
-// Mock Data
-const generateServiceHours = () => {
-    return engines.map(e => ({
-        unit: e.unit,
-        mesin: e.mesin,
-        jamoperasi: Math.floor(Math.random() * 5000) + 1000,
-        gantiOli: Math.floor(Math.random() * 250),
-        waktu: new Date().toISOString()
-    }))
-}
+const authFetch = async (url, options = {}) => {
+    const token = localStorage.getItem('auth_token');
+    const headers = {
+        'Content-Type': 'application/json',
+        ...options.headers,
+    };
 
-const mockRealizations = [
-    {
-        id: 1,
-        tanggal_pelaksanaan: '2023-10-15',
-        unit: 1,
-        mesin: 'SWD 6FHD 240',
-        jenis_pm: 'P1',
-        catatan: 'Routine Check',
-        materials: [
-            { id: 1, nama_material: 'Oil Filter', cycle: 'P1', jumlah_standar: 1, jumlah_realisasi: 1, satuan: 'pcs' }
-        ]
-    },
-    {
-        id: 2,
-        tanggal_pelaksanaan: '2023-11-01',
-        unit: 4,
-        mesin: 'Deutz MWM 212 V12',
-        jenis_pm: 'P2',
-        catatan: 'Oil Change',
-        materials: []
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
     }
-]
 
-// Mock API functions
+    const response = await fetch(`${API_URL}${url}`, {
+        ...options,
+        headers,
+    });
+
+    if (response.status === 401) {
+        // Token expired or invalid
+        localStorage.removeItem('auth_token');
+        window.location.href = '/login';
+        throw new Error('Unauthorized');
+    }
+
+    return response;
+};
+
 export const api = {
     getServiceHours: async () => {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve(generateServiceHours())
-            }, 500)
-        })
+        const response = await authFetch('/service-hours');
+        if (!response.ok) throw new Error('Failed to fetch service hours');
+        const data = await response.json();
+        return data.map(item => ({
+            ...item,
+            waktu: new Date(item.waktu).toISOString()
+        }));
     },
 
     getPMSchedule: async (params) => {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                // Return some mock schedule events
-                const today = new Date()
-                resolve([
-                    {
-                        id: 'evt-1',
-                        title: 'P1 Unit 1',
-                        start: today.toISOString().split('T')[0],
-                        extendedProps: {
-                            unit: 1,
-                            pm: 'P1',
-                            daysFromToday: 0,
-                            targetHours: 3000,
-                            currentHours: 2990
-                        }
-                    },
-                    {
-                        id: 'evt-2',
-                        title: 'P2 Unit 4',
-                        start: new Date(today.getTime() + 86400000 * 2).toISOString().split('T')[0],
-                        extendedProps: {
-                            unit: 4,
-                            pm: 'P2',
-                            daysFromToday: 2,
-                            targetHours: 3500,
-                            currentHours: 3400
-                        }
-                    }
-                ])
-            }, 500)
-        })
+        const query = new URLSearchParams(params).toString();
+        const response = await authFetch(`/pm/schedule?${query}`);
+        if (!response.ok) throw new Error('Failed to fetch PM schedule');
+        return await response.json();
     },
 
     getMaterials: async (unit) => {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve({
-                    materials: [
-                        { nama: 'Filter Oli', jumlah: 2, satuan: 'Pcs', cycle: 'P1' },
-                        { nama: 'Filter Udara', jumlah: 1, satuan: 'Set', cycle: 'P2' },
-                        { nama: 'Majun', jumlah: 5, satuan: 'Kg', cycle: 'P1' }
-                    ]
-                })
-            }, 400)
-        })
+        const response = await authFetch(`/materials?unit=${unit}`);
+        if (!response.ok) throw new Error('Failed to fetch materials');
+        return await response.json();
     },
 
     getRealizations: async (params) => {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve({
-                    data: mockRealizations,
-                    meta: {
-                        page: params.page || 1,
-                        limit: params.limit || 10,
-                        total: mockRealizations.length,
-                        totalPages: 1
-                    }
-                })
-            }, 400)
-        })
+        const query = new URLSearchParams(params).toString();
+        const response = await authFetch(`/pm/realizations?${query}`);
+        if (!response.ok) throw new Error('Failed to fetch realizations');
+        return await response.json();
     },
 
     getRealizationDetail: async (id) => {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                const item = mockRealizations.find(r => r.id == id)
-                resolve(item)
-            }, 300)
-        })
+        const response = await authFetch(`/pm/realizations/${id}`);
+        if (!response.ok) throw new Error('Failed to fetch realization detail');
+        return await response.json();
     },
 
     saveRealization: async (data, id = null) => {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                console.log('Saved realization:', data, id)
-                resolve({ success: true })
-            }, 800)
-        })
+        const url = id ? `/pm/realizations/${id}` : `/pm/realizations`;
+        const method = id ? 'PUT' : 'POST';
+
+        const response = await authFetch(url, {
+            method,
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) throw new Error('Failed to save realization');
+        return await response.json();
     },
 
     deleteRealization: async (id) => {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                console.log('Deleted realization:', id)
-                resolve({ success: true })
-            }, 500)
-        })
+        const response = await authFetch(`/pm/realizations/${id}`, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) throw new Error('Failed to delete realization');
+        return await response.json();
     }
 }

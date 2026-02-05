@@ -152,7 +152,7 @@
       
       <!-- Pagination -->
       <CommonPagination 
-        v-if="pagination.totalPages > 1"
+        v-if="pagination.totalPages > 1 && viewMode === 'table'"
         :current-page="pagination.page"
         :total-pages="pagination.totalPages"
         :total="pagination.total"
