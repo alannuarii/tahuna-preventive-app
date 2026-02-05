@@ -14,7 +14,7 @@ services:
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}
       - JWT_SECRET=${JWT_SECRET}
-      - FRONTEND_URL=${FRONTEND_URL:-http://localhost}
+      - FRONTEND_URL=${FRONTEND_URL}
     networks:
       - preventive-net
 
