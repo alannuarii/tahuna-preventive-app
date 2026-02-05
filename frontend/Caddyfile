@@ -3,7 +3,7 @@
     file_server
     
     # Proxy ke backend via network internal Docker
-    handle_path /api/* {
+    handle /api/* {
         reverse_proxy api-preventive-tahuna:3000
     }
 
