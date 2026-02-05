@@ -54,8 +54,16 @@ const router = createRouter({
     routes
 })
 
+// Helper function to get cookie value
+const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+};
+
 router.beforeEach((to, from, next) => {
-    const isAuthenticated = !!localStorage.getItem('auth_token');
+    const isAuthenticated = !!getCookie('auth_token');
 
     if (to.meta.requiresAuth && !isAuthenticated) {
         next('/login');

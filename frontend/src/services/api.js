@@ -1,7 +1,20 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
+// Helper function to get cookie value
+const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+};
+
+// Helper function to delete cookie
+const deleteCookie = (name) => {
+    document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+};
+
 const authFetch = async (url, options = {}) => {
-    const token = localStorage.getItem('auth_token');
+    const token = getCookie('auth_token');
     const headers = {
         'Content-Type': 'application/json',
         ...options.headers,
@@ -18,7 +31,7 @@ const authFetch = async (url, options = {}) => {
 
     if (response.status === 401) {
         // Token expired or invalid
-        localStorage.removeItem('auth_token');
+        deleteCookie('auth_token');
         window.location.href = '/login';
         throw new Error('Unauthorized');
     }

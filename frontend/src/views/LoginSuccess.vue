@@ -23,17 +23,13 @@ const setCookie = (name, value, days) => {
 
 onMounted(() => {
   const token = route.query.token;
-  console.log('LoginSuccess: token from query =', token ? 'present' : 'missing');
   
   if (token) {
-    // Store in both localStorage and cookie for redundancy
-    localStorage.setItem('auth_token', token);
     setCookie('auth_token', token, 1); // 1 day
-    console.log('LoginSuccess: token saved, redirecting to /preventive');
     router.push('/preventive');
   } else {
-    console.warn('LoginSuccess: No token found, redirecting to /login');
     router.push('/login');
   }
 });
 </script>
+

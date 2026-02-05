@@ -52,6 +52,19 @@ const isActive = (path) => {
   return route.path.startsWith(path)
 }
 
+// Helper function to get cookie value
+const getCookie = (name) => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+  return null;
+};
+
+// Helper function to delete cookie
+const deleteCookie = (name) => {
+  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+};
+
 // Simple JWT decode fallback if library missing
 const parseJwt = (token) => {
     try {
@@ -62,7 +75,7 @@ const parseJwt = (token) => {
 };
 
 onMounted(() => {
-  const token = localStorage.getItem('auth_token');
+  const token = getCookie('auth_token');
   if (token) {
     user.value = parseJwt(token);
   }
@@ -76,7 +89,7 @@ const userStore = computed(() => {
 })
 
 const logout = () => {
-  localStorage.removeItem('auth_token');
+  deleteCookie('auth_token');
   router.push('/login');
 }
 </script>
