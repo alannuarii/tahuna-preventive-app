@@ -35,7 +35,7 @@ app.get('/auth/google', (req, res) => {
 });
 
 // Callback from Google
-app.get('/auth/google/callback', async (req, res) => {
+app.get('/auth/callback/google', async (req, res) => {
     const { code } = req.query;
     if (!code) return res.status(400).send('No code provided');
 
