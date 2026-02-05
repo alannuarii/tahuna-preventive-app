@@ -21,7 +21,7 @@ services:
     restart: always
     # Port 3001 diexpose agar Caddy Host bisa meneruskan trafik (opsional jika lewat frontend)
     ports:
-      - "3001:3000" 
+      - "8001:3000" 
     environment:
       - PORT=3000
       - DB_HOST=host.docker.internal
