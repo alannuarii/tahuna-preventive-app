@@ -55,11 +55,20 @@ pipeline {
         stage('Health Check') {
             steps {
                 script {
-                    // Wait for container to be ready
+                    // Retry health check up to 5 times with 5s intervals
                     sh """
                         echo "Waiting for application to start..."
-                        sleep 10
-                        curl -sf http://localhost:${HOST_PORT}/ > /dev/null && echo "✅ Health check passed!" || (echo "❌ Health check failed!" && exit 1)
+                        for i in 1 2 3 4 5; do
+                            sleep 5
+                            HTTP_CODE=\$(curl -so /dev/null -w '%{http_code}' http://localhost:${HOST_PORT}/ 2>/dev/null || echo "000")
+                            echo "Attempt \$i: HTTP \$HTTP_CODE"
+                            if [ "\$HTTP_CODE" != "000" ]; then
+                                echo "✅ Health check passed! (HTTP \$HTTP_CODE)"
+                                exit 0
+                            fi
+                        done
+                        echo "❌ Health check failed! Server not responding."
+                        exit 1
                     """
                 }
             }
