@@ -41,6 +41,9 @@ ENV HOST=0.0.0.0
 # Expose port
 EXPOSE 3000
 
+# Change ownership so the non-root user can write necessary cache/temp files
+RUN chown -R appuser:appgroup /app
+
 # Switch to non-root user
 USER appuser
 
