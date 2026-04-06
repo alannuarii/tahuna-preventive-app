@@ -4,16 +4,16 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 
 # Copy package files first for better layer caching
-COPY package.json package-lock.json ./
+COPY package.json pnpm-lock.yaml ./
 
-# Install all dependencies (including devDependencies for build)
-RUN npm ci
+# Install pnpm and all dependencies (including devDependencies for build)
+RUN npm install -g pnpm && pnpm install --frozen-lockfile
 
 # Copy source code
 COPY . .
 
 # Build the SolidStart application (produces .output/ via Nitro)
-RUN npm run build
+RUN pnpm run build
 
 # Fix srvx FastURL bug: patch _url.mjs to handle relative URLs
 # srvx@0.9.8 crashes with "Invalid URL" when Node.js passes relative paths
