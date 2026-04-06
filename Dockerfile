@@ -49,4 +49,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1
 
 # Start the application
-CMD ["node", "dist/server/entry-server.js"]
+CMD ["npm", "run", "start", "--", "--host", "0.0.0.0", "--port", "3000"]
