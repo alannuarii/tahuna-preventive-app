@@ -39,7 +39,7 @@ pipeline {
                         sh """
                             docker run -d \
                                 --name ${CONTAINER_NAME} \
-                                --restart unless-stopped \
+                                --restart always \
                                 --env-file \${ENV_FILE} \
                                 -e PORT=${CONTAINER_PORT} \
                                 -e HOST=0.0.0.0 \
