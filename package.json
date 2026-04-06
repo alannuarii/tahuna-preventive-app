@@ -11,7 +11,7 @@
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.15.0",
     "@solidjs/start": "2.0.0-alpha.2",
-    "@solidjs/vite-plugin-nitro-2": "^0.1.0",
+    "@solidjs/vite-plugin-nitro-2": "^0.2.0",
     "@types/js-cookie": "^3.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/pg": "^8.20.0",
@@ -22,6 +22,10 @@
     "pg": "^8.20.0",
     "solid-js": "^1.9.5",
     "vite": "^7.0.0"
+  },
+  "overrides": {
+    "srvx": "0.11.15",
+    "h3": "2.0.1-rc.20"
   },
   "engines": {
     "node": ">=22"
