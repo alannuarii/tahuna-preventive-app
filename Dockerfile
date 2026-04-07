@@ -14,6 +14,17 @@ COPY . .
 # Build the application
 RUN npm run build
 
+# Fix srvx FastURL bug: patch _url.mjs to handle relative URLs
+# srvx crashes with "Invalid URL" when Node.js passes relative paths
+# (e.g. /login, /api/data) because new URL("/login") requires a base URL.
+RUN SRVX_URL_FILE=".output/server/node_modules/srvx/dist/_chunks/_url.mjs" && \
+    if [ -f "$SRVX_URL_FILE" ]; then \
+      sed -i 's|this.#url = new NativeURL(this.href);|const _h = this.href; this.#url = _h.startsWith("/") ? new NativeURL("http://localhost" + _h) : new NativeURL(_h);|' "$SRVX_URL_FILE" && \
+      echo "✅ Patched srvx _url.mjs successfully" ; \
+    else \
+      echo "⚠️  srvx _url.mjs not found, skipping patch" ; \
+    fi
+
 # Production image
 FROM node:22-alpine
 
