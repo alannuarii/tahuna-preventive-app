@@ -35,7 +35,7 @@ pipeline {
                     docker rm ${APP_NAME} || true
                     docker run -d \
                         --name ${APP_NAME} \
-                        --restart unless-stopped \
+                        --restart always \
                         --env-file .env \
                         -p ${HOST_PORT}:${CONTAINER_PORT} \
                         ${APP_NAME}:latest
