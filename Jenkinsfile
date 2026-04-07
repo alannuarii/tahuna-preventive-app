@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         APP_NAME = 'tahuna-preventive-app'
-        HOST_PORT = '3006'
+        HOST_PORT = '3013'
         CONTAINER_PORT = '3000'
     }
 
