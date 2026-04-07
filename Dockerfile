@@ -26,5 +26,9 @@ EXPOSE 3000
 
 ENV NODE_ENV=production
 ENV PORT=3000
+ENV HOST=0.0.0.0
+ENV NITRO_HOST=0.0.0.0
+ENV NITRO_PORT=3000
+ENV ORIGIN=https://preventive-tahuna.serveer.biz.id
 
 CMD ["node", ".output/server/index.mjs"]
