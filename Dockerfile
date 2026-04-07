@@ -1,0 +1,30 @@
+FROM node:22-alpine AS builder
+
+WORKDIR /app
+
+# Copy package.json and npm lockfile
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy application source code
+COPY . .
+
+# Build the application
+RUN npm run build
+
+# Production image
+FROM node:22-alpine
+
+WORKDIR /app
+
+# Copy the built application from the builder stage
+COPY --from=builder /app/.output ./.output
+
+EXPOSE 3000
+
+ENV NODE_ENV=production
+ENV PORT=3000
+
+CMD ["node", ".output/server/index.mjs"]
