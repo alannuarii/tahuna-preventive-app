@@ -2,11 +2,9 @@ pipeline {
     agent any
 
     environment {
-        // Ganti dengan nama credential secret file Anda yang tersimpan di Jenkins
-        SECRET_FILE_CREDENTIAL_ID = 'tahuna-preventive-env'
-        
-        IMAGE_NAME = 'tahuna-preventive-app'
-        CONTAINER_NAME = 'tahuna-preventive-app'
+        APP_NAME = 'tahuna-preventive-app'
+        HOST_PORT = '3006'
+        CONTAINER_PORT = '3000'
     }
 
     stages {
@@ -16,51 +14,45 @@ pipeline {
             }
         }
 
-        stage('Prepare Environment') {
+        stage('Prepare Env') {
             steps {
-                // Menggunakan Secret File dari Jenkins
-                withCredentials([file(credentialsId: "${SECRET_FILE_CREDENTIAL_ID}", variable: 'SECRET_ENV')]) {
-                    // Menyalin secret file ke .env untuk digunakan oleh runtime container
-                    sh 'cp $SECRET_ENV .env'
+                withCredentials([file(credentialsId: 'tahuna-preventive-env', variable: 'ENV_FILE')]) {
+                    sh 'cp "$ENV_FILE" .env'
                 }
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build Image') {
             steps {
-                // Membangun Docker Image
-                sh "docker build -t ${IMAGE_NAME}:latest ."
+                sh "docker build -t ${APP_NAME}:latest ."
             }
         }
 
-        stage('Deploy Container') {
+        stage('Deploy') {
             steps {
-                script {
-                    // Cek jika container sudah ada, hentikan dan hapus
-                    sh """
-                        if [ "\$(docker ps -aq -f name=${CONTAINER_NAME})" ]; then
-                            echo "Stopping and removing existing container..."
-                            docker stop ${CONTAINER_NAME} || true
-                            docker rm ${CONTAINER_NAME} || true
-                        fi
-                    """
-
-                    // Menjalankan container baru
-                    // Host port 3006 mapping ke container port 3000
-                    // .env dipasang pada runtime dengan --env-file
-                    sh "docker run -d --restart always --name ${CONTAINER_NAME} -p 3006:3000 --env-file .env ${IMAGE_NAME}:latest"
-                }
+                sh """
+                    docker stop ${APP_NAME} || true
+                    docker rm ${APP_NAME} || true
+                    docker run -d \
+                        --name ${APP_NAME} \
+                        --restart unless-stopped \
+                        --env-file .env \
+                        -p ${HOST_PORT}:${CONTAINER_PORT} \
+                        ${APP_NAME}:latest
+                """
             }
         }
     }
 
     post {
         always {
-            // Bersihkan file secret .env di workspace
             sh 'rm -f .env'
-            
-            // Bersihkan dangling images untuk menghemat storage
-            sh 'docker image prune -f'
+        }
+        success {
+            echo "✅ ${APP_NAME} deployed on port ${HOST_PORT}"
+        }
+        failure {
+            echo "❌ Deployment failed for ${APP_NAME}"
         }
     }
 }

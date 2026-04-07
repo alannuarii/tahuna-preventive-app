@@ -1,6 +1,7 @@
 dist
-.wrangler
 .output
+.nuxt
+.wrangler
 .vercel
 .netlify
 .vinxi
