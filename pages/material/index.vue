@@ -65,7 +65,7 @@
       <template v-else>
         <!-- Mobile Cards -->
         <div class="material-card-list mobile-only">
-          <div v-for="item in enrichedInventory" :key="item.id" class="material-stock-card">
+          <div v-for="item in enrichedInventory" :key="item.id" class="material-stock-card mb-3">
             <div class="material-stock-header" style="align-items: flex-start;">
               <div>
                 <div class="material-stock-name">{{ item.name }}</div>
@@ -530,18 +530,35 @@
             <div v-if="planResult.materials.length === 0" class="text-center py-6 text-muted">
               <p>Tidak ada material yang dibutuhkan pada periode ini.</p>
             </div>
-            <div v-for="(mat, idx) in planResult.materials" :key="idx" class="usage-item-card">
-              <div class="usage-item-header">
-                <span class="usage-item-name">{{ mat.nama }}</span>
+            <div v-for="(mat, idx) in planResult.materials" :key="idx" class="usage-item-card mb-3">
+              <div class="flex justify-between items-start mb-2">
+                <div class="usage-item-name font-semibold flex-1">{{ Number(idx) + 1 }}. {{ mat.nama }}</div>
+                <div class="text-xs text-muted ml-2" style="font-family: monospace; padding-top: 2px;">{{ mat.part_number || '-' }}</div>
               </div>
-              <div class="usage-item-stats" style="grid-template-columns: 1fr 1fr;">
-                <div class="usage-stat">
-                  <span class="usage-stat-label">Jumlah</span>
-                  <span class="usage-stat-value font-semibold" style="color: var(--primary-500);">{{ formatNumber(mat.totalJumlah) }}</span>
+              
+              <div class="grid grid-cols-2 gap-3 mt-3 pt-3" style="border-top: 1px dashed var(--glass-border);">
+                <div>
+                  <div class="text-xs text-muted mb-1">Kebutuhan PM</div>
+                  <div class="font-semibold" style="color: var(--primary-500);">
+                    {{ formatNumber(mat.totalJumlah) }} <span class="text-xs font-normal text-muted">{{ mat.satuan }}</span>
+                  </div>
+                  <div v-if="mat.isLubeOil" class="text-xs text-muted italic mt-0.5">≈ {{ (mat.totalJumlah / 209).toFixed(1) }} drum</div>
                 </div>
-                <div class="usage-stat">
-                  <span class="usage-stat-label">Satuan</span>
-                  <span class="usage-stat-value">{{ mat.satuan }}</span>
+                
+                <div>
+                  <div class="text-xs text-muted mb-1">Stok Saat Ini</div>
+                  <div class="font-semibold">
+                    {{ formatNumber(mat.currentStock) }} <span class="text-xs font-normal text-muted">{{ mat.satuan }}</span>
+                  </div>
+                  <div v-if="mat.isLubeOil" class="text-xs text-muted italic mt-0.5">≈ {{ (mat.currentStock / 209).toFixed(1) }} drum</div>
+                </div>
+              </div>
+                
+              <div class="w-full mt-4 flex justify-between items-center" style="background: rgba(0,0,0,0.2); padding: 10px 12px; border-radius: 6px;">
+                <div class="text-sm text-muted">Selisih (Stok - Kebutuhan)</div>
+                <div class="font-semibold flex flex-col items-end gap-1 text-right" :class="mat.selisih < 0 ? 'text-danger' : 'text-success'">
+                  <div class="text-base">{{ formatNumber(mat.selisih) }} <span class="text-sm font-normal opacity-80">{{ mat.satuan }}</span></div>
+                  <div v-if="mat.isLubeOil" class="text-xs italic opacity-80" style="font-weight: normal;">(≈ {{ (mat.selisih / 209).toFixed(1) }} drum)</div>
                 </div>
               </div>
             </div>
@@ -1249,6 +1266,7 @@ const tabOptions = [
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-xl);
   padding: var(--space-4);
+  margin-bottom: var(--space-3);
   transition: all var(--transition-base);
 }
 .material-stock-card:hover { border-color: rgba(255, 255, 255, 0.1); }
