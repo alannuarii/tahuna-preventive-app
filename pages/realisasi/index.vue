@@ -22,6 +22,20 @@
     <!-- Filters -->
     <div v-if="viewMode === 'table'" class="card mb-4">
       <div class="card-body">
+        <div class="form-group mb-4">
+          <label class="form-label">Filter Unit</label>
+          <div class="flex flex-wrap gap-4 items-center">
+            <label class="cursor-pointer flex items-center gap-2">
+              <input type="checkbox" :checked="filters.unit.length === 0" @change="filters.unit = []" class="form-checkbox" />
+              <span class="text-sm font-medium">Semua</span>
+            </label>
+            <label v-for="engine in engines" :key="engine.unit" class="cursor-pointer flex items-center gap-2">
+              <input type="checkbox" :value="engine.unit" v-model="filters.unit" class="form-checkbox" />
+              <span class="text-sm">Unit {{ engine.unit }}</span>
+            </label>
+          </div>
+        </div>
+
         <div class="realisasi-filter-grid">
           <div class="form-group mb-0">
             <label class="form-label">Dari Tanggal</label>
@@ -32,10 +46,10 @@
             <input type="date" v-model="filters.end" class="form-input form-input-sm" />
           </div>
           <div class="form-group mb-0">
-            <label class="form-label">Unit</label>
-            <select v-model="filters.unit" class="form-input form-input-sm">
-              <option value="">Semua</option>
-              <option v-for="engine in engines" :key="engine.unit" :value="engine.unit">Unit {{ engine.unit }}</option>
+            <label class="form-label">Urutkan</label>
+            <select v-model="filters.sort" class="form-input form-input-sm">
+              <option value="desc">Terbaru</option>
+              <option value="asc">Terlama</option>
             </select>
           </div>
           <div class="form-group mb-0 realisasi-filter-actions">
@@ -207,7 +221,7 @@
 import { engines } from '~/utils/pmCycles'
 
 const viewMode = ref('table')
-const filters = reactive({ start: '', end: '', unit: '', page: 1, limit: 10 })
+const filters = reactive({ start: '', end: '', unit: [] as number[], sort: 'desc', page: 1, limit: 10 })
 const responseData = ref<any>(null)
 const calendarData = ref<any>(null)
 const pending = ref(false)
@@ -224,7 +238,8 @@ const refresh = async () => {
     const q = new URLSearchParams()
     if (filters.start) q.set('start', filters.start)
     if (filters.end) q.set('end', filters.end)
-    if (filters.unit) q.set('unit', filters.unit)
+    if (filters.unit && filters.unit.length > 0) q.set('unit', filters.unit.join(','))
+    if (filters.sort) q.set('sort', filters.sort)
     q.set('page', filters.page.toString())
     q.set('limit', filters.limit.toString())
     
@@ -239,7 +254,7 @@ const loadCalendarData = async () => {
   const q = new URLSearchParams()
   if (filters.start) q.set('start', filters.start)
   if (filters.end) q.set('end', filters.end)
-  if (filters.unit) q.set('unit', filters.unit)
+  if (filters.unit && filters.unit.length > 0) q.set('unit', filters.unit.join(','))
   q.set('limit', '0')
   const res = await fetch(`/api/pm/realizations?${q.toString()}`)
   if (res.ok) calendarData.value = await res.json()
@@ -300,7 +315,8 @@ const applyFilters = () => {
 const resetFilters = () => {
   filters.start = ''
   filters.end = ''
-  filters.unit = ''
+  filters.unit = []
+  filters.sort = 'desc'
   filters.page = 1
   refresh()
 }

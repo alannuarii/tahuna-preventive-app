@@ -269,7 +269,7 @@ import { engines } from '~/utils/pmCycles'
 const route = useRoute()
 const router = useRouter()
 const eventData = ref<any>({})
-const materialsData = ref<any>({})
+const materialsData = ref<{ materials?: any[], applicableCycles?: string[] }>({})
 const materialsPending = ref(false)
 const loaded = ref(false)
 const copied = ref(false)

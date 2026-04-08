@@ -36,6 +36,14 @@ export default defineEventHandler(async (event) => {
     // Delete old materials and insert new ones
     await query(`DELETE FROM pm_realization_materials WHERE realization_id = $1`, [id])
 
+    // Revert existing material transactions (restore previously deducted stock)
+    const oldTxns = await query(`SELECT material_id, quantity FROM material_transactions WHERE reference_doc = $1 AND transaction_type = 'OUT'`, [`PM_REALIZATION_${id}`])
+    for (const txn of oldTxns) {
+      await query(`UPDATE material_inventory SET current_stock = current_stock + $1, updated_at = CURRENT_TIMESTAMP WHERE material_id = $2`, [txn.quantity, txn.material_id])
+    }
+    // Delete old tracking log
+    await query(`DELETE FROM material_transactions WHERE reference_doc = $1`, [`PM_REALIZATION_${id}`])
+
     if (materials && Array.isArray(materials) && materials.length > 0) {
       for (const material of materials) {
         await query(
@@ -51,6 +59,31 @@ export default defineEventHandler(async (event) => {
             material.cycle
           ]
         )
+
+        // Re-apply material transaction
+        if (material.material_id && material.jumlah_realisasi > 0) {
+          const notesText = `Penggunaan Realisasi PM ${jenis_pm} - Unit ${unit}`
+          const refDoc = `PM_REALIZATION_${id}`
+          
+          await query(`
+             INSERT INTO material_transactions (material_id, transaction_type, quantity, transaction_date, notes, reference_doc)
+             VALUES ($1, 'OUT', $2, $3, $4, $5)
+          `, [material.material_id, material.jumlah_realisasi, tanggal_pelaksanaan || new Date().toISOString(), notesText, refDoc])
+          
+          const inv = await query(`SELECT * FROM material_inventory WHERE material_id = $1`, [material.material_id])
+          if (inv && inv.length > 0) {
+            await query(`
+              UPDATE material_inventory 
+              SET current_stock = current_stock - $1, updated_at = CURRENT_TIMESTAMP
+              WHERE material_id = $2
+            `, [material.jumlah_realisasi, material.material_id])
+          } else {
+            await query(`
+              INSERT INTO material_inventory (material_id, current_stock, updated_at) 
+              VALUES ($1, $2, CURRENT_TIMESTAMP)
+            `, [material.material_id, Math.max(0, -material.jumlah_realisasi)])
+          }
+        }
       }
     }
 

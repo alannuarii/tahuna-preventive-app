@@ -1,7 +1,7 @@
 import { query } from '~/server/utils/db'
 
 export default defineEventHandler(async (event) => {
-  const { start, end, unit, page: pageStr, limit: limitStr } = getQuery(event)
+  const { start, end, unit, sort, page: pageStr, limit: limitStr } = getQuery(event)
   const page = parseInt((pageStr as string) || '1')
   const limit = parseInt((limitStr as string) || '10')
 
@@ -22,9 +22,13 @@ export default defineEventHandler(async (event) => {
   }
 
   if (unit) {
-    whereClause += ` AND r.unit = $${paramIndex}`
-    params.push(parseInt(unit as string))
-    paramIndex++
+    const units = (unit as string).split(',').map(u => parseInt(u.trim())).filter(u => !isNaN(u))
+    if (units.length > 0) {
+      const placeholders = units.map((_, i) => `$${paramIndex + i}`).join(', ')
+      whereClause += ` AND r.unit IN (${placeholders})`
+      params.push(...units)
+      paramIndex += units.length
+    }
   }
 
   try {
@@ -45,7 +49,7 @@ export default defineEventHandler(async (event) => {
         r.updated_at
       FROM pm_realizations r
       ${whereClause}
-      ORDER BY r.tanggal_pelaksanaan DESC, r.created_at DESC
+      ORDER BY r.tanggal_pelaksanaan ${sort === 'asc' ? 'ASC' : 'DESC'}, r.created_at ${sort === 'asc' ? 'ASC' : 'DESC'}
     `
 
     const dataParams = [...params]
