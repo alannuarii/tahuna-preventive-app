@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tahuna-app-v1';
+const CACHE_NAME = 'tahuna-app-v2';
 const STATIC_ASSETS = [
   '/',
   '/manifest.webmanifest',
