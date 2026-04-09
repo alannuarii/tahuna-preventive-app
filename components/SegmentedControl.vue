@@ -138,6 +138,12 @@ onMounted(() => {
   letter-spacing: 0.01em;
 }
 
+@media (max-width: 767px) {
+  .seg-label {
+    display: none;
+  }
+}
+
 @media (min-width: 768px) {
   .segmented-control {
     width: auto;
