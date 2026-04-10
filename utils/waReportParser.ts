@@ -300,13 +300,19 @@ function matchMaterial(line: string): string | null {
  * Main parser: takes raw WhatsApp text and returns structured data.
  */
 export function parseWhatsAppReport(rawText: string): ParsedReport {
+  // Normalize double-escaped newlines (e.g., from webhooks) or HTML line breaks
+  const normalizedText = rawText
+    .replace(/\\r\\n/g, '\n')
+    .replace(/\\n/g, '\n')
+    .replace(/<br\s*\/?>/gi, '\n')
+
   const warnings: string[] = []
-  const lines = rawText.split('\n').map(l => l.trim()).filter(l => l.length > 0)
+  const lines = normalizedText.split('\n').map(l => l.trim()).filter(l => l.length > 0)
   
   // 1. Extract high-level metadata from full text
-  const tanggal = extractDate(rawText)
-  const unit = extractUnit(rawText)
-  const jenisPm = extractPM(rawText)
+  const tanggal = extractDate(normalizedText)
+  const unit = extractUnit(normalizedText)
+  const jenisPm = extractPM(normalizedText)
   
   if (!tanggal) warnings.push('Tanggal tidak terdeteksi')
   if (!unit) warnings.push('Unit tidak terdeteksi')
@@ -432,8 +438,8 @@ export function parseWhatsAppReport(rawText: string): ParsedReport {
     unit: unit || 0,
     jenisPm: jenisPm || '',
     materials: parsedMaterials,
-    catatan: rawText.substring(0, 500),
-    rawText,
+    catatan: normalizedText.substring(0, 500),
+    rawText: normalizedText,
     warnings,
   }
 }
