@@ -61,8 +61,8 @@ export const fastMovingMaterials = [
     unit: 1,
     mesin: "SWD 6FHD 240",
     material: [
-      { nama: "Lube Oil Filter", part_number: "SWD-LO-001", jumlah: 4, satuan: "buah", cycle: "P3" },
-      { nama: "Fuel Filter", part_number: "SWD-FF-002", jumlah: 2, satuan: "buah", cycle: "P2" },
+      { nama: "Lube Oil Filter", part_number: "LF3414", jumlah: 4, satuan: "buah", cycle: "P3" },
+      { nama: "Fuel Filter", part_number: "BF 1018/1", jumlah: 2, satuan: "buah", cycle: "P2" },
       { nama: "Lube Oil", part_number: "Pertamina Meditran S SAE 40", jumlah: 209, satuan: "liter", cycle: "P3" },
     ],
   },
