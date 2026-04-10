@@ -276,10 +276,10 @@ const router = useRouter()
 const isEdit = computed(() => !!route.query.edit)
 const editId = computed(() => route.query.edit as string)
 
-// Input mode: 'manual' or 'whatsapp'
 const inputMode = ref<'manual' | 'whatsapp'>('manual')
 const waReportText = ref('')
 const parseResult = ref<ParsedReport | null>(null)
+const notificationId = computed(() => route.query.notificationId as string)
 
 const form = reactive({
   tanggal_pelaksanaan: '',
@@ -339,6 +339,34 @@ onMounted(async () => {
     } catch {
       alert('Gagal memuat data')
       router.replace('/realisasi')
+    } finally {
+      loadingData.value = false
+    }
+  } else if (notificationId.value) {
+    // Handle notification click
+    loadingData.value = true
+    try {
+      const res = await fetch(`/api/notifications/${notificationId.value}`)
+      if (res.ok) {
+        const data = await res.json()
+        
+        let reportText = ''
+        try {
+          const parsedPayload = JSON.parse(data.payload)
+          reportText = parsedPayload.message || parsedPayload.text || parsedPayload.body || data.payload
+        } catch {
+          reportText = data.payload
+        }
+        
+        waReportText.value = reportText
+        inputMode.value = 'whatsapp'
+        parseReport()
+        
+        // Mark as read
+        fetch(`/api/notifications/${notificationId.value}/read`, { method: 'PUT' }).catch(console.error)
+      }
+    } catch (e) {
+      console.error('Failed to load notification', e)
     } finally {
       loadingData.value = false
     }
