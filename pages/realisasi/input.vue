@@ -95,7 +95,7 @@ Filter udara 2 bh
           </h4>
 
           <!-- Warnings -->
-          <div v-if="parseResult.warnings.length > 0" class="parse-warnings mb-3">
+          <div v-if="parseResult.warnings.length > 0" class="parse-warnings">
             <div v-for="(w, i) in parseResult.warnings" :key="i" class="parse-warning-item">
               ⚠️ {{ w }}
             </div>
@@ -153,7 +153,7 @@ Filter udara 2 bh
           </div>
 
           <!-- Apply button -->
-          <div class="flex justify-end gap-2 mt-4 pt-3" style="border-top: 1px solid var(--glass-border);">
+          <div class="flex justify-end gap-3 mt-6 pt-5" style="border-top: 1px solid var(--glass-border);">
             <button type="button" class="btn btn-secondary" @click="parseResult = null">Batal</button>
             <button type="button" class="btn btn-primary" @click="applyParseResult" :disabled="!parseResult.unit || !parseResult.jenisPm || !parseResult.tanggal">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align: -2px; margin-right:4px;">
@@ -254,7 +254,7 @@ Filter udara 2 bh
           </div>
         </div>
 
-        <div class="flex justify-end gap-3 mt-6 pt-4 border-top">
+        <div class="flex justify-end gap-3 mt-8 pt-5 border-top">
           <NuxtLink to="/realisasi" class="btn btn-secondary">Batal</NuxtLink>
           <button type="submit" class="btn btn-primary" :disabled="submitting">
             {{ submitting ? 'Menyimpan...' : (isEdit ? 'Update' : 'Simpan') }}
@@ -542,18 +542,20 @@ const handleSubmit = async () => {
   font-size: var(--font-size-base);
   font-weight: 600;
   color: var(--primary-700);
-  margin: 0 0 var(--space-3) 0;
+  margin: 0 0 var(--space-4) 0;
 }
 .parse-warnings {
   background: rgba(245, 158, 11, 0.08);
   border: 1px solid rgba(245, 158, 11, 0.2);
   border-radius: var(--radius-md);
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-5);
+  margin-top: var(--space-2);
 }
 .parse-warning-item {
   font-size: var(--font-size-sm);
   color: #b45309;
-  padding: 2px 0;
+  padding: 4px 0;
 }
 .parse-meta-grid {
   display: grid;

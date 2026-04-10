@@ -331,7 +331,7 @@
               <textarea v-model="txnForm.notes" class="form-input" rows="3" placeholder="Contoh: Stok Baru / Pemakaian Unit 1"></textarea>
             </div>
 
-            <div class="flex justify-end gap-3 pt-4" style="border-top: 1px solid var(--glass-border);">
+            <div class="flex justify-end gap-3 mt-6 pt-5" style="border-top: 1px solid var(--glass-border);">
               <button type="button" class="btn btn-secondary" @click="closeTxnModal">Batal</button>
               <button type="submit" class="btn btn-primary" :disabled="isSubmittingTxn">
                 {{ isSubmittingTxn ? 'Menyimpan...' : 'Simpan' }}
