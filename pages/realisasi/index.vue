@@ -20,8 +20,16 @@
     </div>
 
     <!-- Filters -->
-    <div v-if="viewMode === 'table'" class="card mb-4">
-      <div class="card-body">
+    <template v-if="viewMode === 'table'">
+      <div class="flex justify-end mb-3 mobile-only">
+        <button class="btn btn-secondary btn-sm" @click="showMobileFilter = !showMobileFilter">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          {{ showMobileFilter ? 'Sembunyikan Filter' : 'Tampilkan Filter' }}
+        </button>
+      </div>
+
+      <div class="card mb-4" :class="{ 'mobile-collapse-hidden': !showMobileFilter }">
+        <div class="card-body">
         <div class="form-group mb-4">
           <label class="form-label">Filter Unit</label>
           <div class="flex flex-wrap gap-4 items-center">
@@ -62,6 +70,7 @@
         </div>
       </div>
     </div>
+  </template>
 
     <!-- Loading -->
     <div v-if="pending" class="loading-container">
@@ -91,8 +100,8 @@
                 <th style="min-width: 70px;">Unit</th>
                 <th style="min-width: 100px;" class="hidden sm:table-cell">Mesin</th>
                 <th>Jenis PM</th>
-                <th style="min-width: 120px;" class="hidden sm:table-cell">Catatan</th>
-                <th style="min-width: 80px;" class="text-right">Aksi</th>
+                <th class="hidden sm:table-cell" style="min-width: 120px;">Catatan</th>
+                <th style="min-width: 80px;" class="text-center">Aksi</th>
               </tr>
             </thead>
             <tbody>
@@ -105,9 +114,10 @@
                 </td>
                 <td class="text-xs text-muted hidden sm:table-cell truncate" style="max-width: 150px;" :title="item.catatan">{{ item.catatan || '-' }}</td>
                 <td>
-                  <div class="flex gap-1 justify-end">
-                    <NuxtLink :to="`/realisasi/input?edit=${item.id}`" class="btn btn-sm btn-secondary btn-icon-sm" title="Edit">✏️</NuxtLink>
-                    <button class="btn btn-sm btn-danger btn-icon-sm" @click="confirmDelete(item)" title="Hapus">🗑️</button>
+                  <div class="flex justify-center">
+                    <NuxtLink :to="`/realisasi/detail/${item.id}`" class="btn btn-sm btn-secondary" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                      Lihat Detail &rarr;
+                    </NuxtLink>
                   </div>
                 </td>
               </tr>
@@ -124,96 +134,6 @@
         @change="changePage"
       />
     </template>
-
-    <!-- Detail Modal -->
-    <div v-if="showDetailModal" class="modal-overlay" @click.self="showDetailModal = false">
-      <div class="modal modal-lg">
-        <div class="modal-header">
-          <h3 class="modal-title">Detail Realisasi</h3>
-          <button class="modal-close" @click="showDetailModal = false">✕</button>
-        </div>
-        <div class="modal-body">
-          <template v-if="selectedDetail">
-            <div class="detail-grid">
-              <div class="detail-item">
-                <span class="detail-label">Tanggal Pelaksanaan</span>
-                <span class="detail-value">{{ formatDate(selectedDetail.tanggal_pelaksanaan) }}</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">Unit</span>
-                <span class="detail-value">Unit {{ selectedDetail.unit }}</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">Mesin</span>
-                <span class="detail-value">{{ selectedDetail.mesin }}</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">Jenis PM</span>
-                <span class="detail-value">
-                  <span :class="['badge', getPMBadgeClass(selectedDetail.jenis_pm)]">{{ selectedDetail.jenis_pm }}</span>
-                </span>
-              </div>
-              <div v-if="selectedDetail.catatan" class="detail-item full-width">
-                <span class="detail-label">Catatan</span>
-                <span class="detail-value">{{ selectedDetail.catatan }}</span>
-              </div>
-            </div>
-
-            <div v-if="selectedDetail.materials && selectedDetail.materials.length > 0" class="mt-4">
-              <h4 class="section-subtitle">Material yang Digunakan</h4>
-              <div class="table-wrapper">
-                <table class="table table-sm">
-                  <thead>
-                    <tr>
-                      <th>Material</th>
-                      <th>Cycle</th>
-                      <th class="text-right">Standar</th>
-                      <th class="text-right">Realisasi</th>
-                      <th>Satuan</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="mat in selectedDetail.materials" :key="mat.id">
-                      <td>{{ mat.nama_material }}</td>
-                      <td><span :class="['badge badge-sm', getPMBadgeClass(mat.cycle)]">{{ mat.cycle }}</span></td>
-                      <td class="text-right">{{ mat.jumlah_standar }}</td>
-                      <td class="text-right font-bold">{{ mat.jumlah_realisasi }}</td>
-                      <td>{{ mat.satuan }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </template>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" @click="showDetailModal = false">Tutup</button>
-          <NuxtLink :to="`/realisasi/input?edit=${selectedDetail?.id}`" class="btn btn-primary">✏️ Edit</NuxtLink>
-        </div>
-      </div>
-    </div>
-
-    <!-- Delete Modal -->
-    <div v-if="showDeleteModal" class="modal-overlay" @click.self="showDeleteModal = false">
-      <div class="modal">
-        <div class="modal-header">
-          <h3 class="modal-title">Konfirmasi Hapus</h3>
-        </div>
-        <div class="modal-body">
-          <p>Apakah Anda yakin ingin menghapus realisasi ini?</p>
-          <p class="text-muted text-sm mt-2">
-            Unit {{ itemToDelete?.unit }} - {{ itemToDelete?.jenis_pm }} 
-            ({{ formatDate(itemToDelete?.tanggal_pelaksanaan) }})
-          </p>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" @click="showDeleteModal = false">Batal</button>
-          <button class="btn btn-danger" @click="deleteRealization" :disabled="deleting">
-            {{ deleting ? 'Menghapus...' : 'Hapus' }}
-          </button>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -225,12 +145,9 @@ const filters = reactive({ start: '', end: '', unit: [] as number[], sort: 'desc
 const responseData = ref<any>(null)
 const calendarData = ref<any>(null)
 const pending = ref(false)
+const showMobileFilter = ref(false)
 
-const showDetailModal = ref(false)
-const showDeleteModal = ref(false)
-const selectedDetail = ref<any>(null)
-const itemToDelete = ref<any>(null)
-const deleting = ref(false)
+const router = useRouter()
 
 const refresh = async () => {
   pending.value = true
@@ -293,18 +210,8 @@ const calendarEvents = computed(() => {
   }))
 })
 
-const handleEventClick = async (event: any) => {
-  try {
-    const res = await fetch(`/api/pm/realizations/${event.id}`)
-    if (res.ok) {
-      selectedDetail.value = await res.json()
-      showDetailModal.value = true
-    } else {
-      alert('Gagal memuat detail realisasi')
-    }
-  } catch {
-    alert('Gagal memuat detail realisasi')
-  }
+const handleEventClick = (event: any) => {
+  router.push(`/realisasi/detail/${event.id}`)
 }
 
 const applyFilters = () => {
@@ -331,28 +238,6 @@ const getPMBadgeClass = (pm: string) => {
   return classes[pm] || 'badge-secondary'
 }
 
-const confirmDelete = (item: any) => {
-  itemToDelete.value = item
-  showDeleteModal.value = true
-}
-
-const deleteRealization = async () => {
-  if (!itemToDelete.value) return
-  deleting.value = true
-  try {
-    const res = await fetch(`/api/pm/realizations/${itemToDelete.value.id}`, { method: 'DELETE' })
-    if (res.ok) {
-      showDeleteModal.value = false
-      itemToDelete.value = null
-      refresh()
-    } else {
-      alert('Gagal menghapus data')
-    }
-  } finally {
-    deleting.value = false
-  }
-}
-
 const listIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>'
 const calendarIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'
 
@@ -363,6 +248,12 @@ const viewOptions = [
 </script>
 
 <style>
+@media (max-width: 767px) {
+  .mobile-collapse-hidden {
+    display: none !important;
+  }
+}
+
 .realisasi-filter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; width: 100%; align-items: end; }
 .realisasi-filter-actions { display: flex; flex-direction: column; justify-content: flex-end; }
 @media (min-width: 768px) {
@@ -370,20 +261,9 @@ const viewOptions = [
   .realisasi-filter-actions .form-label { display: block !important; }
 }
 
-.btn-icon-sm { width: 30px; height: 30px; padding: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; border-radius: var(--radius-md); }
-@media (min-width: 640px) { .btn-icon-sm { width: 32px; height: 32px; } }
-
 .table-mobile-optimized th, .table-mobile-optimized td { padding: 0.5rem; font-size: 0.775rem; }
 @media (min-width: 640px) { .table-mobile-optimized th, .table-mobile-optimized td { padding: var(--space-3) var(--space-4); font-size: var(--font-size-sm); } }
 
 .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
 .whitespace-nowrap { white-space: nowrap; }
-
-.detail-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-3); }
-@media (min-width: 640px) { .detail-grid { grid-template-columns: repeat(2, 1fr); } }
-.detail-item { display: flex; flex-direction: column; gap: 0.25rem; }
-.detail-item.full-width { grid-column: span 2; }
-.detail-label { font-size: 0.75rem; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.05em; }
-.detail-value { font-size: var(--font-size-base); color: var(--gray-800); font-weight: 500; }
-.section-subtitle { font-size: var(--font-size-sm); font-weight: 600; color: var(--gray-700); margin-bottom: var(--space-2); }
 </style>

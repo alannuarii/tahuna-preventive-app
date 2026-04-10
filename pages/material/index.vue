@@ -12,19 +12,17 @@
 
     <!-- ==================== TAB 1: STOK GUDANG ==================== -->
     <template v-if="activeTab === 'stock'">
-      <div class="card mb-4">
+      <div class="flex justify-end mb-3 mobile-only">
+        <button class="btn btn-secondary btn-sm" @click="showMobileStockFilter = !showMobileStockFilter">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          {{ showMobileStockFilter ? 'Sembunyikan Filter' : 'Tampilkan Filter' }}
+        </button>
+      </div>
+
+      <div class="card mb-4" :class="{ 'mobile-collapse-hidden': !showMobileStockFilter }">
         <div class="card-body">
           <div class="material-filter-row">
             <div class="form-group mb-0 flex-1">
-              <label class="form-label">Cari Material</label>
-              <div class="search-input-wrapper">
-                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                </svg>
-                <input type="text" v-model="stockSearch" class="form-input form-input-sm search-input-field" placeholder="Nama atau Part Number..." @keyup.enter="loadInventory" />
-              </div>
-            </div>
-            <div class="form-group mb-0">
               <label class="form-label">Jenis Mesin</label>
               <select v-model="stockMachineFilter" class="form-input form-input-sm">
                 <option value="">Semua Mesin</option>
@@ -33,19 +31,18 @@
                 </option>
               </select>
             </div>
-            <div class="form-group mb-0">
+            <div class="form-group mb-0" style="min-width: 200px;">
               <label class="form-label">Urutkan</label>
               <select v-model="stockSort" class="form-input form-input-sm" @change="loadInventory">
                 <option value="name_asc">Nama A–Z</option>
                 <option value="name_desc">Nama Z–A</option>
                 <option value="stock_asc">Stok Terendah</option>
                 <option value="stock_desc">Stok Tertinggi</option>
+                <option value="est_asc">Habis Tercepat</option>
+                <option value="est_desc">Habis Terlama</option>
               </select>
             </div>
-            <div class="form-group mb-0 material-filter-action">
-              <label class="form-label desktop-only">&nbsp;</label>
-              <button class="btn btn-primary btn-sm" @click="loadInventory">Cari</button>
-            </div>
+
           </div>
         </div>
       </div>
@@ -159,7 +156,14 @@
     <!-- ==================== TAB 2: TRANSAKSI ==================== -->
     <template v-if="activeTab === 'transactions'">
       <template v-if="!showTxnModal">
-        <div class="card mb-4">
+        <div class="flex justify-between items-center mb-3">
+          <button class="btn btn-primary btn-sm mobile-only" style="background-color: var(--primary-700);" @click="openTxnModal">+ Input Transaksi</button>
+          <button class="btn btn-secondary btn-sm mobile-only ml-auto" @click="showMobileTxnFilter = !showMobileTxnFilter">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            {{ showMobileTxnFilter ? 'Sembunyikan Filter' : 'Tampilkan Filter' }}
+          </button>
+        </div>
+        <div class="card mb-4" :class="{ 'mobile-collapse-hidden': !showMobileTxnFilter }">
         <div class="card-body">
           <div class="material-filter-row flex-wrap" style="gap: 12px;">
             <div class="form-group mb-0" style="min-width: 250px; flex: 2;">
@@ -199,7 +203,7 @@
               <div class="flex gap-2 flex-wrap justify-end">
                 <button class="btn btn-primary btn-sm" @click="applyTxnFilters">Filter</button>
                 <button class="btn btn-secondary btn-sm" @click="resetTxnFilters">Reset</button>
-                <button class="btn btn-primary btn-sm ml-auto" style="background-color: var(--primary-700);" @click="openTxnModal">+ Input Transaksi</button>
+                <button class="btn btn-primary btn-sm ml-auto desktop-only" style="background-color: var(--primary-700);" @click="openTxnModal">+ Input Transaksi</button>
               </div>
             </div>
           </div>
@@ -407,8 +411,14 @@
 
     <!-- ==================== TAB 4: PERENCANAAN ==================== -->
     <template v-if="activeTab === 'planning'">
+      <div class="flex justify-end mb-3 mobile-only">
+        <button class="btn btn-secondary btn-sm" @click="showMobilePlanFilter = !showMobilePlanFilter">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          {{ showMobilePlanFilter ? 'Sembunyikan Filter' : 'Tampilkan Filter' }}
+        </button>
+      </div>
       <!-- Filter Card -->
-      <div class="card mb-4">
+      <div class="card mb-4" :class="{ 'mobile-collapse-hidden': !showMobilePlanFilter }">
         <div class="card-header">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary-300)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
@@ -626,6 +636,10 @@ import { engines, fastMovingMaterials, getCycleRange } from '~/utils/pmCycles'
 
 const activeTab = ref('stock')
 
+const showMobileStockFilter = ref(false)
+const showMobileTxnFilter = ref(false)
+const showMobilePlanFilter = ref(false)
+
 // ===== PM SCHEDULE =====
 const pmSchedules = ref<any[]>([])
 
@@ -769,6 +783,14 @@ const enrichedInventory = computed(() => {
       if (!rules) return false
       return rules.some((r: any) => filterUnits.includes(r.unit.toString()))
     })
+  }
+
+  if (stockSort.value === 'est_asc' || stockSort.value === 'est_desc') {
+    mapped.sort((a, b) => {
+      const daysA = (a.estHabis && typeof a.estHabis.days === 'number') ? a.estHabis.days : 999999;
+      const daysB = (b.estHabis && typeof b.estHabis.days === 'number') ? b.estHabis.days : 999999;
+      return stockSort.value === 'est_asc' ? daysA - daysB : daysB - daysA;
+    });
   }
 
   return mapped
@@ -1085,6 +1107,12 @@ const tabOptions = [
 </script>
 
 <style>
+@media (max-width: 767px) {
+  .mobile-collapse-hidden {
+    display: none !important;
+  }
+}
+
 /* ===== Filter Layout ===== */
 .material-filter-row {
   display: flex;
@@ -1101,16 +1129,7 @@ const tabOptions = [
   .material-filter-action .form-label { display: block !important; }
 }
 
-.desktop-only { display: none !important; }
-.mobile-only { display: block !important; }
-@media (min-width: 768px) {
-  .desktop-only { display: block !important; }
-  .mobile-only { display: none !important; }
-}
-/* Fix for desktop-only tables */
-@media (min-width: 768px) {
-  .table-wrapper.desktop-only { display: block !important; }
-}
+
 
 /* ===== Search Input ===== */
 .search-input-wrapper {

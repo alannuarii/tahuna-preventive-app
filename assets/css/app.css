@@ -299,6 +299,12 @@ h4 { font-size: var(--font-size-lg); }
     .md\:w-auto { width: auto; }
     .md\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
     .md\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+    
+    .mobile-only { display: none !important; }
+}
+
+@media (max-width: 767px) {
+    .desktop-only { display: none !important; }
 }
 
 @media (min-width: 1024px) {
