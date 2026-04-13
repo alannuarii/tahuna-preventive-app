@@ -1722,3 +1722,8 @@ select {
 .whitespace-nowrap {
     white-space: nowrap;
 }
+
+/* Custom Back Button */
+.btn-back { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; flex-shrink: 0; background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); color: var(--gray-600); cursor: pointer; transition: all var(--transition-base); text-decoration: none; padding: 0; }
+.btn-back:hover { background: var(--bg-hover); border-color: rgba(255,255,255,0.1); color: var(--gray-800); transform: translateX(-2px); }
+.btn-back:active { transform: scale(0.95); }

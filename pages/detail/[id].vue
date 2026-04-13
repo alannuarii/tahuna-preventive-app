@@ -25,7 +25,7 @@
       <div class="card-body text-center py-8">
         <div class="empty-state-icon">📋</div>
         <p class="text-muted text-lg mb-4">Data tidak ditemukan</p>
-        <button class="btn btn-primary" @click="goBack">← Kembali</button>
+        <button class="btn btn-primary" @click="goBack">Kembali</button>
       </div>
     </div>
 
@@ -377,9 +377,7 @@ const copyToClipboard = () => {
 .detail-page-title-wrapper { display: flex; align-items: center; gap: var(--space-3); flex: 1; min-width: 0; }
 .detail-page-title-wrapper .home-title { margin-bottom: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-.btn-back { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; flex-shrink: 0; background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); color: var(--gray-600); cursor: pointer; transition: all var(--transition-base); }
-.btn-back:hover { background: var(--bg-hover); border-color: rgba(255,255,255,0.1); color: var(--gray-800); transform: translateX(-2px); }
-.btn-back:active { transform: scale(0.95); }
+
 
 .detail-status-card { background: linear-gradient(135deg, rgba(99,102,241,0.12) 0%, rgba(34,211,238,0.08) 100%); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid rgba(99,102,241,0.2); border-radius: var(--radius-xl); padding: var(--space-5); margin-bottom: var(--space-5); position: relative; overflow: hidden; }
 .detail-status-card::before { content: ''; position: absolute; top: -50%; right: -30%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%); pointer-events: none; }

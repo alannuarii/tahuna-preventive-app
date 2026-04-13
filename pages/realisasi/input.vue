@@ -1,8 +1,13 @@
 <template>
   <div class="animate-fade-in">
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex items-center gap-4 mb-6 pt-2">
+      <NuxtLink to="/realisasi" class="btn-back" aria-label="Kembali">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+      </NuxtLink>
       <h1 class="home-title m-0">{{ isEdit ? 'Edit' : 'Input' }} Realisasi PM</h1>
-      <NuxtLink to="/realisasi" class="btn btn-secondary">← Kembali</NuxtLink>
     </div>
 
     <div v-if="isEdit && loadingData" class="loading-container" style="min-height: 40vh;">
