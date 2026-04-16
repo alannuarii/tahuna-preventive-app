@@ -181,6 +181,11 @@
             </div>
 
             <div class="form-group mb-6">
+              <label class="form-label">Spesifikasi Material</label>
+              <textarea v-model="materialForm.spesification" class="form-input" rows="3" placeholder="Detail spesifikasi, ukuran, parameter teknis (opsional)"></textarea>
+            </div>
+
+            <div class="form-group mb-6">
               <label class="form-label">Catatan (Notes)</label>
               <textarea v-model="materialForm.notes" class="form-input" rows="3" placeholder="Tambahkan catatan penting terkait material ini (opsional)"></textarea>
             </div>
@@ -208,6 +213,10 @@
               <label class="form-label">Foto Material</label>
               <div class="flex items-center gap-3">
                 <input type="file" ref="fileInput" @change="handleFileUpload" multiple accept="image/*" class="form-input" style="padding: 10px; flex: 1;" />
+                <button type="button" @click="isCameraOpen = true" class="btn btn-secondary flex items-center justify-center gap-2" style="padding: 10px; flex-shrink: 0; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.05);" title="Ambil Foto Secara Langsung">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                  <span class="hidden md:inline text-sm font-semibold whitespace-nowrap">Ambil Foto</span>
+                </button>
               </div>
               <div v-if="materialForm.imageUrls.length > 0" class="mt-3 flex gap-2 flex-wrap">
                 <div v-for="(img, idx) in materialForm.imageUrls" :key="idx" class="relative group" style="width: 80px; height: 80px; border-radius: 8px; overflow: hidden; border: 1px solid var(--glass-border);">
@@ -394,11 +403,20 @@
         </form>
       </template>
     </template>
+
+    <CameraCapture v-model:isOpen="isCameraOpen" @capture="handleCameraCapture" title="FOTO MATERIAL" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { engines } from '~/utils/pmCycles'
+
+const isCameraOpen = ref(false)
+
+const handleCameraCapture = (file: File) => {
+  materialForm.imageFiles.push(file)
+  materialForm.imageUrls.push(URL.createObjectURL(file))
+}
 
 const categoryOptions = [
   { value: 'fast-moving', label: 'Fast Moving', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>' },
@@ -446,6 +464,7 @@ const materialForm = reactive({
   status: 'Baru',
   current_stock: 0,
   notes: '',
+  spesification: '',
   isCommon: true,
   engines: [] as string[],
   imageUrls: [] as string[],
@@ -473,6 +492,7 @@ const openMaterialForm = () => {
   materialForm.status = 'Baru'
   materialForm.current_stock = 0
   materialForm.notes = ''
+  materialForm.spesification = ''
   materialForm.isCommon = true
   materialForm.engines = []
   materialForm.imageUrls.forEach(url => URL.revokeObjectURL(url))
@@ -502,9 +522,48 @@ const removeImage = (idx: number) => {
   materialForm.imageUrls.splice(idx, 1)
 }
 
-const submitMaterial = () => {
-  alert('Simulasi integrasi mockup: Material baru berhasil disimpan.')
-  closeMaterialForm()
+const submitMaterial = async () => {
+  try {
+    const formData = new FormData()
+    formData.append('name', materialForm.name)
+    formData.append('part_number', materialForm.part_number)
+    formData.append('unit', materialForm.unit)
+    formData.append('status', materialForm.status)
+    formData.append('current_stock', materialForm.current_stock.toString())
+    formData.append('notes', materialForm.notes)
+    formData.append('spesification', materialForm.spesification)
+    formData.append('isCommon', materialForm.isCommon.toString())
+    
+    materialForm.engines.forEach(engine => {
+      formData.append('engines', engine)
+    })
+    
+    materialForm.imageFiles.forEach(file => {
+       formData.append('images', file)
+    })
+
+    const res: any = await $fetch('/api/materials/essential', {
+      method: 'POST',
+      body: formData
+    })
+
+    alert('Material baru beserta gambar berhasil disimpan.')
+    closeMaterialForm()
+    
+    // Optimistic UI update
+    inventoryData.value.push({
+      id: res.id,
+      name: materialForm.name,
+      part_number: materialForm.part_number,
+      satuan: materialForm.unit,
+      current_stock: materialForm.current_stock,
+      min_stock: 0,
+      category: 'essential'
+    })
+  } catch (error) {
+    console.error('Submit error:', error)
+    alert('Terjadi kesalahan saat menyimpan material.')
+  }
 }
 
 // State Data: Material Essential (siap dihubungkan ke API)

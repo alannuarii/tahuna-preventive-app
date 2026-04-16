@@ -18,9 +18,9 @@ async function runSQL() {
   const client = await pool.connect()
   try {
     const res = await client.query(`
-      SELECT table_name
-      FROM information_schema.tables
-      WHERE table_schema = 'public';
+      SELECT column_name, data_type 
+      FROM information_schema.columns 
+      WHERE table_name = 'materials';
     `)
     console.log("Existing Tables:")
     res.rows.forEach(r => console.log(r.table_name))

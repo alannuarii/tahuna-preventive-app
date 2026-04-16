@@ -28,6 +28,7 @@ async function runSQL() {
         status VARCHAR(50) NOT NULL,
         current_stock NUMERIC DEFAULT 0,
         notes TEXT,
+        spesification TEXT,
         images TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

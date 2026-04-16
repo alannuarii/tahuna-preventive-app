@@ -7,5 +7,7 @@
       </div>
     </main>
     <AppMenu />
+    <!-- Portal target for overlays (camera, modals) that need to escape overflow containers -->
+    <div id="teleports"></div>
   </div>
 </template>
