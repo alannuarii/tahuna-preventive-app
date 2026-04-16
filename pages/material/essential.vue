@@ -230,8 +230,11 @@
             </div>
 
             <div class="flex justify-end gap-3 mt-6 pt-5" style="border-top: 1px solid var(--glass-border);">
-              <button type="button" class="btn btn-secondary" @click="closeMaterialForm">Batal</button>
-              <button type="submit" class="btn btn-primary" :title="(!materialForm.isCommon && materialForm.engines.length === 0) ? 'Pilih minimal satu mesin' : ''" :disabled="!materialForm.isCommon && materialForm.engines.length === 0">Simpan Material</button>
+              <button type="button" class="btn btn-secondary" @click="closeMaterialForm" :disabled="isUploading">Batal</button>
+              <button type="submit" class="btn btn-primary flex items-center" :title="(!materialForm.isCommon && materialForm.engines.length === 0) ? 'Pilih minimal satu mesin' : ''" :disabled="(!materialForm.isCommon && materialForm.engines.length === 0) || isUploading">
+                <span v-if="isUploading" class="spinner spinner-sm mr-2" style="border-color: rgba(255,255,255,0.3); border-top-color: white;"></span>
+                {{ isUploading ? 'Mengeksekusi...' : 'Simpan Material' }}
+              </button>
             </div>
           </div>
         </form>
@@ -412,6 +415,8 @@
 import { engines } from '~/utils/pmCycles'
 
 const isCameraOpen = ref(false)
+const isUploading = ref(false)
+const isFetching = ref(true)
 
 const handleCameraCapture = (file: File) => {
   materialForm.imageFiles.push(file)
@@ -523,6 +528,9 @@ const removeImage = (idx: number) => {
 }
 
 const submitMaterial = async () => {
+  if (isUploading.value) return
+  isUploading.value = true
+
   try {
     const formData = new FormData()
     formData.append('name', materialForm.name)
@@ -547,7 +555,6 @@ const submitMaterial = async () => {
       body: formData
     })
 
-    alert('Material baru beserta gambar berhasil disimpan.')
     closeMaterialForm()
     
     // Optimistic UI update
@@ -558,18 +565,36 @@ const submitMaterial = async () => {
       satuan: materialForm.unit,
       current_stock: materialForm.current_stock,
       min_stock: 0,
-      category: 'essential'
+      category: 'Essential'
     })
+    
+    alert('Material baru beserta gambar berhasil disimpan.')
   } catch (error) {
     console.error('Submit error:', error)
     alert('Terjadi kesalahan saat menyimpan material.')
+  } finally {
+    isUploading.value = false
   }
 }
 
 // State Data: Material Essential (siap dihubungkan ke API)
 const inventoryData = ref<any[]>([])
-
 const txnData = ref<any[]>([])
+
+onMounted(async () => {
+  isFetching.value = true
+  try {
+    const res: any = await $fetch('/api/materials/essential')
+    if (res && res.success) {
+      inventoryData.value = res.inventory || []
+      txnData.value = res.transactions || []
+    }
+  } catch(e) {
+    console.error('Error fetching essential data:', e)
+  } finally {
+    isFetching.value = false
+  }
+})
 
 // ===== STOCK TAB =====
 const stockSearch = ref('')

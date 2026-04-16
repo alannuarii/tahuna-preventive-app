@@ -32,7 +32,8 @@
     </div>
 
     <template v-else>
-      <!-- Hero Product Section (Shopee-like layout) -->
+      <template v-if="!isEditing">
+        <!-- Hero Product Section (Shopee-like layout) -->
       <div class="material-hero-card">
         <div class="hero-grid">
           
@@ -56,7 +57,20 @@
 
           <!-- Column 2: Product Info -->
           <div class="hero-info">
-            <h2 class="material-name">{{ material.name || material.nama }}</h2>
+            <div class="flex justify-between items-start mb-4">
+              <h2 class="material-name m-0">{{ material.name || material.nama }}</h2>
+              
+              <!-- Action Buttons -->
+              <div v-if="itemType === 'essential'" class="flex gap-2">
+                <button class="btn btn-secondary btn-sm" style="padding: 6px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.05);" @click="handleEdit" title="Edit Material">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="btn btn-sm" style="padding: 6px; border: 1px solid #ef4444; color: #ef4444; background: rgba(239,68,68,0.1);" @click="handleDelete" :disabled="isDeleting" title="Hapus Material">
+                  <svg v-if="!isDeleting" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                  <span v-else class="spinner spinner-xs" style="border-color: rgba(239,68,68,0.3); border-top-color: #ef4444; width: 14px; height: 14px; border-width: 2px;"></span>
+                </button>
+              </div>
+            </div>
             
             <div class="material-meta-block mb-6" style="border-bottom: 1px dashed var(--glass-border); padding-bottom: 16px;">
               <div class="meta-item">
@@ -189,11 +203,122 @@
           </div>
         </div>
       </div>
+      </template>
+
+      <!-- EDIT MATERIAL FORM -->
+      <template v-else>
+        <div class="flex items-center gap-4 mb-6 mt-2">
+          <button class="btn-back" @click="closeEditForm" aria-label="Kembali">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"/>
+              <polyline points="12 19 5 12 12 5"/>
+            </svg>
+          </button>
+          <h1 class="home-title m-0" style="font-size: 1.5rem;">Edit Data Material</h1>
+        </div>
+
+        <form @submit.prevent="submitEditMaterial" class="card">
+          <div class="card-body">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div class="form-group mb-0">
+                <label class="form-label">Nama Material <span class="text-danger">*</span></label>
+                <input type="text" v-model="materialForm.name" class="form-input" required placeholder="Contoh: Majun Putih" />
+              </div>
+              <div class="form-group mb-0">
+                <label class="form-label">Part Number</label>
+                <input type="text" v-model="materialForm.part_number" class="form-input" placeholder="Contoh: MJN-001 (Opsional)" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div class="form-group mb-0">
+                <label class="form-label">Satuan <span class="text-danger">*</span></label>
+                <input type="text" v-model="materialForm.unit" class="form-input" required placeholder="Contoh: Kg, Pcs, Liter" />
+              </div>
+              <div class="form-group mb-0">
+                <label class="form-label">Status <span class="text-danger">*</span></label>
+                <select v-model="materialForm.status" class="form-input" required>
+                  <option value="Baru">Baru</option>
+                  <option value="Bekas">Bekas</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group mb-6">
+              <label class="form-label">Spesifikasi Material</label>
+              <textarea v-model="materialForm.spesification" class="form-input" rows="3" placeholder="Detail spesifikasi, ukuran, parameter teknis (opsional)"></textarea>
+            </div>
+
+            <div class="form-group mb-6">
+              <label class="form-label">Catatan (Notes)</label>
+              <textarea v-model="materialForm.notes" class="form-input" rows="3" placeholder="Tambahkan catatan penting terkait material ini (opsional)"></textarea>
+            </div>
+
+            <div v-if="itemType === 'essential'" class="form-group mb-6">
+              <label class="form-label">Jenis Mesin <span class="text-danger">*</span></label>
+              <div class="engine-selection-box p-4" style="background: rgba(0,0,0,0.1); border-radius: 8px; border: 1px solid var(--glass-border);">
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <label class="custom-checkbox flex items-center gap-2 cursor-pointer p-2 rounded hover:bg-white/5" style="border: 1px solid rgba(255,255,255,0.05); background: rgba(52, 211, 153, 0.05);">
+                    <input type="checkbox" v-model="materialForm.isCommon" @change="handleCommonToggle" style="width: 16px; height: 16px;" />
+                    <span class="text-sm font-medium text-emerald-400">Common</span>
+                  </label>
+
+                  <label v-for="engine in availableEngines" :key="engine.id" class="custom-checkbox flex items-center gap-2 cursor-pointer p-2 rounded hover:bg-white/5" style="border: 1px solid rgba(255,255,255,0.05);">
+                    <input type="checkbox" :value="engine.value" v-model="materialForm.engines" style="width: 16px; height: 16px;" />
+                    <span class="text-sm font-medium">{{ engine.label }}</span>
+                  </label>
+                </div>
+                <small class="text-muted block mt-3">Keterangan: Common berarti material umum yang tidak terikat pada mesin manapun.</small>
+              </div>
+            </div>
+
+            <div class="form-group mb-6">
+              <label class="form-label">Foto Material</label>
+              
+              <!-- Existing Images (jika ada yg ingin dihapus saat edit) -->
+              <div v-if="materialForm.existingImages.length > 0" class="mb-3">
+                <small class="text-muted mb-2 block">Gambar Tersimpan:</small>
+                <div class="flex gap-3 flex-wrap">
+                  <div v-for="(img, idx) in materialForm.existingImages" :key="idx" style="position: relative; width: 80px; height: 80px; border-radius: 8px; border: 1px solid var(--glass-border); flex-shrink: 0;">
+                    <img :src="img" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block;" />
+                    <button type="button" @click.prevent="removeExistingImage(idx)" style="position: absolute; top: 4px; right: 4px; background-color: #ef4444; color: #ffffff; border: 1px solid #dc2626; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; padding: 0;" aria-label="Hapus Foto" title="Hapus foto ini">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3 mt-4">
+                <input type="file" ref="fileInput" @change="handleFileUpload" multiple accept="image/*" class="form-input" style="padding: 10px; flex: 1;" />
+              </div>
+              <div v-if="materialForm.imageUrls.length > 0" class="mt-3 flex gap-3 flex-wrap">
+                <div v-for="(img, idx) in materialForm.imageUrls" :key="idx" style="position: relative; width: 80px; height: 80px; border-radius: 8px; border: 1px solid var(--glass-border); flex-shrink: 0;">
+                  <img :src="img" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block;" />
+                  <button type="button" @click.prevent="removeNewImage(idx)" style="position: absolute; top: 4px; right: 4px; background-color: #ef4444; color: #ffffff; border: 1px solid #dc2626; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; padding: 0;" aria-label="Hapus Foto" title="Hapus foto ini">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  </button>
+                </div>
+              </div>
+              <small class="text-muted block mt-2">Boleh lebih dari 1 foto. Kosongkan jika tidak ingin menambah foto.</small>
+            </div>
+
+            <div class="flex justify-end gap-3 mt-6 pt-5" style="border-top: 1px solid var(--glass-border);">
+              <button type="button" class="btn btn-secondary" @click="closeEditForm" :disabled="isSubmittingEdit">Batal</button>
+              <button type="submit" class="btn btn-primary flex items-center" :disabled="isSubmittingEdit">
+                <span v-if="isSubmittingEdit" class="spinner spinner-sm mr-2" style="border-color: rgba(255,255,255,0.3); border-top-color: white;"></span>
+                {{ isSubmittingEdit ? 'Menyimpan...' : 'Perbarui Material' }}
+              </button>
+            </div>
+          </div>
+        </form>
+      </template>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
+import { engines } from '~/utils/pmCycles'
 const route = useRoute()
 const router = useRouter()
 const itemId = route.params.id as string
@@ -218,9 +343,189 @@ const scrollToTxn = () => {
   // In a real app we might open the modal here
 }
 
+const isDeleting = ref(false)
+const isEditing = ref(false)
+const isSubmittingEdit = ref(false)
+
+const handleEdit = () => {
+  // Populate form with current material data
+  materialForm.name = material.value.name || material.value.nama || ''
+  materialForm.part_number = material.value.part_number || ''
+  materialForm.unit = material.value.unit || material.value.satuan || ''
+  materialForm.status = material.value.status || 'Baru'
+  materialForm.spesification = material.value.spesification || ''
+  materialForm.notes = material.value.notes || ''
+  
+  if (material.value.isCommon === false || material.value.isCommon === 'false') {
+    materialForm.isCommon = false
+  } else {
+    materialForm.isCommon = true
+  }
+
+  // Pre-fill engines safely
+  materialForm.engines = []
+  if (material.value.engines) {
+    if (Array.isArray(material.value.engines)) {
+      materialForm.engines = material.value.engines
+    } else if (typeof material.value.engines === 'string') {
+      materialForm.engines = material.value.engines.split(',').map((e:string) => e.trim())
+    }
+  }
+
+  // Pre-fill existing images safely
+  materialForm.existingImages = []
+  if (images.value && images.value.length > 0 && images.value[0] !== PLACEHOLDER) {
+    materialForm.existingImages = [...images.value]
+  }
+
+  materialForm.imageUrls.forEach(url => URL.revokeObjectURL(url))
+  materialForm.imageUrls = []
+  materialForm.imageFiles = []
+
+  isEditing.value = true
+}
+
+const closeEditForm = () => {
+  isEditing.value = false
+}
+
+const handleDelete = async () => {
+  const confirmMessage = `Apakah Anda yakin ingin menghapus material ini?\n\nPerhatian: Data material dan riwayat transaksi akan dihapus secara permanen dari database lokal, beserta SEMUA GAMBAR fisiknya yang tersimpan di server cloud AuraStorage.`
+  if (confirm(confirmMessage)) {
+    isDeleting.value = true
+    try {
+      await $fetch(`/api/materials/essential/${itemId}`, { method: 'DELETE' })
+      alert('Data material berhasil dihapus.')
+      router.push('/material/essential') // Kembali ke daftar list
+    } catch (e: any) {
+      console.error('Delete error:', e)
+      alert('Gagal menghapus material.')
+    } finally {
+      isDeleting.value = false
+    }
+  }
+}
+
+const deleteFromAuraStorage = async (url: string) => {
+   // Already handled in Backend
+}
+
 const toggleTxnSort = () => {
   txnSortDesc.value = !txnSortDesc.value
 }
+
+// ==== Form Editing Logic ====
+const availableEngines = computed(() => {
+  const groups: Record<string, number[]> = {}
+  engines.forEach(e => {
+    if (!groups[e.mesin]) groups[e.mesin] = []
+    groups[e.mesin].push(e.unit)
+  })
+  
+  return Object.entries(groups).map(([mesin, units], idx) => {
+    const unitsStr = units.length > 1 
+      ? units.slice(0, -1).join(', ') + ' & ' + units[units.length - 1] 
+      : units[0]
+    return {
+      id: idx + 1,
+      label: `${mesin} (Unit ${unitsStr})`,
+      value: units.join(',')
+    }
+  })
+})
+
+const materialForm = reactive({
+  name: '',
+  part_number: '',
+  unit: '',
+  status: 'Baru',
+  notes: '',
+  spesification: '',
+  isCommon: true,
+  engines: [] as string[],
+  existingImages: [] as string[],
+  imageUrls: [] as string[],
+  imageFiles: [] as File[]
+})
+
+const handleCommonToggle = () => {
+  if (materialForm.isCommon) {
+    materialForm.engines = []
+  }
+}
+
+watch(() => materialForm.engines, (val) => {
+  if (val.length > 0) {
+    materialForm.isCommon = false
+  } else {
+    materialForm.isCommon = true
+  }
+}, { deep: true })
+
+const removeExistingImage = (idx: number) => {
+  materialForm.existingImages.splice(idx, 1)
+}
+
+const removeNewImage = (idx: number) => {
+  materialForm.imageFiles.splice(idx, 1)
+  URL.revokeObjectURL(materialForm.imageUrls[idx])
+  materialForm.imageUrls.splice(idx, 1)
+}
+
+const handleFileUpload = (e: Event) => {
+  const target = e.target as HTMLInputElement
+  if (!target.files) return
+  
+  Array.from(target.files).forEach(file => {
+    materialForm.imageFiles.push(file)
+    materialForm.imageUrls.push(URL.createObjectURL(file))
+  })
+  target.value = ''
+}
+
+const submitEditMaterial = async () => {
+  if (isSubmittingEdit.value) return
+  isSubmittingEdit.value = true
+
+  try {
+    const formData = new FormData()
+    formData.append('name', materialForm.name)
+    formData.append('part_number', materialForm.part_number)
+    formData.append('unit', materialForm.unit)
+    formData.append('status', materialForm.status)
+    formData.append('notes', materialForm.notes)
+    formData.append('spesification', materialForm.spesification)
+    formData.append('isCommon', materialForm.isCommon.toString())
+    formData.append('existing_images', materialForm.existingImages.join(','))
+    
+    materialForm.engines.forEach(engine => {
+      formData.append('engines', engine)
+    })
+    
+    materialForm.imageFiles.forEach(file => {
+       formData.append('images', file)
+    })
+
+    await $fetch(`/api/materials/essential/${itemId}`, {
+      method: 'PUT' as any,
+      body: formData
+    })
+
+    alert('Perubahan material berhasil disimpan.')
+    
+    // Reload full data to display
+    isEditing.value = false
+    loading.value = true
+    await loadEssentialMockData()
+    loading.value = false
+  } catch (error) {
+    console.error('Edit error:', error)
+    alert('Terjadi kesalahan saat memperbarui material.')
+  } finally {
+    isSubmittingEdit.value = false
+  }
+}
+// ====================
 
 const sortedTxns = computed(() => {
   const data = [...txns.value]
