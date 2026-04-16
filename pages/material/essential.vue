@@ -218,12 +218,12 @@
                   <span class="hidden md:inline text-sm font-semibold whitespace-nowrap">Ambil Foto</span>
                 </button>
               </div>
-              <div v-if="materialForm.imageUrls.length > 0" class="mt-3 flex gap-2 flex-wrap">
-                <div v-for="(img, idx) in materialForm.imageUrls" :key="idx" class="relative group" style="width: 80px; height: 80px; border-radius: 8px; overflow: hidden; border: 1px solid var(--glass-border);">
-                  <img :src="img" style="width: 100%; height: 100%; object-fit: cover;" />
-                  <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer text-white text-xs" @click="removeImage(idx)">
-                    Hapus
-                  </div>
+              <div v-if="materialForm.imageUrls.length > 0" class="mt-3 flex gap-3 flex-wrap">
+                <div v-for="(img, idx) in materialForm.imageUrls" :key="idx" style="position: relative; width: 80px; height: 80px; border-radius: 8px; border: 1px solid var(--glass-border); flex-shrink: 0;">
+                  <img :src="img" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block;" />
+                  <button type="button" @click.prevent="removeImage(idx)" style="position: absolute; top: 4px; right: 4px; background-color: #ef4444; color: #ffffff; border: 1px solid #dc2626; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; padding: 0;" aria-label="Hapus Foto" title="Hapus foto ini">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  </button>
                 </div>
               </div>
               <small class="text-muted block mt-2">Boleh lebih dari 1 foto. Kosongkan jika ingin menggunakan gambar placeholder.</small>

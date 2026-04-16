@@ -11,11 +11,22 @@
 
       <span class="camera-title">{{ title }}</span>
 
-      <button class="camera-ctrl-btn" @click="switchCamera" aria-label="Ganti Kamera">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 9V5a2 2 0 0 1 2-2h3" /><path d="M21 9V5a2 2 0 0 0-2-2h-3" />
-          <path d="M3 15v4a2 2 0 0 0 2 2h3" /><path d="M21 15v4a2 2 0 0 1-2 2h-3" />
-          <rect x="7" y="7" width="10" height="10" rx="2" />
+      <button
+        class="camera-ctrl-btn"
+        :class="{ 'torch-active': isTorchOn }"
+        @click="toggleTorch"
+        :disabled="facingMode !== 'environment'"
+        :title="facingMode !== 'environment' ? 'Flash hanya tersedia pada kamera belakang' : (isTorchOn ? 'Matikan Flash' : 'Aktifkan Flash')"
+        aria-label="Toggle Flash"
+      >
+        <!-- Flash On icon -->
+        <svg v-if="isTorchOn" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+          <path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13L13 2Z"/>
+        </svg>
+        <!-- Flash Off icon -->
+        <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13L13 2Z"/>
+          <line x1="2" y1="2" x2="22" y2="22"/>
         </svg>
       </button>
     </div>
@@ -64,11 +75,7 @@
 
     <!-- Footer Controls -->
     <div class="camera-footer">
-      <button class="camera-ctrl-btn secondary" @click="closeCamera" aria-label="Batal">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-        </svg>
-      </button>
+      <div class="camera-ctrl-btn secondary" style="visibility: hidden;"></div>
 
       <!-- Shutter -->
       <button
@@ -120,6 +127,7 @@ const facingMode = ref('environment')
 const cameraError = ref('')
 const isCapturing = ref(false)
 const isFlashing = ref(false)
+const isTorchOn = ref(false)
 
 watch(() => props.isOpen, async (newVal) => {
   if (newVal) {
@@ -171,9 +179,24 @@ const stopCamera = () => {
     stream.value.getTracks().forEach(t => t.stop())
     stream.value = null
   }
+  isTorchOn.value = false
+}
+
+const toggleTorch = async () => {
+  if (facingMode.value !== 'environment' || !stream.value) return
+  const track = stream.value.getVideoTracks()[0]
+  if (!track) return
+  try {
+    const newState = !isTorchOn.value
+    await track.applyConstraints({ advanced: [{ torch: newState }] })
+    isTorchOn.value = newState
+  } catch (e) {
+    console.warn('Torch not supported on this device:', e)
+  }
 }
 
 const switchCamera = () => {
+  isTorchOn.value = false
   facingMode.value = facingMode.value === 'environment' ? 'user' : 'environment'
   startCamera()
 }
@@ -408,6 +431,20 @@ onBeforeUnmount(() => {
 
 .camera-ctrl-btn.secondary {
   background: rgba(255, 255, 255, 0.12);
+}
+
+.camera-ctrl-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.camera-ctrl-btn.torch-active {
+  background: #facc15;
+  color: #000;
+}
+
+.camera-ctrl-btn.torch-active:hover {
+  background: #fde047;
 }
 
 /* ── Shutter button ───────────────────────────────── */
