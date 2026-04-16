@@ -897,7 +897,7 @@ const closeTxnModal = () => {
 
 const submitTxn = async () => {
   if (!txnForm.material_id || !txnForm.quantity) {
-    alert('Harap isi material dan jumlah!')
+    showAlert('Harap isi material dan jumlah!', 'warning')
     return
   }
   isSubmittingTxn.value = true
@@ -915,10 +915,10 @@ const submitTxn = async () => {
       }
     } else {
       const err = await res.json()
-      alert(err.statusMessage || 'Gagal menyimpan transaksi')
+      showAlert(err.statusMessage || 'Gagal menyimpan transaksi', 'error')
     }
   } catch(e) {
-    alert('Gagal menyimpan transaksi')
+    showAlert('Gagal menyimpan transaksi', 'error')
   } finally {
     isSubmittingTxn.value = false
   }
@@ -1065,7 +1065,7 @@ const calculatePlanning = async () => {
     }
   } catch (err) {
     console.error('Planning calculation error:', err)
-    alert('Gagal menghitung perencanaan material')
+    showAlert('Gagal menghitung perencanaan material', 'error')
   } finally {
     planLoading.value = false
   }

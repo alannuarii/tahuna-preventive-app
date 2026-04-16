@@ -189,7 +189,7 @@ const deleteRealization = async () => {
       showDeleteModal.value = false
       router.push('/realisasi')
     } else {
-      alert('Gagal menghapus data')
+      showAlert('Gagal menghapus data', 'error')
     }
   } finally {
     deleting.value = false

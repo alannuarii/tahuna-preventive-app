@@ -342,7 +342,7 @@ onMounted(async () => {
         router.replace('/realisasi')
       }
     } catch {
-      alert('Gagal memuat data')
+      showAlert('Gagal memuat data', 'error')
       router.replace('/realisasi')
     } finally {
       loadingData.value = false
@@ -438,7 +438,7 @@ const applyParseResult = async () => {
 // ===== SUBMIT =====
 const handleSubmit = async () => {
   if (!form.tanggal_pelaksanaan || !form.unit || !form.jenis_pm) {
-    alert('Mohon lengkapi semua field yang wajib diisi')
+    showAlert('Mohon lengkapi semua field yang wajib diisi', 'warning')
     return
   }
 
@@ -473,7 +473,7 @@ const handleSubmit = async () => {
     if (res.ok) {
       router.push('/realisasi')
     } else {
-      alert('Gagal menyimpan data')
+      showAlert('Gagal menyimpan data', 'error')
     }
   } finally {
     submitting.value = false

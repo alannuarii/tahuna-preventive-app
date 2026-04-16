@@ -44,7 +44,7 @@ const route = useRoute()
 
 onMounted(() => {
   if (route.query.error) {
-    alert('Login failed: ' + route.query.error)
+    showAlert('Login failed: ' + route.query.error, 'error')
   }
 })
 </script>

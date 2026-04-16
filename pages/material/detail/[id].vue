@@ -1,7 +1,7 @@
 <template>
   <div class="animate-fade-in">
     <!-- Header -->
-    <div class="detail-page-header">
+    <div class="detail-page-header" v-if="!isEditing">
       <button class="btn-back" @click="goBack" aria-label="Kembali">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <line x1="19" y1="12" x2="5" y2="12"/>
@@ -291,6 +291,10 @@
 
               <div class="flex items-center gap-3 mt-4">
                 <input type="file" ref="fileInput" @change="handleFileUpload" multiple accept="image/*" class="form-input" style="padding: 10px; flex: 1;" />
+                <button type="button" @click="isCameraOpen = true" class="btn btn-secondary flex items-center justify-center gap-2" style="padding: 10px; flex-shrink: 0; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.05);" title="Ambil Foto Secara Langsung">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                  <span class="hidden md:inline text-sm font-semibold whitespace-nowrap">Ambil Foto</span>
+                </button>
               </div>
               <div v-if="materialForm.imageUrls.length > 0" class="mt-3 flex gap-3 flex-wrap">
                 <div v-for="(img, idx) in materialForm.imageUrls" :key="idx" style="position: relative; width: 80px; height: 80px; border-radius: 8px; border: 1px solid var(--glass-border); flex-shrink: 0;">
@@ -314,6 +318,8 @@
         </form>
       </template>
     </template>
+
+    <CameraCapture v-model:isOpen="isCameraOpen" @capture="handleCameraCapture" title="FOTO MATERIAL" />
   </div>
 </template>
 
@@ -346,6 +352,12 @@ const scrollToTxn = () => {
 const isDeleting = ref(false)
 const isEditing = ref(false)
 const isSubmittingEdit = ref(false)
+const isCameraOpen = ref(false)
+
+const handleCameraCapture = (file: File) => {
+  materialForm.imageFiles.push(file)
+  materialForm.imageUrls.push(URL.createObjectURL(file))
+}
 
 const handleEdit = () => {
   // Populate form with current material data
@@ -390,16 +402,16 @@ const closeEditForm = () => {
 }
 
 const handleDelete = async () => {
-  const confirmMessage = `Apakah Anda yakin ingin menghapus material ini?\n\nPerhatian: Data material dan riwayat transaksi akan dihapus secara permanen dari database lokal, beserta SEMUA GAMBAR fisiknya yang tersimpan di server cloud AuraStorage.`
-  if (confirm(confirmMessage)) {
+  const confirmMessage = `Data material dan riwayat transaksi akan dihapus secara permanen dari database lokal, beserta SEMUA GAMBAR fisiknya yang tersimpan di server cloud AuraStorage.`
+  if (await showConfirm(confirmMessage, 'Hapus Material Ini?')) {
     isDeleting.value = true
     try {
       await $fetch(`/api/materials/essential/${itemId}`, { method: 'DELETE' })
-      alert('Data material berhasil dihapus.')
+      showAlert('Data material berhasil dihapus.', 'success')
       router.push('/material/essential') // Kembali ke daftar list
     } catch (e: any) {
       console.error('Delete error:', e)
-      alert('Gagal menghapus material.')
+      showAlert('Gagal menghapus material.', 'error')
     } finally {
       isDeleting.value = false
     }
@@ -511,7 +523,7 @@ const submitEditMaterial = async () => {
       body: formData
     })
 
-    alert('Perubahan material berhasil disimpan.')
+    showAlert('Perubahan material berhasil disimpan.', 'success')
     
     // Reload full data to display
     isEditing.value = false
@@ -520,7 +532,7 @@ const submitEditMaterial = async () => {
     loading.value = false
   } catch (error) {
     console.error('Edit error:', error)
-    alert('Terjadi kesalahan saat memperbarui material.')
+    showAlert('Terjadi kesalahan saat memperbarui material.', 'error')
   } finally {
     isSubmittingEdit.value = false
   }

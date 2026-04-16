@@ -233,7 +233,7 @@
               <button type="button" class="btn btn-secondary" @click="closeMaterialForm" :disabled="isUploading">Batal</button>
               <button type="submit" class="btn btn-primary flex items-center" :title="(!materialForm.isCommon && materialForm.engines.length === 0) ? 'Pilih minimal satu mesin' : ''" :disabled="(!materialForm.isCommon && materialForm.engines.length === 0) || isUploading">
                 <span v-if="isUploading" class="spinner spinner-sm mr-2" style="border-color: rgba(255,255,255,0.3); border-top-color: white;"></span>
-                {{ isUploading ? 'Mengeksekusi...' : 'Simpan Material' }}
+                {{ isUploading ? 'Menyimpan...' : 'Simpan Material' }}
               </button>
             </div>
           </div>
@@ -568,10 +568,10 @@ const submitMaterial = async () => {
       category: 'Essential'
     })
     
-    alert('Material baru beserta gambar berhasil disimpan.')
+    showAlert('Material baru beserta gambar berhasil disimpan.', 'success')
   } catch (error) {
     console.error('Submit error:', error)
-    alert('Terjadi kesalahan saat menyimpan material.')
+    showAlert('Terjadi kesalahan saat menyimpan material.', 'error')
   } finally {
     isUploading.value = false
   }
@@ -667,7 +667,7 @@ const closeTxnModal = () => {
 }
 
 const submitTxn = () => {
-  alert('Simulasi integrasi mockup: Transaksi essential berhasil disimpan, namun data hanya bersifat statis mockup untuk saat ini.')
+  showAlert('Transaksi essential berhasil disimpan (Data saat ini bersifat statis mockup).', 'success')
   closeTxnModal()
 }
 
