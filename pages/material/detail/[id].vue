@@ -205,10 +205,9 @@ const material = ref<any>(null)
 const txns = ref<any[]>([])
 const txnSortDesc = ref(true) // Terbaru
 
-// Default image placeholder
-const images = ref([
-  `/images/material-placeholder.png`
-])
+// Default image placeholder — diisi setelah fetch
+const PLACEHOLDER = `/images/material-placeholder.png`
+const images = ref<string[]>([PLACEHOLDER])
 const activeImageIdx = ref(0)
 
 // Helper logic
@@ -276,19 +275,24 @@ onMounted(async () => {
 })
 
 const loadEssentialMockData = async () => {
-  // Simulate delay
-  await new Promise(r => setTimeout(r, 600))
-  
-  // Re-define state for API data
-  // try {
-  //   const response = await $fetch(`/api/materials/essential/${itemId}`)
-  //   material.value = response.data
-  //   txns.value = response.transactions
-  // } catch (e) {}
+  try {
+    const res: any = await $fetch(`/api/materials/essential/${itemId}`)
+    material.value = res.data
+    txns.value = res.transactions || []
 
-  // Sementara dibiarkan kosong
-  material.value = null
-  txns.value = []
+    // Set up image array from AuraStorage URLs
+    if (res.data.images && res.data.images.length > 0) {
+      images.value = res.data.images
+    } else {
+      images.value = [PLACEHOLDER]
+    }
+    activeImageIdx.value = 0
+  } catch (e: any) {
+    console.error('Error loading essential material:', e)
+    material.value = null
+    txns.value = []
+    images.value = [PLACEHOLDER]
+  }
 }
 
 const loadFastMovingData = async () => {
