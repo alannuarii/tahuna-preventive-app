@@ -39,8 +39,14 @@
           
           <!-- Column 1: Image Carousel -->
           <div class="hero-gallery">
-            <div class="main-image-wrapper">
-              <img :src="images[activeImageIdx]" alt="Gambar Material" class="main-image" />
+            <div class="main-image-wrapper" style="position: relative;">
+              <button v-if="images.length > 1" @click="prevImage" class="image-nav left" aria-label="Gambar sebelumnya">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+              </button>
+              <img :src="images[activeImageIdx]" alt="Gambar Material" class="main-image" @touchstart="handleTouchStart" @touchend="handleTouchEnd" />
+              <button v-if="images.length > 1" @click="nextImage" class="image-nav right" aria-label="Gambar selanjutnya">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
             </div>
             <div class="thumbnail-list" v-if="images.length > 1">
               <div 
@@ -73,38 +79,32 @@
             </div>
             
             <div class="material-meta-block mb-6" style="border-bottom: 1px dashed var(--glass-border); padding-bottom: 16px;">
-              <div class="meta-item">
+              <div class="meta-item mb-6">
                 <span class="meta-label">Part Number</span>
-                <span class="meta-value part-number" style="display: inline-block; margin-top: 4px;">{{ material.part_number || '-' }}</span>
+                <span class="meta-value text-sm mt-1" style="white-space: pre-line; line-height: 1.5; color: var(--gray-600); font-weight: normal;">{{ material.part_number || '-' }}</span>
               </div>
-              <div v-if="material.notes" class="meta-item mt-4 p-3" style="background: rgba(0,0,0,0.03); border-radius: 6px; border-left: 3px solid var(--primary-400);">
+              <div v-if="material.spesification" class="meta-item mb-6">
+                <span class="meta-label">Spesifikasi</span>
+                <span class="meta-value text-sm mt-1" style="white-space: pre-line; line-height: 1.5; color: var(--gray-600); font-weight: normal;">{{ material.spesification }}</span>
+              </div>
+              <div v-if="material.enginesText" class="meta-item mb-6">
+                <span class="meta-label">Mesin</span>
+                <span class="meta-value text-sm mt-1" style="white-space: pre-line; line-height: 1.5; color: var(--gray-600); font-weight: normal;">{{ getMachineNames(material.enginesText) }}</span>
+              </div>
+              <div v-if="material.notes" class="meta-item">
                 <span class="meta-label">Catatan</span>
                 <span class="meta-value text-sm mt-1" style="white-space: pre-line; line-height: 1.5; color: var(--gray-600); font-weight: normal;">{{ material.notes }}</span>
               </div>
             </div>
 
-            <div class="stock-box">
-              <div class="stock-header">
-                <span class="stock-label">Stok Tersedia</span>
-                <span :class="['stock-badge', getStockLevel(material.current_stock)]">
-                  {{ formatNumber(material.current_stock) }} {{ material.satuan }}
-                </span>
-              </div>
-              <div class="stock-bar-wrapper">
-                <div class="stock-bar-track">
-                  <div class="stock-bar-fill" :style="{ width: Math.min((material.current_stock / 100) * 100, 100) + '%' }"></div>
-                </div>
-                <div class="flex justify-between mt-1 px-1">
-                  <span class="text-xs text-muted">0</span>
-                </div>
-              </div>
+            <div class="stock-box flex justify-between items-center px-5 py-4">
+              <span class="stock-label m-0 text-gray-400">Stok Tersedia</span>
+              <span :class="['stock-badge', getStockLevel(material.current_stock)]" style="font-size: 1rem; padding: 0.4rem 1rem;">
+                {{ formatNumber(material.current_stock) }} <span class="text-xs ml-1">{{ material.satuan }}</span>
+              </span>
             </div>
 
-            <div class="detail-info-list mt-6">
-              <div class="detail-info-row" v-if="material.enginesText">
-                <span class="detail-info-label">Dapat Digunakan di Unit</span>
-                <span class="detail-info-value">{{ material.enginesText }}</span>
-              </div>
+            <div class="detail-info-list mt-6" v-if="material.drumText || material.estHabis">
               <div class="detail-info-row" v-if="material.drumText">
                 <span class="detail-info-label">Estimasi Drum</span>
                 <span class="detail-info-value">{{ material.drumText }}</span>
@@ -117,9 +117,7 @@
               </div>
             </div>
 
-            <div class="mt-8 flex gap-3 mobile-actions">
-              <button class="btn btn-primary flex-1 no-wrap" @click="scrollToTxn">+ Input Transaksi</button>
-            </div>
+
           </div>
         </div>
       </div>
@@ -343,10 +341,43 @@ const activeImageIdx = ref(0)
 
 // Helper logic
 const goBack = () => router.back()
+
+const prevImage = () => {
+  if (images.value.length <= 1) return
+  activeImageIdx.value = activeImageIdx.value === 0 ? images.value.length - 1 : activeImageIdx.value - 1
+}
+
+const nextImage = () => {
+  if (images.value.length <= 1) return
+  activeImageIdx.value = activeImageIdx.value === images.value.length - 1 ? 0 : activeImageIdx.value + 1
+}
+
+const touchStartX = ref(0)
+const handleTouchStart = (e: TouchEvent) => { touchStartX.value = e.changedTouches[0].screenX }
+const handleTouchEnd = (e: TouchEvent) => {
+  const touchEndX = e.changedTouches[0].screenX
+  if (touchStartX.value - touchEndX > 50) nextImage() // swipe left
+  if (touchEndX - touchStartX.value > 50) prevImage() // swipe right
+}
+
+const getMachineNames = (val: string) => {
+  if (!val || val === 'Common') return 'Common'
+  const unitNumbers = val.split(',').map(v => v.trim()).filter(Boolean)
+  const names = new Set<string>()
+  unitNumbers.forEach(uStr => {
+    const eng = engines.find(e => e.unit.toString() === uStr)
+    if (eng) names.add(eng.mesin)
+    else names.add(uStr) // fallback
+  })
+  if (names.size === 0) return val
+  return Array.from(names).join(', ')
+}
 const scrollToTxn = () => {
-  router.push(`/material/${itemType}`)
-  // Redirect to parent page since this page doesn't have the input form to simplify
-  // In a real app we might open the modal here
+  if (itemType === 'essential') {
+    router.push('/material/essential') // Akan masuk ke tab persediaan, pengguna bisa berpindah ke tab transaksi
+  } else {
+    router.push('/material/fast-moving')
+  }
 }
 
 const isDeleting = ref(false)
@@ -551,8 +582,6 @@ const sortedTxns = computed(() => {
 
 const getStockLevel = (stock: number) => {
   if (stock <= 0) return 'stock-empty'
-  if (stock <= 10) return 'stock-low'
-  if (stock <= 50) return 'stock-medium'
   return 'stock-good'
 }
 
@@ -692,6 +721,33 @@ const loadFastMovingData = async () => {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.image-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s;
+  z-index: 10;
+}
+.image-nav:hover {
+  background: rgba(0,0,0,0.8);
+}
+.image-nav.left {
+  left: 10px;
+}
+.image-nav.right {
+  right: 10px;
 }
 
 .thumbnail-list {

@@ -89,8 +89,8 @@
                 <span class="material-part-number" style="font-family: monospace;">{{ item.part_number || '-' }}</span>
               </div>
               <div class="text-right">
-                <div class="text-xs text-muted">Batas Minimum</div>
-                <span class="text-sm font-semibold">{{ item.min_stock }} {{ item.satuan }}</span>
+                <div class="text-xs text-muted">Mesin</div>
+                <span class="text-sm font-semibold">{{ getMachineNames(item.mesin) }}</span>
               </div>
             </div>
           </div>
@@ -105,8 +105,8 @@
                   <th style="width: 50px;" class="text-center">NO</th>
                   <th>NAMA MATERIAL & KATEGORI</th>
                   <th class="text-center">PART NUMBER</th>
+                  <th class="text-center">MESIN</th>
                   <th class="text-center">STOCK SAAT INI</th>
-                  <th class="text-center">BATAS MINIMUM</th>
                 </tr>
               </thead>
               <tbody>
@@ -119,15 +119,13 @@
                     </div>
                   </td>
                   <td class="text-center text-muted" style="font-family: monospace;">{{ item.part_number || '-' }}</td>
+                  <td class="text-center">{{ getMachineNames(item.mesin) }}</td>
                   <td class="text-center">
                     <div>
                       <span :class="['stock-badge', getStockLevel(item.current_stock)]">
                         {{ formatNumber(item.current_stock) }} {{ item.satuan }}
                       </span>
                     </div>
-                  </td>
-                  <td class="text-center">
-                    <span class="text-muted font-semibold">{{ formatNumber(item.min_stock) }} {{ item.satuan }}</span>
                   </td>
                 </tr>
               </tbody>
@@ -400,7 +398,10 @@
 
             <div class="flex justify-end gap-3 mt-6 pt-5" style="border-top: 1px solid var(--glass-border);">
               <button type="button" class="btn btn-secondary" @click="closeTxnModal">Batal</button>
-              <button type="submit" class="btn btn-primary">Simpan Transaksi</button>
+              <button type="submit" class="btn btn-primary" :disabled="isSubmittingTxn">
+                <span v-if="isSubmittingTxn" class="spinner spinner-sm mr-2" style="border-color: rgba(255,255,255,0.3); border-top-color: white;"></span>
+                {{ isSubmittingTxn ? 'Menyimpan...' : 'Simpan Transaksi' }}
+              </button>
             </div>
           </div>
         </form>
@@ -645,6 +646,7 @@ const filteredTxns = computed(() => {
 
 // ===== TXN MODAL FORM =====
 const showTxnModal = ref(false)
+const isSubmittingTxn = ref(false)
 const txnForm = reactive({
   material_id: '',
   transaction_type: 'OUT',
@@ -666,9 +668,38 @@ const closeTxnModal = () => {
   showTxnModal.value = false
 }
 
-const submitTxn = () => {
-  showAlert('Transaksi essential berhasil disimpan (Data saat ini bersifat statis mockup).', 'success')
-  closeTxnModal()
+const submitTxn = async () => {
+  if (!txnForm.material_id || !txnForm.quantity) {
+    showAlert('Harap isi material dan jumlah!', 'warning')
+    return
+  }
+  isSubmittingTxn.value = true
+  try {
+    const res = await fetch('/api/materials/essential/transactions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(txnForm)
+    })
+    if (res.ok) {
+      closeTxnModal()
+      showAlert('Transaksi berhasil disimpan.', 'success')
+      // Refresh data to update stock and transaction list
+      isFetching.value = true
+      const refreshRes: any = await $fetch('/api/materials/essential')
+      if (refreshRes && refreshRes.success) {
+        inventoryData.value = refreshRes.inventory || []
+        txnData.value = refreshRes.transactions || []
+      }
+    } else {
+      const err = await res.json()
+      showAlert(err.statusMessage || 'Gagal menyimpan transaksi', 'error')
+    }
+  } catch(e) {
+    showAlert('Gagal menyimpan transaksi', 'error')
+  } finally {
+    isSubmittingTxn.value = false
+    isFetching.value = false
+  }
 }
 
 // ===== HELPERS =====
@@ -681,9 +712,19 @@ const formatDate = (dateStr: string) => {
 
 const getStockLevel = (stock: number) => {
   if (stock <= 0) return 'stock-empty'
-  if (stock <= 10) return 'stock-low'
-  if (stock <= 50) return 'stock-medium'
   return 'stock-good'
+}
+
+const getMachineNames = (val: string) => {
+  if (!val || val === 'Common') return 'Common'
+  const unitNumbers = val.split(',').map(v => v.trim()).filter(Boolean)
+  const names = new Set<string>()
+  unitNumbers.forEach(uStr => {
+    const eng = engines.find(e => e.unit.toString() === uStr)
+    if (eng) names.add(eng.mesin)
+  })
+  if (names.size === 0) return val
+  return Array.from(names).join(', ')
 }
 
 // Tab options with icons

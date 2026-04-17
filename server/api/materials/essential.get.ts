@@ -5,15 +5,18 @@ export default defineEventHandler(async (event) => {
     // Ambil data inventory essential
     const inventorySQL = `
       SELECT
-        id,
-        name,
-        part_number,
-        unit AS satuan,
-        current_stock,
+        m.id,
+        m.name,
+        m.part_number,
+        m.unit AS satuan,
+        m.current_stock,
         0 AS min_stock,
-        'Essential' AS category
-      FROM materials_essential
-      ORDER BY name ASC
+        'Essential' AS category,
+        COALESCE(STRING_AGG(e.machine_type, ', '), 'Common') as mesin
+      FROM materials_essential m
+      LEFT JOIN material_essential_engines e ON m.id = e.material_id
+      GROUP BY m.id
+      ORDER BY m.name ASC
     `
     const inventoryRows = await query(inventorySQL, [])
 
