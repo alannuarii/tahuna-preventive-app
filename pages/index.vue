@@ -10,28 +10,62 @@
       </div>
     </div>
 
-    <div v-if="viewMode === 'calendar'" class="filter-bar">
-      <input 
-        type="date" 
-        v-model="startDate"
-        class="form-input form-input-sm"
-        placeholder="Start"
-      />
-      <input 
-        type="date" 
-        v-model="endDate"
-        class="form-input form-input-sm"
-        placeholder="End"
-      />
-      <button class="btn btn-primary btn-sm" @click="loadSchedule">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"/>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-        Filter
+    <div v-if="viewMode === 'calendar'" class="flex justify-end mb-3 mobile-only">
+      <button class="btn btn-secondary btn-sm" @click="showMobileFilter = !showMobileFilter">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        {{ showMobileFilter ? 'Sembunyikan Filter' : 'Tampilkan Filter' }}
       </button>
     </div>
-    
+
+    <div v-if="viewMode === 'calendar'" class="card mb-4" :class="{ 'mobile-collapse-hidden': !showMobileFilter }">
+      <div class="card-body">
+        <div class="form-group mb-4">
+          <label class="form-label text-muted" style="font-size: 0.875rem;">Filter Unit</label>
+          <div class="flex flex-wrap gap-4 items-center mt-2">
+            <label class="cursor-pointer flex items-center gap-2">
+              <input type="checkbox" :checked="selectedUnits.length === 0" @change="selectedUnits = []" class="form-checkbox" />
+              <span class="text-sm font-medium">Semua</span>
+            </label>
+            <label v-for="engine in engines" :key="engine.unit" class="cursor-pointer flex items-center gap-2">
+              <input type="checkbox" :value="engine.unit" v-model="selectedUnits" class="form-checkbox" />
+              <span class="text-sm">Unit {{ engine.unit }}</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group mb-4">
+          <label class="form-label text-muted" style="font-size: 0.875rem;">Filter Jenis PM</label>
+          <div class="flex flex-wrap gap-4 items-center mt-2">
+            <label class="cursor-pointer flex items-center gap-2">
+              <input type="checkbox" :checked="selectedPMs.length === 0" @change="selectedPMs = []" class="form-checkbox" />
+              <span class="text-sm font-medium">Semua</span>
+            </label>
+            <label v-for="pm in ['P1', 'P2', 'P3', 'P4', 'P5']" :key="pm" class="cursor-pointer flex items-center gap-2">
+              <input type="checkbox" :value="pm" v-model="selectedPMs" class="form-checkbox" />
+              <span class="text-sm">{{ pm }}</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-4 items-end justify-between">
+          <div class="grid grid-cols-2 gap-4 flex-1 w-full md:w-auto">
+            <div class="form-group mb-0">
+              <label class="form-label text-muted" style="font-size: 0.875rem;">Dari Tanggal</label>
+              <input type="date" v-model="startDate" class="form-input form-input-sm mt-1 w-full" />
+            </div>
+            <div class="form-group mb-0">
+              <label class="form-label text-muted" style="font-size: 0.875rem;">Sampai Tanggal</label>
+              <input type="date" v-model="endDate" class="form-input form-input-sm mt-1 w-full" />
+            </div>
+          </div>
+          
+          <div class="form-group mb-0 flex gap-2 w-full md:w-auto mt-2 md:mt-0">
+            <button class="btn btn-primary btn-sm flex-1 md:flex-none px-4" style="border-radius: 99px;" @click="loadSchedule">Filter</button>
+            <button class="btn btn-secondary btn-sm flex-1 md:flex-none px-4" style="border-radius: 99px;" @click="resetFilter">Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div v-if="isLoading || pending" class="loading-container">
       <div class="spinner spinner-lg"></div>
       <p class="mt-4 text-muted">Memuat data...</p>
@@ -39,15 +73,56 @@
     
     <MaintenanceTable v-if="!isLoading && !pending && viewMode === 'table'" :data="tableData" />
     
-    <PMCalendar v-if="!isLoading && !pending && viewMode === 'calendar'" :events="pmSchedule" @event-click="handleEventClick" />
+    <PMCalendar v-if="!isLoading && !pending && viewMode === 'calendar'" :events="filteredPmSchedule" @event-click="handleEventClick" @month-change="handleMonthChange" />
+
+    <div v-if="!isLoading && !pending && viewMode === 'calendar'" class="mt-6">
+      <div class="card">
+        <div class="table-wrapper">
+          <table class="table table-mobile-optimized">
+            <thead>
+              <tr>
+                <th style="min-width: 120px;">TANGGAL</th>
+                <th>UNIT</th>
+                <th>JENIS PM</th>
+                <th class="text-right">AKSI</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="event in currentMonthEvents" :key="event.id">
+                <td class="whitespace-nowrap">{{ formatDate(event.start) }}</td>
+                <td class="font-medium whitespace-nowrap">Unit {{ event.extendedProps.unit }}</td>
+                <td>
+                  <span :class="['badge', getPMBadgeClass(event.title.split(' ')[0])]">
+                    {{ event.title.split(' ')[0] }}
+                  </span>
+                </td>
+                <td class="text-right">
+                  <button @click="handleEventClick(event)" class="btn btn-sm btn-secondary" style="font-size: 0.75rem; padding: 0.25rem 0.75rem; border-radius: 99px;">
+                    Lihat Detail &rarr;
+                  </button>
+                </td>
+              </tr>
+              <tr v-if="currentMonthEvents.length === 0">
+                <td colspan="4" class="text-center py-4 text-muted">Tidak ada jadwal PM di bulan ini.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { engines } from '~/utils/pmCycles'
+
 const router = useRouter()
 const viewMode = ref('table')
 const startDate = ref('')
 const endDate = ref('')
+const selectedUnits = ref<number[]>([])
+const selectedPMs = ref<string[]>([])
+const showMobileFilter = ref(false)
 
 const { serviceHours, isLoading, gantiOliCycles, overhaulCycles, fetchPMSchedule } = useMaintenanceData()
 
@@ -64,6 +139,57 @@ const loadSchedule = async () => {
     pending.value = false
   }
 }
+
+const resetFilter = () => {
+  startDate.value = ''
+  endDate.value = ''
+  selectedUnits.value = []
+  selectedPMs.value = []
+  loadSchedule()
+}
+
+const filteredPmSchedule = computed(() => {
+  let filtered = pmSchedule.value
+
+  if (selectedUnits.value.length > 0) {
+    filtered = filtered.filter(event => selectedUnits.value.includes(event.extendedProps.unit))
+  }
+
+  if (selectedPMs.value.length > 0) {
+    filtered = filtered.filter(event => {
+      const jenisPM = event.title.split(' ')[0]
+      return selectedPMs.value.includes(jenisPM)
+    })
+  }
+
+  return filtered
+})
+
+const currentCalendarMonth = ref(new Date())
+
+const handleMonthChange = (date: Date) => {
+  currentCalendarMonth.value = date
+}
+
+const formatDate = (dateStr: string) => {
+  if (!dateStr) return '-'
+  return new Date(dateStr).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: '2-digit' }).replace('.', '')
+}
+
+const getPMBadgeClass = (pm: string) => {
+  const classes: Record<string, string> = { P1: 'badge-info', P2: 'badge-success', P3: 'badge-warning', P4: 'badge-danger', P5: 'badge-primary' }
+  return classes[pm] || 'badge-secondary'
+}
+
+const currentMonthEvents = computed(() => {
+  const month = currentCalendarMonth.value.getMonth()
+  const year = currentCalendarMonth.value.getFullYear()
+  
+  return filteredPmSchedule.value.filter(event => {
+    const eventDate = new Date(event.start)
+    return eventDate.getMonth() === month && eventDate.getFullYear() === year
+  }).sort((a, b) => new Date(b.start).getTime() - new Date(a.start).getTime())
+})
 
 onMounted(() => {
   loadSchedule()
@@ -110,3 +236,11 @@ const viewOptions = [
   { value: 'calendar', label: 'Kalender', icon: calendarIcon }
 ]
 </script>
+
+<style>
+@media (max-width: 767px) {
+  .mobile-collapse-hidden {
+    display: none !important;
+  }
+}
+</style>

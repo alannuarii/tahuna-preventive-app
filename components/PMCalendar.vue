@@ -58,11 +58,16 @@ const props = defineProps<{
   events: EventProps[]
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   eventClick: [event: EventProps]
+  monthChange: [date: Date]
 }>()
 
 const currentDate = ref(new Date())
+
+onMounted(() => {
+  emit('monthChange', currentDate.value)
+})
 
 const weekdays = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab']
 const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
@@ -125,10 +130,12 @@ const calendarDays = computed(() => {
 
 const prevMonth = () => {
   currentDate.value = new Date(currentDate.value.getFullYear(), currentDate.value.getMonth() - 1, 1)
+  emit('monthChange', currentDate.value)
 }
 
 const nextMonth = () => {
   currentDate.value = new Date(currentDate.value.getFullYear(), currentDate.value.getMonth() + 1, 1)
+  emit('monthChange', currentDate.value)
 }
 
 const unitColors: Record<number, string> = {

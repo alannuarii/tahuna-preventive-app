@@ -1,7 +1,7 @@
 import { query } from '~/server/utils/db'
 
 export default defineEventHandler(async (event) => {
-  const { start, end, unit, sort, page: pageStr, limit: limitStr } = getQuery(event)
+  const { start, end, unit, jenis_pm, sort, page: pageStr, limit: limitStr } = getQuery(event)
   const page = parseInt((pageStr as string) || '1')
   const limit = parseInt((limitStr as string) || '10')
 
@@ -28,6 +28,16 @@ export default defineEventHandler(async (event) => {
       whereClause += ` AND r.unit IN (${placeholders})`
       params.push(...units)
       paramIndex += units.length
+    }
+  }
+
+  if (jenis_pm) {
+    const pms = (jenis_pm as string).split(',').map(p => p.trim()).filter(p => p)
+    if (pms.length > 0) {
+      const placeholders = pms.map((_, i) => `$${paramIndex + i}`).join(', ')
+      whereClause += ` AND r.jenis_pm IN (${placeholders})`
+      params.push(...pms)
+      paramIndex += pms.length
     }
   }
 

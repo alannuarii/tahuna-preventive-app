@@ -44,6 +44,20 @@
           </div>
         </div>
 
+        <div class="form-group mb-4">
+          <label class="form-label">Filter Jenis PM</label>
+          <div class="flex flex-wrap gap-4 items-center">
+            <label class="cursor-pointer flex items-center gap-2">
+              <input type="checkbox" :checked="filters.jenis_pm.length === 0" @change="filters.jenis_pm = []" class="form-checkbox" />
+              <span class="text-sm font-medium">Semua</span>
+            </label>
+            <label v-for="pm in ['P1', 'P2', 'P3', 'P4', 'P5']" :key="pm" class="cursor-pointer flex items-center gap-2">
+              <input type="checkbox" :value="pm" v-model="filters.jenis_pm" class="form-checkbox" />
+              <span class="text-sm">{{ pm }}</span>
+            </label>
+          </div>
+        </div>
+
         <div class="realisasi-filter-grid">
           <div class="form-group mb-0">
             <label class="form-label">Dari Tanggal</label>
@@ -141,7 +155,7 @@
 import { engines } from '~/utils/pmCycles'
 
 const viewMode = ref('table')
-const filters = reactive({ start: '', end: '', unit: [] as number[], sort: 'desc', page: 1, limit: 10 })
+const filters = reactive({ start: '', end: '', unit: [] as number[], jenis_pm: [] as string[], sort: 'desc', page: 1, limit: 10 })
 const responseData = ref<any>(null)
 const calendarData = ref<any>(null)
 const pending = ref(false)
@@ -156,6 +170,7 @@ const refresh = async () => {
     if (filters.start) q.set('start', filters.start)
     if (filters.end) q.set('end', filters.end)
     if (filters.unit && filters.unit.length > 0) q.set('unit', filters.unit.join(','))
+    if (filters.jenis_pm && filters.jenis_pm.length > 0) q.set('jenis_pm', filters.jenis_pm.join(','))
     if (filters.sort) q.set('sort', filters.sort)
     q.set('page', filters.page.toString())
     q.set('limit', filters.limit.toString())
@@ -172,6 +187,7 @@ const loadCalendarData = async () => {
   if (filters.start) q.set('start', filters.start)
   if (filters.end) q.set('end', filters.end)
   if (filters.unit && filters.unit.length > 0) q.set('unit', filters.unit.join(','))
+  if (filters.jenis_pm && filters.jenis_pm.length > 0) q.set('jenis_pm', filters.jenis_pm.join(','))
   q.set('limit', '0')
   const res = await fetch(`/api/pm/realizations?${q.toString()}`)
   if (res.ok) calendarData.value = await res.json()
@@ -223,6 +239,7 @@ const resetFilters = () => {
   filters.start = ''
   filters.end = ''
   filters.unit = []
+  filters.jenis_pm = []
   filters.sort = 'desc'
   filters.page = 1
   refresh()
