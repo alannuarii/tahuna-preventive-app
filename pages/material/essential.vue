@@ -41,6 +41,13 @@
                 </div>
               </div>
               <div class="form-group mb-0" style="min-width: 200px;">
+                <label class="form-label">Mesin</label>
+                <select v-model="stockMachineFilter" class="form-input form-input-sm">
+                  <option value="">Semua Mesin</option>
+                  <option v-for="m in uniqueMachineOptions" :key="m" :value="m">{{ m }}</option>
+                </select>
+              </div>
+              <div class="form-group mb-0" style="min-width: 200px;">
                 <label class="form-label">Urutkan</label>
                 <select v-model="stockSort" class="form-input form-input-sm">
                   <option value="name_asc">Nama A–Z</option>
@@ -600,6 +607,13 @@ onMounted(async () => {
 // ===== STOCK TAB =====
 const stockSearch = ref('')
 const stockSort = ref('name_asc')
+const stockMachineFilter = ref('')
+
+const uniqueMachineOptions = computed(() => {
+  const machines = new Set<string>()
+  engines.forEach(e => machines.add(e.mesin))
+  return ['Common', ...Array.from(machines)]
+})
 
 const filteredInventory = computed(() => {
   let mapped = inventoryData.value
@@ -610,6 +624,21 @@ const filteredInventory = computed(() => {
       item.name.toLowerCase().includes(term) || 
       (item.part_number && item.part_number.toLowerCase().includes(term))
     )
+  }
+
+  if (stockMachineFilter.value) {
+    mapped = mapped.filter(item => {
+      if (stockMachineFilter.value === 'Common') {
+        return !item.mesin || item.mesin === 'Common'
+      }
+      
+      if (!item.mesin) return false
+      const units = item.mesin.split(',').map((u: string) => u.trim())
+      return units.some((u: string) => {
+        const eng = engines.find(e => e.unit.toString() === u)
+        return eng && eng.mesin === stockMachineFilter.value
+      })
+    })
   }
 
   mapped.sort((a, b) => {
