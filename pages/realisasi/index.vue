@@ -101,7 +101,7 @@
     </div>
 
     <!-- Calendar View -->
-    <PMCalendar v-if="!pending && realizations.length > 0 && viewMode === 'calendar'" :events="calendarEvents" @event-click="handleEventClick" />
+    <PMCalendar v-if="!pending && realizations.length > 0 && viewMode === 'calendar'" :events="calendarEvents" @event-click="handleEventClick" @download="handleDownloadCalendar" />
 
     <!-- Table View -->
     <template v-if="!pending && realizations.length > 0 && viewMode === 'table'">
@@ -228,6 +228,34 @@ const calendarEvents = computed(() => {
 
 const handleEventClick = (event: any) => {
   router.push(`/realisasi/detail/${event.id}`)
+}
+
+const handleDownloadCalendar = async (date: Date) => {
+  const month = date.getMonth() + 1
+  const year = date.getFullYear()
+  
+  try {
+    // Show loading state if we want, but since it's just a file download it might be quick
+    const url = `/api/pm/download-realisasi?month=${month}&year=${year}`
+    const response = await fetch(url)
+    
+    if (!response.ok) throw new Error('Download failed')
+      
+    const blob = await response.blob()
+    const downloadUrl = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = downloadUrl
+    
+    const monthNames = ['JANUARI', 'FEBRUARI', 'MARET', 'APRIL', 'MEI', 'JUNI', 'JULI', 'AGUSTUS', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DESEMBER']
+    a.download = `Realisasi PM ${monthNames[month - 1]} ${year}.xlsx`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    window.URL.revokeObjectURL(downloadUrl)
+  } catch (error) {
+    console.error('Error downloading realisasi:', error)
+    alert('Gagal mengunduh file Excel.')
+  }
 }
 
 const applyFilters = () => {
