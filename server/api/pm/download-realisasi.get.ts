@@ -46,9 +46,14 @@ export default defineEventHandler(async (event) => {
   const realizations = await query(sql, [startStr, endStr])
 
   // Load template
-  const templatePath = path.resolve('public', '00. Realisasi PM MOUNT YEAR.xlsx')
+  let templatePath = path.resolve('public', '00. Realisasi PM MOUNT YEAR.xlsx')
   if (!fs.existsSync(templatePath)) {
-    throw createError({ statusCode: 500, statusMessage: 'Template file not found' })
+    // Fallback for production where the public folder is in .output/public
+    templatePath = path.resolve(process.cwd(), '.output', 'public', '00. Realisasi PM MOUNT YEAR.xlsx')
+  }
+
+  if (!fs.existsSync(templatePath)) {
+    throw createError({ statusCode: 500, statusMessage: 'Template file not found at: ' + templatePath })
   }
 
   const workbook = new ExcelJS.Workbook()
