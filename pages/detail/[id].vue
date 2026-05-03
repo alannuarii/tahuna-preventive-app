@@ -359,7 +359,7 @@ const getReportText = () => {
   const pm = eventData.value.pm ? eventData.value.pm.split(' ')[0] : ''
   const fullEngine = getEngineName(eventData.value.unit)
   const engineShort = fullEngine.split(' ')[0] || 'Mesin'
-  return `Selamat ${getGreeting()}, besok akan dilaksanakan pemeliharaan rutin ${pm} pada mesin ${engineShort} #${eventData.value.unit}`
+  return `Selamat ${getGreeting()}, besok akan dilaksanakan pemeliharaan rutin ${pm} pada mesin ${engineShort} Unit ${eventData.value.unit}`
 }
 
 const copyToClipboard = () => {

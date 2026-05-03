@@ -56,7 +56,7 @@
         </div>
         <div class="user-details">
           <span class="header-user-name">{{ user?.name || 'User' }}</span>
-          <span class="header-user-role">Preventive Maintenance</span>
+          <span class="header-user-role">TL Pemeliharaan</span>
         </div>
       </div>
       <button class="btn-logout" @click="handleLogout" title="Sign Out">

@@ -1,15 +1,13 @@
 <template>
   <div class="maintenance-view">
-    <div class="mb-4 text-center text-xs text-muted italic">
-      Data tanggal {{ dataDate }}
-    </div>
+
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <div v-for="item in data" :key="item.unit" class="mobile-card">
         <div class="mobile-card-header">
           <span class="font-bold text-lg">Unit {{ item.unit }}</span>
           <NuxtLink 
-            v-if="item.pm && item.pm.id"
+            v-if="item.currentStatus === 'Normal' && item.pm && item.pm.id"
             :to="`/detail/${item.pm.id}`" 
             class="badge badge-primary"
             style="transition: opacity 0.2s;"
@@ -17,6 +15,9 @@
           >
             {{ pmTimeToGo(item) }}h → {{ pmTitle(item) }}
           </NuxtLink>
+          <span v-else-if="item.currentStatus && item.currentStatus !== 'Normal'" :class="['badge', getStatusBadgeClass(item.currentStatus)]">
+            {{ item.currentStatus }}
+          </span>
         </div>
 
         <div class="mobile-card-body">
@@ -43,6 +44,9 @@
         </div>
       </div>
     </div>
+    <div class="mt-6 text-left text-xs text-muted" style="font-style: italic;">
+      Data tanggal {{ dataDate }}
+    </div>
   </div>
 </template>
 
@@ -56,35 +60,41 @@ const props = defineProps<{
 
 const dataDate = computed(() => {
   if (props.data.length > 0 && props.data[0].waktu) {
-    return convertTime(props.data[0].waktu, 1)
+    const d = new Date(props.data[0].waktu)
+    return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
   }
   return 'Loading...'
 })
 
 const operasiValue = (item: any) => {
-  return Math.floor((item.jamoperasi % 3000) % item.gantiOliCycles)
+  return Math.floor(item.ganti_oli || 0)
 }
 
 const operasiTarget = (item: any) => {
-  return gantiOliHours((item.jamoperasi % 3000) % item.gantiOliCycles, item.unit)
+  let gantiOli = parseFloat(item.ganti_oli || 0)
+  const cycleInterval = item.gantiOliCycles
+  if (gantiOli <= 125) return 125
+  if (gantiOli <= 250) return 250
+  if (cycleInterval === 500 && gantiOli <= 375) return 375
+  if (cycleInterval === 500 && gantiOli <= 500) return 500
+  return cycleInterval
 }
 
 const pmTimeToGo = (item: any) => {
-  const target: any = operasiTarget(item)
-  const current = operasiValue(item)
-  return target ? target - current : 0
+  const target = operasiTarget(item)
+  const current = parseFloat(item.ganti_oli || 0)
+  return Math.floor(target - current)
 }
 
 const pmTitle = (item: any) => {
-  return item.pm?.title?.replace(/\s#\d+$/, '') || 'N/A'
+  return item.pm?.title?.replace(/\s(Unit|#)\s?\d+$/, '') || 'N/A'
 }
 
 const getOperasiClass = (item: any) => {
-  const val = operasiValue(item)
-  const cycle = item.gantiOliCycles
-  if (val > cycle) return 'table-status-danger'
-  if (val >= 0.9 * cycle && cycle === 250) return 'table-status-warning'
-  if (val >= 0.95 * cycle && cycle === 500) return 'table-status-warning'
+  const val = parseFloat(item.ganti_oli || 0)
+  const target = operasiTarget(item)
+  if (val > target) return 'table-status-danger'
+  if (val >= 0.9 * target) return 'table-status-warning'
   return ''
 }
 
@@ -103,6 +113,12 @@ const getOverhaulClass = (item: any) => {
   if (val > cycle) return 'table-status-danger'
   if (val >= 0.75 * cycle) return 'table-status-warning'
   return ''
+}
+
+const getStatusBadgeClass = (status: string) => {
+  if (status === 'Gangguan') return 'badge-danger'
+  if (status === 'Pemeliharaan') return 'badge-warning'
+  return 'badge-success'
 }
 
 const savePmToLocalStorage = (item: any) => {

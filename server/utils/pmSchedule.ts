@@ -11,7 +11,7 @@ export const generateRandomId = (length = 8) => {
 }
 
 // Generate PM schedule for all units
-export const generatePMSchedule = (units: any[], startDateStr: string | null = null, endDateStr: string | null = null) => {
+export const generatePMSchedule = (units: any[], startDateStr: string | null = null, endDateStr: string | null = null, downtimes: any[] = [], averages: any[] = []) => {
   const colorsByUnit: Record<number, string> = {
     1: "#FF5733",
     4: "#33FF57",
@@ -38,22 +38,86 @@ export const generatePMSchedule = (units: any[], startDateStr: string | null = n
 
   let allSchedules: any[] = []
 
-  units.forEach(({ unit, jamoperasi }) => {
-    let reducedHours = jamoperasi % 3000
-    let cycleHours = reducedHours
+  units.forEach(({ unit, jamoperasi, ganti_oli }) => {
+    let currentOverhaul = jamoperasi % 3000
+    let currentGantiOli = parseFloat(ganti_oli || 0)
     let currentBaseDate = new Date(baseDate)
 
+    const cycleInterval = [4, 5, 8, 9].includes(unit) ? 250 : 500
+
+    let lastResetOverhaul = currentOverhaul - currentGantiOli
+    while (lastResetOverhaul < 0) lastResetOverhaul += 3000
+    
+    // Snap to the nearest oil change cycle (250 or 500) to find the true baseline
+    let gridOverhaul = (Math.round(lastResetOverhaul / cycleInterval) * cycleInterval) % 3000
+
+    let nextTargetGantiOli = 125
+    if (currentGantiOli <= 125) nextTargetGantiOli = 125
+    else if (currentGantiOli <= 250) nextTargetGantiOli = 250
+    else if (cycleInterval === 500 && currentGantiOli <= 375) nextTargetGantiOli = 375
+    else if (cycleInterval === 500 && currentGantiOli <= 500) nextTargetGantiOli = 500
+    else nextTargetGantiOli = cycleInterval // Overdue
+
     for (let i = 0; i < maxIterations; i++) {
-      const pmCycle = pmCycles.find(cycle => cycle.min <= cycleHours && cycleHours < cycle.max)
+      let stepGantiOli = i === 0 ? nextTargetGantiOli : 125
+      
+      let targetOverhaul = gridOverhaul + stepGantiOli
+      while (targetOverhaul > 3000) targetOverhaul -= 3000
+      if (targetOverhaul <= 0) targetOverhaul += 3000
+
+      const pmCycle = pmCycles.find(cycle => cycle.max === targetOverhaul)
       if (!pmCycle) break
 
-      const targetHours = pmCycle.max
-      const hoursToNextPM = targetHours - cycleHours
-      if (hoursToNextPM <= 0) break
+      let hoursNeeded = 0
+      if (i === 0) {
+        hoursNeeded = nextTargetGantiOli - currentGantiOli
+      } else {
+        hoursNeeded = 125
+      }
 
-      const daysToNextPM = hoursToNextPM / 24
+      let simDate = new Date(currentBaseDate.getTime())
       let pmDate = new Date(currentBaseDate.getTime())
-      pmDate.setDate(pmDate.getDate() + Math.ceil(daysToNextPM))
+      let isInfiniteDowntime = false
+
+      while (hoursNeeded > 0) {
+        simDate.setDate(simDate.getDate() + 1)
+        
+        // check if simDate is within any downtime
+        const activeDowntime = downtimes.find(d => {
+          if (d.unit !== unit) return false
+          const dStart = new Date(d.start_date)
+          dStart.setHours(0,0,0,0)
+          if (simDate < dStart) return false
+          
+          if (d.end_date) {
+            const dEnd = new Date(d.end_date)
+            dEnd.setHours(23,59,59,999)
+            return simDate <= dEnd
+          } else {
+            return true // ongoing indefinitely
+          }
+        })
+        
+        const avgData = averages.find(a => a.unit.toString() === unit.toString())
+        const dailyAverage = avgData && avgData.avg_jam_kerja ? parseFloat(avgData.avg_jam_kerja) : 24
+
+        if (!activeDowntime) {
+          hoursNeeded -= dailyAverage
+        } else if (!activeDowntime.end_date) {
+          // If the machine is down indefinitely, we cannot schedule this PM
+          isInfiniteDowntime = true
+          break
+        }
+        
+        // Safe bound to avoid infinite loops (10 years)
+        if (simDate.getFullYear() - today.getFullYear() > 10) {
+           break
+        }
+      }
+      
+      if (isInfiniteDowntime) break // stop scheduling for this unit
+      
+      pmDate = new Date(simDate.getTime())
       pmDate.setHours(0, 0, 0, 0)
 
       if (pmDate > endDate) break
@@ -62,21 +126,20 @@ export const generatePMSchedule = (units: any[], startDateStr: string | null = n
 
       allSchedules.push({
         id: eventId,
-        title: `${pmCycle.pm} #${unit}`,
+        title: `${pmCycle.pm} Unit ${unit}`,
         start: pmDate.toISOString().slice(0, 10),
         allDay: true,
         color: colorsByUnit[unit] || "#000000",
         extendedProps: {
-          currentHours: cycleHours,
-          targetHours: targetHours,
-          daysFromToday: daysToNextPM,
+          currentHours: currentGantiOli,
+          targetHours: 125,
+          daysFromToday: (pmDate.getTime() - today.getTime()) / (1000 * 3600 * 24),
           unit: unit,
           url: `/detail/${eventId}`,
         },
       })
 
-      cycleHours = targetHours
-      if (cycleHours >= 3000) cycleHours -= 3000
+      gridOverhaul = targetOverhaul
       currentBaseDate = new Date(pmDate)
     }
   })
