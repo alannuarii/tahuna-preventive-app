@@ -41,10 +41,10 @@ export const gantiOliHours = (sh: number, unit: number) => {
 
 export const engines = [
   { unit: 1, mesin: "SWD 6FHD 240" },
-  { unit: 4, mesin: "Deutz TBD 616 V12" },
-  { unit: 5, mesin: "Deutz TBD 616 V12" },
-  { unit: 6, mesin: "Mitsubishi S16R PTA-S" },
-  { unit: 7, mesin: "Mitsubishi S16R PTA-S" },
+  { unit: 4, mesin: "Deutz MWM TBD 616 V12" },
+  { unit: 5, mesin: "Deutz MWM TBD 616 V12" },
+  { unit: 6, mesin: "Mitsubishi S16R-PTA-S" },
+  { unit: 7, mesin: "Mitsubishi S16R-PTA-S" },
   { unit: 8, mesin: "Cummins KTA50-G8" },
   { unit: 9, mesin: "Cummins KTA50-G8" },
 ]
@@ -68,7 +68,7 @@ export const fastMovingMaterials = [
   },
   {
     unit: 4,
-    mesin: "Deutz TBD 616 V12",
+    mesin: "Deutz MWM TBD 616 V12",
     material: [
       { nama: "Lube Oil Filter", part_number: "0118-2001", jumlah: 1, satuan: "buah", cycle: "P3" },
       { nama: "Fuel Filter", part_number: "0117-4423", jumlah: 1, satuan: "buah", cycle: "P2" },
@@ -78,7 +78,7 @@ export const fastMovingMaterials = [
   },
   {
     unit: 5,
-    mesin: "Deutz TBD 616 V12",
+    mesin: "Deutz MWM TBD 616 V12",
     material: [
       { nama: "Lube Oil Filter", part_number: "0118-2001", jumlah: 1, satuan: "buah", cycle: "P3" },
       { nama: "Fuel Filter", part_number: "0117-4423", jumlah: 1, satuan: "buah", cycle: "P2" },
@@ -88,7 +88,7 @@ export const fastMovingMaterials = [
   },
   {
     unit: 6,
-    mesin: "Mitsubishi S16R PTA-S",
+    mesin: "Mitsubishi S16R-PTA-S",
     material: [
       { nama: "Lube Oil Filter", part_number: "37540-11100", jumlah: 4, satuan: "buah", cycle: "P2" },
       { nama: "Fuel Filter", part_number: "32562-60300", jumlah: 4, satuan: "buah", cycle: "P2" },
@@ -100,7 +100,7 @@ export const fastMovingMaterials = [
   },
   {
     unit: 7,
-    mesin: "Mitsubishi S16R PTA-S",
+    mesin: "Mitsubishi S16R-PTA-S",
     material: [
       { nama: "Lube Oil Filter", part_number: "37540-11100", jumlah: 4, satuan: "buah", cycle: "P2" },
       { nama: "Fuel Filter", part_number: "32562-60300", jumlah: 4, satuan: "buah", cycle: "P2" },

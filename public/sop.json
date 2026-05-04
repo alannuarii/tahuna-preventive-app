@@ -1,0 +1,1168 @@
+{
+  "SWD 6FHD 240": [
+    {
+      "jenis_pm": "P1",
+      "jumlah_personil": 5,
+      "tools": [
+        "Kunci pas ring (1 Set)",
+        "Obeng minus dan plus",
+        "Multimeter",
+        "Tang Ampere",
+        "Senter / alat penerangan"
+      ],
+      "apd": [
+        "Sarung tangan (katun / karet)",
+        "Safety helmet",
+        "Safety shoes",
+        "Baju kerja",
+        "Ear plug"
+      ],
+      "material": [
+        "Kain lap majun secukupnya",
+        "Detergen secukupnya"
+      ],
+      "risiko": [
+        "Terjepit komponen mekanik mesin",
+        "Terpeleset akibat permukaan lantai licin",
+        "Tersengat arus listrik akibat kesalahan penanganan"
+      ],
+      "detail_aktivitas": {
+        "persiapan": [
+          "Lakukan Safety Briefing dan Review Job Safety Analysis (JSA).",
+          "Alihkan mesin jika sedang beroperasi.",
+          "Pasang Lock Out / Tag Out (LOTO)."
+        ],
+        "pelaksanaan": [
+          "Melakukan pengecekan visual keliling, pastikan tidak ada kondisi abnormal pada bagian-bagian mesin.",
+          "Melakukan pengukuran parameter elektrik sesuai standar yang telah ditetapkan.",
+          "Membersihkan filter/strainer kompressor.",
+          "Membersihkan filter/strainer minyak pelumas.",
+          "Membersihkan filter/strainer bahan bakar.",
+          "Membersihkan filter udara.",
+          "Membersihkan badan dan sistem pendingin udara kompresi.",
+          "Memeriksa kondisi air pendingin.",
+          "Memperbaiki kebocoran air dan bahan bakar pada pompa."
+        ],
+        "penormalan": [
+          "Periksa dan bersihkan kembali lokasi pekerjaan dari sisa material atau alat.",
+          "Lepaskan Lock Out dan Tag Out (LOTO).",
+          "Posisikan mesin dalam keadaan siap dioperasikan."
+        ]
+      }
+    },
+    {
+      "jenis_pm": "P2",
+      "jumlah_personil": 5,
+      "tools": [
+        "Kunci pas ring (1 Set)",
+        "Obeng minus dan plus",
+        "Filter Wrench (Kunci Filter)",
+        "Multimeter",
+        "Tang Ampere",
+        "Grease gun",
+        "Senter / alat penerangan"
+      ],
+      "apd": [
+        "Sarung tangan (katun / karet)",
+        "Safety helmet",
+        "Safety shoes",
+        "Baju kerja",
+        "Ear plug",
+        "Kacamata safety"
+      ],
+      "material": [
+        "Kain lap majun secukupnya",
+        "Detergen secukupnya",
+        "Filter bahan bakar (2 buah)",
+        "Grease secukupnya"
+      ],
+      "risiko": [
+        "Terjepit komponen mekanik berputar",
+        "Terpeleset akibat ceceran bahan bakar atau pelumas",
+        "Tersengat arus listrik dari panel",
+        "Paparan debu kotoran generator"
+      ],
+      "detail_aktivitas": {
+        "persiapan": [
+          "Lakukan Safety Briefing dan Review JSA.",
+          "Alihkan mesin jika sedang beroperasi.",
+          "Pasang Lock Out / Tag Out (LOTO)."
+        ],
+        "pelaksanaan": [
+          "Melakukan pengecekan visual keliling dan pengukuran parameter elektrik standar.",
+          "Membersihkan filter/strainer kompressor.",
+          "Membersihkan filter/strainer minyak pelumas.",
+          "Mengganti filter bahan bakar (2 buah).",
+          "Membersihkan filter udara.",
+          "Membersihkan badan dan sistem pendingin udara kompresi.",
+          "Memeriksa kondisi air pendingin serta memperbaiki kebocoran air dan bahan bakar pada pompa.",
+          "Memeriksa kondisi fuse dan MCB pada sumber tegangan DC and AC.",
+          "Memeriksa fungsi pemutus daya/CB.",
+          "Membersihkan filter/strainer generator.",
+          "Memeriksa kelonggaran baut terminal utama pada fuse, MCB, dan pemutus daya lainnya.",
+          "Memeriksa kebocoran minyak trafo daya, fungsi sistem kontrol trafo, catat posisi tap changer, dan periksa silicagel trafo (ganti bila perlu).",
+          "Memeriksa terminal sambungan kawat pentanahan pada trafo daya.",
+          "Memeriksa kekencangan baut pondasi dan membersihkan badan pada motor-motor listrik.",
+          "Merawat lidah-lidah kontaktor motor-motor listrik.",
+          "Memeriksa terminal sambungan kabel pada servomotor governor/aktuator.",
+          "Membersihkan bagian dalam panel generator, panel kontrol alat bantu, dan panel kontrol mesin.",
+          "Memeriksa dan mengencangkan baut kebocoran saluran gas buang.",
+          "Melumasi (greasing) bearing motor listrik fan radiator.",
+          "Membersihkan fin radiator/cooler air pendingin mesin dan fin radiator/intercooler udara masuk mesin.",
+          "Memeriksa dan mengencangkan baut flanges pipa bahan bakar, pipa minyak lumas, and pipa air pendingin.",
+          "Memeriksa fungsi dan catat penunjukan counter CB, terminal kawat pentanahan panel cubicle, tanda korosi kerangka cubicle, dan kebocoran tabung CB.",
+          "Memeriksa dan mengencangkan terminal kabel-kabel di dalam panel-panel kontrol and panel mesin."
+        ],
+        "penormalan": [
+          "Periksa dan bersihkan kembali lokasi pekerjaan dari sisa bahan bakar/pelumas.",
+          "Lepaskan Lock Out dan Tag Out (LOTO).",
+          "Posisikan mesin dalam keadaan siap dioperasikan."
+        ]
+      }
+    },
+    {
+      "jenis_pm": "P3",
+      "jumlah_personil": 5,
+      "tools": [
+        "Kunci pas ring (1 Set)",
+        "Obeng minus dan plus",
+        "Filter Wrench (Kunci Filter)",
+        "Multimeter",
+        "Tang Ampere",
+        "Grease gun",
+        "Bak penampung oli (Oil pan)"
+      ],
+      "apd": [
+        "Sarung tangan mekanik dan karet nitrile",
+        "Safety helmet",
+        "Safety shoes",
+        "Baju kerja",
+        "Ear plug",
+        "Kacamata safety"
+      ],
+      "material": [
+        "Kain lap majun secukupnya",
+        "Detergen secukupnya",
+        "Filter bahan bakar (2 buah)",
+        "Filter minyak lumas (4 buah)",
+        "Minyak lumas (209 liter)",
+        "Grease secukupnya"
+      ],
+      "risiko": [
+        "Terjepit bagian mekanik mesin",
+        "Terpeleset genangan 209L minyak lumas",
+        "Tersengat listrik panel tegangan tinggi",
+        "Paparan oli panas atau bahan bakar ke kulit/mata"
+      ],
+      "detail_aktivitas": {
+        "persiapan": [
+          "Lakukan Safety Briefing dan Review JSA.",
+          "Alihkan mesin jika sedang beroperasi.",
+          "Pasang Lock Out / Tag Out (LOTO)."
+        ],
+        "pelaksanaan": [
+          "Melakukan semua pengecekan visual, elektrikal, trafo, fuse, dan kebersihan panel (sama seperti cakupan P2).",
+          "Membersihkan filter/strainer kompressor.",
+          "Mengkuras oli lama dan mengganti minyak lumas baru (209 liter).",
+          "Mengganti filter minyak lumas (4 buah).",
+          "Mengganti filter bahan bakar (2 buah).",
+          "Membersihkan filter udara, sistem pendingin udara, fin radiator/cooler, dan CAC.",
+          "Memeriksa dan memperbaiki kebocoran air/bb pada pompa serta memeriksa baut gas buang, flanges pipa bb/pelumas/air.",
+          "Melumasi (greasing) bearing motor fan radiator.",
+          "Memeriksa dan memperbaiki clearance inlet and exhaust valve.",
+          "Memeriksa dan memperbaiki tekanan pengkabutan nozzle.",
+          "Membersihkan dan melumasi batang penggerak governor.",
+          "Memeriksa dan mengganti minyak lumas governor, minyak lumas turbocharger, and minyak lumas kompressor.",
+          "Membersihkan spring/concentric valve pada safety valve kompressor.",
+          "Memeriksa terminal kabel, fungsi pemutus daya/CB, tap changer, silicagel, pentanahan, lidah kontaktor, and indikator panel kontrol (cakupan P2)."
+        ],
+        "penormalan": [
+          "Periksa dan pastikan tidak ada kebocoran setelah pengisian minyak lumas, bersihkan lokasi secara menyeluruh.",
+          "Lepaskan Lock Out dan Tag Out (LOTO).",
+          "Posisikan mesin dalam keadaan siap dioperasikan."
+        ]
+      }
+    },
+    {
+      "jenis_pm": "P4",
+      "jumlah_personil": 5,
+      "tools": [
+        "Kunci pas ring (1 Set)",
+        "Obeng minus dan plus",
+        "Filter Wrench",
+        "Multimeter",
+        "Tang Ampere",
+        "Grease gun",
+        "Bak penampung oli",
+        "Vibration meter"
+      ],
+      "apd": [
+        "Sarung tangan mekanik dan nitrile",
+        "Safety helmet",
+        "Safety shoes",
+        "Baju kerja",
+        "Ear plug",
+        "Kacamata safety"
+      ],
+      "material": [
+        "Kain lap majun secukupnya",
+        "Detergen secukupnya",
+        "Filter bahan bakar (2 buah)",
+        "Filter minyak lumas (4 buah)",
+        "Minyak lumas (209 liter)",
+        "Grease secukupnya"
+      ],
+      "risiko": [
+        "Terjepit bantalan engkol atau komponen berat",
+        "Terpeleset akibat pelumas/basa",
+        "Tersengat listrik dari terminal relay/meter",
+        "Luka gores saat pengencangan baut pondasi/carter"
+      ],
+      "detail_aktivitas": {
+        "persiapan": [
+          "Lakukan Safety Briefing dan Review JSA.",
+          "Alihkan mesin jika sedang beroperasi.",
+          "Pasang Lock Out / Tag Out (LOTO)."
+        ],
+        "pelaksanaan": [
+          "Melakukan seluruh pekerjaan rutin P3 (Ganti pelumas 209L, ganti filter lumas, ganti filter bb, bersihkan filter udara, cek trafo, panel, fuse, dll).",
+          "Memeriksa dan memperbaiki clearance inlet/exhaust valve serta tekanan pengkabutan nozzle.",
+          "Membersihkan dan melumasi batang governor, mengganti lumas governor/turbo/kompresor, membersihkan spring safety valve kompresor.",
+          "Memeriksa posisi dan melumasi crankpin bearing.",
+          "Memeriksa posisi dan melumasi main bearing.",
+          "Memeriksa posisi dan melumasi piston and liner.",
+          "Memeriksa dan mengencangkan baut counter weight.",
+          "Memeriksa dan mengencangkan baut conrod.",
+          "Memeriksa dan mengencangkan baut pipa-pipa di dalam carter.",
+          "Memeriksa dan mengencangkan baut pondasi mesin and baut pondasi cooler/radiator.",
+          "Mengukur vibrasi mesin and generator.",
+          "Memeriksa dan mengencangkan baut pada terminal kabel over current relay, under voltage relay, over voltage relay, and reverse power relay.",
+          "Memeriksa dan mengencangkan baut pada terminal kabel ampere meter, voltmeter, kW meter, kVA meter, cos phi meter, frekuensi meter, kWh meter, and kVAR meter pada panel kontrol generator.",
+          "Memeriksa dan mengencangkan baut pada terminal pressure gauge and thermometer pada panel kontrol mesin."
+        ],
+        "penormalan": [
+          "Periksa dan pastikan seluruh blok carter telah tertutup rapat, bersihkan lokasi.",
+          "Lepaskan Lock Out dan Tag Out (LOTO).",
+          "Posisikan mesin dalam keadaan siap dioperasikan."
+        ]
+      }
+    },
+    {
+      "jenis_pm": "P5",
+      "jumlah_personil": 5,
+      "tools": [
+        "Kunci pas ring (1 Set)",
+        "Kunci momen (Torque wrench)",
+        "Obeng minus dan plus",
+        "Filter Wrench",
+        "Multimeter",
+        "Tang Ampere",
+        "Grease gun",
+        "Insulating tester (Megger)",
+        "Thermal imager"
+      ],
+      "apd": [
+        "Sarung tangan safety dielektrik dan nitrile",
+        "Safety helmet",
+        "Safety shoes",
+        "Baju kerja",
+        "Ear plug",
+        "Kacamata safety"
+      ],
+      "material": [
+        "Kain lap majun secukupnya",
+        "Detergen secukupnya",
+        "Filter bahan bakar (2 buah)",
+        "Filter minyak lumas (4 buah)",
+        "Minyak lumas (209 liter)",
+        "Grease secukupnya"
+      ],
+      "risiko": [
+        "Terjepit mekanisme timing/camshaft",
+        "Terpeleset ceceran pendingin/pelumas",
+        "Tersengat tegangan listrik saat uji tahanan (Megger)",
+        "Paparan suhu tinggi (thermal spot) and bahaya komponen internal mesin"
+      ],
+      "detail_aktivitas": {
+        "persiapan": [
+          "Lakukan Safety Briefing dan Review JSA.",
+          "Alihkan mesin jika sedang beroperasi.",
+          "Pasang Lock Out / Tag Out (LOTO)."
+        ],
+        "pelaksanaan": [
+          "Melakukan seluruh pekerjaan penggantian dan pemeriksaan P4 (Ganti pelumas, filter, pelumasan bearing, pengencangan baut pondasi/carter, pengencangan terminal relay/meter).",
+          "Memeriksa dan menyetel timing inlet and exhaust cam.",
+          "Memeriksa dan menyetel timing injection pump.",
+          "Memeriksa dan mengencangkan baut roller.",
+          "Memeriksa dan mengencangkan baut inlet and exhaust cam.",
+          "Membersihkan bagian dalam mesin.",
+          "Membersihkan bagian dalam turbocharger.",
+          "Membersihkan bagian dalam intercooler.",
+          "Membersihkan bagian dalam oil cooler.",
+          "Membersihkan bagian dalam radiator.",
+          "Menguji dan menyetel fungsi relay proteksi generator and relay proteksi mesin.",
+          "Mengukur tahanan isolasi (Megger) trafo daya, generator, and motor-motor listrik.",
+          "Membersihkan isolator trafo tenaga and generator.",
+          "Memeriksa dan mengencangkan baut kabel power pada generator and trafo.",
+          "Memeriksa dan mengganti bearing motor-motor radiator.",
+          "Melakukan inspeksi suhu (thermal spot) pada peralatan di dalam panel kontrol alat bantu, panel kontrol mesin, and panel kontrol generator.",
+          "Memeriksa dan mengukur keandalan sistem pentanahan (grounding) gedung, mesin, and trafo."
+        ],
+        "penormalan": [
+          "Lakukan housekeeping, pastikan alat ukur seperti megger and thermal imager telah diamankan.",
+          "Lepaskan Lock Out dan Tag Out (LOTO).",
+          "Posisikan mesin dalam keadaan siap dioperasikan."
+        ]
+      }
+    }
+  ],
+  "Deutz MWM TBD 616 V12": [
+    {
+      "jenis_pm": "P1",
+      "jumlah_personil": 5,
+      "tools": [
+        "Kunci pas ring (1 Set)",
+        "Obeng minus dan plus",
+        "Multimeter",
+        "Tang Ampere"
+      ],
+      "apd": [
+        "Sarung tangan",
+        "Safety helmet",
+        "Safety shoes",
+        "Baju kerja",
+        "Ear plug"
+      ],
+      "material": [
+        "Kain lap majun secukupnya",
+        "Detergen secukupnya"
+      ],
+      "risiko": [
+        "Terjepit komponen mekanik mesin",
+        "Terpeleset akibat lantai basah / oli",
+        "Tersengat arus listrik akibat kesalahan pemeliharaan"
+      ],
+      "detail_aktivitas": {
+        "persiapan": [
+          "Safety Briefing dan Review JSA.",
+          "Alihkan mesin jika sedang beroperasi.",
+          "Pasang Lock Out / Tag Out (LOTO)."
+        ],
+        "pelaksanaan": [
+          "Melakukan pengecekan visual keliling untuk memastikan tidak ada kondisi abnormal mekanik maupun kelistrikan.",
+          "Melakukan pengukuran kelistrikan sesuai standar.",
+          "Membersihkan filter/strainer minyak pelumas.",
+          "Membersihkan filter/strainer bahan bakar.",
+          "Membersihkan filter udara.",
+          "Membersihkan badan dan sistem pendingin udara kompresi.",
+          "Memeriksa kondisi air pendingin.",
+          "Memperbaiki jika ada kebocoran air dan bahan bakar pada pompa."
+        ],
+        "penormalan": [
+          "Periksa dan bersihkan lokasi pekerjaan.",
+          "Lepaskan LOTO.",
+          "Mesin siap dioperasikan."
+        ]
+      }
+    },
+    {
+      "jenis_pm": "P2",
+      "jumlah_personil": 5,
+      "tools": [
+        "Kunci pas ring (1 Set)",
+        "Obeng minus dan plus",
+        "Multimeter",
+        "Tang Ampere"
+      ],
+      "apd": [
+        "Sarung tangan",
+        "Safety helmet",
+        "Safety shoes",
+        "Baju kerja",
+        "Ear plug"
+      ],
+      "material": [
+        "Kain lap majun secukupnya",
+        "Detergen secukupnya",
+        "Filter bahan bakar (1 buah)",
+        "Minyak lumas (70 liter)"
+      ],
+      "risiko": [
+        "Terjepit komponen bergerak",
+        "Terpeleset ceceran minyak lumas 70L",
+        "Tersengat listrik dari panel"
+      ],
+      "detail_aktivitas": {
+        "persiapan": [
+          "Safety Briefing dan Review JSA.",
+          "Alihkan mesin jika sedang beroperasi.",
+          "Pasang Lock Out / Tag Out (LOTO)."
+        ],
+        "pelaksanaan": [
+          "Melakukan pengecekan visual dan pengukuran elektrik standar.",
+          "Membersihkan filter/strainer minyak pelumas.",
+          "Mengkuras dan mengganti minyak lumas (70 liter).",
+          "Mengganti filter bahan bakar (1 buah).",
+          "Membersihkan filter udara, badan, and sistem pendingin udara kompresi.",
+          "Memeriksa kondisi air pendingin and memperbaiki kebocoran air/bb pada pompa.",
+          "Memeriksa kondisi fuse, MCB pada sumber tegangan DC and AC, serta fungsi pemutus data/CB.",
+          "Memeriksa kebersihan filter/strainer generator.",
+          "Memeriksa kelonggaran baut terminal utama pada fuse, MCB, pemutus daya lainnya.",
+          "Memeriksa kebocoran minyak trafo daya, fungsi sistem kontrol trafo, tap changer, silicagel, kawat pentanahan.",
+          "Memeriksa dan mengencangkan baut klem/sambungan baterai start.",
+          "Membersihkan bagian dalam panel generator, panel kontrol mesin.",
+          "Memeriksa kekencangan baut pondasi motor listrik, membersihkan badan motor listrik, merawat lidah kontaktor, periksa kabel servomotor governor.",
+          "Memeriksa dan mengencangkan baut kebocoran saluran gas buang.",
+          "Melumasi/greasing bearing motor and fan radiator.",
+          "Membersihkan fin radiator/cooler air pendingin mesin and CAC udara masuk mesin.",
+          "Memeriksa dan mengencangkan baut flanges pipa bahan bakar, minyak lumas, and air pendingin mesin."
+        ],
+        "penormalan": [
+          "Bersihkan lokasi pekerjaan dari tumpahan oli 70L.",
+          "Lepaskan LOTO.",
+          "Mesin siap dioperasikan."
+        ]
+      }
+    },
+    {
+      "jenis_pm": "P3",
+      "jumlah_personil": 5,
+      "tools": [
+        "Kunci pas ring (1 Set)",
+        "Obeng minus dan plus",
+        "Multimeter",
+        "Tang Ampere"
+      ],
+      "apd": [
+        "Sarung tangan",
+        "Safety helmet",
+        "Safety shoes",
+        "Baju kerja",
+        "Ear plug"
+      ],
+      "material": [
+        "Kain lap majun secukupnya",
+        "Detergen secukupnya",
+        "Filter bahan bakar (1 buah)",
+        "Filter minyak lumas (1 buah)",
+        "Minyak lumas (70 liter)"
+      ],
+      "risiko": [
+        "Terjepit saat melakukan adjust valve",
+        "Terpeleset genangan pelumas",
+        "Tersengat arus dari lidah kontaktor / terminal panel"
+      ],
+      "detail_aktivitas": {
+        "persiapan": [
+          "Safety Briefing dan Review JSA.",
+          "Alihkan mesin jika sedang beroperasi.",
+          "Pasang Lock Out / Tag Out (LOTO)."
+        ],
+        "pelaksanaan": [
+          "Melakukan pekerjaan rutin elektrikal P2 (Cek fuse, baterai, panel, trafo, motor listrik).",
+          "Mengganti filter minyak lumas (1 buah).",
+          "Mengganti filter bahan bakar (1 buah).",
+          "Mengganti minyak lumas (70 liter).",
+          "Membersihkan filter udara, sistem pendingin udara, fin radiator/cooler, CAC.",
+          "Memeriksa dan mengencangkan baut gas buang, baut flanges pipa bb/lumas/air.",
+          "Melumasi (greasing) bearing motor and fan radiator.",
+          "Memeriksa dan memperbaiki clearance inlet and exhaust valve.",
+          "Memeriksa dan memperbaiki tekanan pengabutan nozzle."
+        ],
+        "penormalan": [
+          "Bersihkan lokasi pekerjaan secara total.",
+          "Lepaskan LOTO.",
+          "Mesin siap dioperasikan."
+        ]
+      }
+    },
+    {
+      "jenis_pm": "P4",
+      "jumlah_personil": 5,
+      "tools": [
+        "Kunci pas ring (1 Set)",
+        "Obeng minus dan plus",
+        "Multimeter",
+        "Tang Ampere"
+      ],
+      "apd": [
+        "Sarung tangan",
+        "Safety helmet",
+        "Safety shoes",
+        "Baju kerja",
+        "Ear plug"
+      ],
+      "material": [
+        "Kain lap majun secukupnya",
+        "Detergen secukupnya",
+        "Filter bahan bakar (1 buah)",
+        "Filter minyak lumas (1 buah)",
+        "Filter udara (2 buah)",
+        "Minyak lumas (70 liter)"
+      ],
+      "risiko": [
+        "Terjepit atau tertimpa saat inspeksi bearing/conrod",
+        "Terpeleset lantai licin",
+        "Tersengat listrik saat pengencangan terminal relay proteksi"
+      ],
+      "detail_aktivitas": {
+        "persiapan": [
+          "Safety Briefing dan Review JSA.",
+          "Alihkan mesin jika sedang beroperasi.",
+          "Pasang Lock Out / Tag Out (LOTO)."
+        ],
+        "pelaksanaan": [
+          "Melakukan penggantian rutin P3 (Ganti pelumas, ganti filter lumas, ganti filter bb, cek valve, nozzle, trafo, fuse, baterai, kontaktor).",
+          "Mengganti filter udara (2 buah).",
+          "Memeriksa posisi dan pelumasan crankpin bearing.",
+          "Memeriksa posisi dan pelumasan main bearing.",
+          "Memeriksa dan mengencangkan baut counter weight.",
+          "Memeriksa dan mengencangkan baut conrod.",
+          "Memeriksa dan mengencangkan baut pipa-pipa di dalam carter.",
+          "Memeriksa dan mengencangkan baut pondasi mesin and pondasi cooler/radiator.",
+          "Mengukur vibrasi mesin and generator.",
+          "Memeriksa dan mengencangkan baut pada terminal kabel over current relay, under voltage relay, over voltage relay, and reverse power relay.",
+          "Memeriksa dan mengencangkan baut pada terminal kabel ampere meter, voltmater, kW meter, kVA meter, cos phi meter, frekuensi meter, kWh meter and kVAR meter pada panel kontrol generator.",
+          "Memeriksa dan mengencangkan baut pada terminal pressure gauge and thermometer pada panel kontrol mesin."
+        ],
+        "penormalan": [
+          "Bersihkan peralatan dan lokasi pekerjaan.",
+          "Lepaskan LOTO.",
+          "Posisikan mesin siap dioperasikan."
+        ]
+      }
+    },
+    {
+      "jenis_pm": "P5",
+      "jumlah_personil": 5,
+      "tools": [
+        "Kunci pas ring (1 Set)",
+        "Obeng minus dan plus",
+        "Multimeter",
+        "Tang Ampere",
+        "Insulating tester (megger)",
+        "Thermal Imager"
+      ],
+      "apd": [
+        "Sarung tangan",
+        "Safety helmet",
+        "Safety shoes",
+        "Baju kerja",
+        "Ear plug"
+      ],
+      "material": [
+        "Kain lap majun secukupnya",
+        "Detergen secukupnya",
+        "Filter bahan bakar (1 buah)",
+        "Filter minyak lumas (1 buah)",
+        "Filter udara (2 buah)",
+        "Minyak lumas (70 liter)"
+      ],
+      "risiko": [
+        "Terjepit mekanisme timing camshaft/pump",
+        "Terpeleset ceceran pendingin",
+        "Tersengat listrik tegangan tinggi saat Megger",
+        "Paparan panas dari pengujian thermal"
+      ],
+      "detail_aktivitas": {
+        "persiapan": [
+          "Safety Briefing dan Review JSA.",
+          "Alihkan mesin jika sedang beroperasi.",
+          "Pasang Lock Out / Tag Out (LOTO)."
+        ],
+        "pelaksanaan": [
+          "Melakukan pekerjaan rutin mekanik dan elektrik P4 (Ganti pelumas, ganti filter lumas/bb/udara, periksa bearing, baut pondasi, terminal relay, kontaktor, baterai, trafo).",
+          "Memeriksa dan menyetel timing inlet and exhaust cam.",
+          "Memeriksa dan menyetel timing injection pump.",
+          "Memeriksa dan mengencangkan baut roller serta baut inlet and exhaust cam.",
+          "Membersihkan bagian dalam mesin, turbocharger, intercooler, oil cooler, radiator.",
+          "Menguji dan menyetel fungsi relay proteksi generator and mesin.",
+          "Mengukur tahanan isolasi (Megger) trafo daya, generator, and motor-motor listrik.",
+          "Membersihkan isolator trafo tenaga and generator.",
+          "Memeriksa dan mengencangkan baut kabel power pada generator and trafo.",
+          "Memeriksa atau mengganti bearing motor-motor radiator.",
+          "Melakukan thermal spot pada peralatan di dalam panel kontrol alat bantu, panel kontrol mesin, and panel kontrol generator.",
+          "Memeriksa dan mengukur keandalan sistem pentanahan (grounding) gedung, mesin, and trafo."
+        ],
+        "penormalan": [
+          "Amankan alat ukur (megger, thermal imager), bersihkan area secara menyeluruh.",
+          "Lepaskan LOTO.",
+          "Mesin diserahkan kembali untuk standby."
+        ]
+      }
+    }
+  ],
+  "Mitsubishi S16R-PTA-S": [
+    {
+      "jenis_pm": "P1",
+      "jumlah_personil": 5,
+      "tools": [
+        "Kunci pas ring (1 Set)",
+        "Obeng minus dan plus",
+        "Multimeter",
+        "Senter / alat penerangan"
+      ],
+      "apd": [
+        "Sarung tangan",
+        "Safety helmet",
+        "Safety shoes",
+        "Baju kerja",
+        "Ear plug"
+      ],
+      "material": [
+        "Kain lap majun secukupnya",
+        "Detergen secukupnya",
+        "Filter racor (2 buah)"
+      ],
+      "risiko": [
+        "Terjepit komponen",
+        "Terpeleset akibat lantai basah",
+        "Tergores sisa material mesin"
+      ],
+      "detail_aktivitas": {
+        "persiapan": [
+          "Lakukan Safety Briefing dan Review JSA.",
+          "Alihkan mesin jika sedang beroperasi.",
+          "Pasang Lock Out / Tag Out (LOTO)."
+        ],
+        "pelaksanaan": [
+          "Memeriksa kebersihan mesin secara keseluruhan.",
+          "Memeriksa warna gas buang mesin.",
+          "Membuang air kondensat di dalam tangki bahan bakar.",
+          "Memeriksa indikasi kebocoran pelumas dan BBM.",
+          "Memeriksa kebocoran air, pelumas, and bahan bakar pada cylinder head.",
+          "Memeriksa kebocoran dan kekencangan sambungan pada cylinder head and cylinder block.",
+          "Memeriksa kondisi axial blower turbocharger.",
+          "Memeriksa kekencangan baut terminal baterai and mengecek level elektrolit baterai.",
+          "Memeriksa dan mengencangkan baut saluran udara masuk and saluran gas buang.",
+          "Memeriksa kebersihan lingkungan di sekitar area mesin.",
+          "Memeriksa kekencangan baut penutup and pondasi generator.",
+          "Memeriksa kondisi kabel busbar untuk memastikan tidak ada gesekan dengan kabel tray.",
+          "Memeriksa kebersihan venting udara pendingin generator.",
+          "Mengecek level pelumas, air pendingin, and oli trafo.",
+          "Mengecek kondisi liner and axial conrod.",
+          "Mengecek kondisi filter pelumas.",
+          "Mengganti filter racor (2 buah)."
+        ],
+        "penormalan": [
+          "Periksa dan bersihkan lokasi pekerjaan.",
+          "Lepaskan Lock Out dan Tag Out (LOTO).",
+          "Posisikan mesin siap dioperasikan."
+        ]
+      }
+    },
+    {
+      "jenis_pm": "P2",
+      "jumlah_personil": 5,
+      "tools": [
+        "Kunci pas ring (1 Set)",
+        "Obeng minus dan plus",
+        "Multimeter",
+        "Filter Wrench"
+      ],
+      "apd": [
+        "Sarung tangan karet/nitrile",
+        "Safety helmet",
+        "Safety shoes",
+        "Baju kerja",
+        "Ear plug",
+        "Kacamata safety"
+      ],
+      "material": [
+        "Kain lap majun secukupnya",
+        "Detergen secukupnya",
+        "Racor filter (2 buah)",
+        "Fuel filter (4 buah)",
+        "Lube oil filter (4 buah)",
+        "Lube oil filter bypass (1 buah)",
+        "Lube oil (320 liter)"
+      ],
+      "risiko": [
+        "Terjepit komponen mekanik",
+        "Terpeleset genangan cairan pelumas 320 liter",
+        "Paparan pelumas/BBM saat ganti filter"
+      ],
+      "detail_aktivitas": {
+        "persiapan": [
+          "Lakukan Safety Briefing dan Review JSA.",
+          "Alihkan mesin jika sedang beroperasi.",
+          "Pasang Lock Out / Tag Out (LOTO)."
+        ],
+        "pelaksanaan": [
+          "Melakukan pemeriksaan dasar P1 (Warna gas buang, air kondensat, busbar, venting, level baterai/trafo).",
+          "Mengecek kekencangan baut pengikat cover cylinder head.",
+          "Mengecek kondisi pipa pelumasan, bahan bakar, and saluran pendinginan.",
+          "Mengkuras oli lama dan mengganti dengan pelumas baru (320 liter).",
+          "Memeriksa keseluruhan saluran pelumas and saluran bahan bakar.",
+          "Mengganti lube oil filter (4 buah) and lube oil filter bypass (1 buah).",
+          "Mengganti racor filter (2 buah).",
+          "Mengganti fuel filter (4 buah).",
+          "Mengecek kebocoran saluran air pendingin, kualitas air pendingin, and level coolant.",
+          "Memeriksa kebersihan kisi-kisi radiator.",
+          "Mengecek kekencangan baut pengikat turbo, klam pipa exhaust, pipa air intake, and pipa exhaust.",
+          "Mengecek kekencangan kabel terminal baterai and baut pengikat terminal panel sinkron.",
+          "Membersihkan komponen panel sinkron and mengecek fuse panel sinkron.",
+          "Mengecek kekencangan baut pondasi and memeriksa kondisi bearing generator."
+        ],
+        "penormalan": [
+          "Bersihkan sisa pelumas dan BBM di area kerja.",
+          "Lepaskan Lock Out dan Tag Out (LOTO).",
+          "Mesin siap dioperasikan."
+        ]
+      }
+    },
+    {
+      "jenis_pm": "P3",
+      "jumlah_personil": 5,
+      "tools": [
+        "Kunci pas ring (1 Set)",
+        "Obeng minus dan plus",
+        "Multimeter",
+        "Filter Wrench",
+        "Bak penampung oli (320L)"
+      ],
+      "apd": [
+        "Sarung tangan karet/nitrile",
+        "Safety helmet",
+        "Safety shoes",
+        "Baju kerja",
+        "Ear plug",
+        "Kacamata safety"
+      ],
+      "material": [
+        "Kain lap majun secukupnya",
+        "Detergen secukupnya",
+        "Racor filter (2 buah)",
+        "Fuel filter (4 buah)",
+        "Lube oil filter (4 buah)",
+        "Lube oil filter bypass (1 buah)",
+        "Lube oil (320 liter)"
+      ],
+      "risiko": [
+        "Terjepit atau tergores mesin",
+        "Terpeleset genangan 320L pelumas",
+        "Tersengat arus dari panel sinkron"
+      ],
+      "detail_aktivitas": {
+        "persiapan": [
+          "Safety Briefing dan Review JSA.",
+          "Alihkan operasi mesin.",
+          "Pasang Lock Out / Tag Out (LOTO)."
+        ],
+        "pelaksanaan": [
+          "Melakukan seluruh pemeriksaan P2 (Baut cylinder head, pipa pelumas/air/bb, trafo, baterai, panel sinkron).",
+          "Mengkuras dan mengganti pelumas (320 liter).",
+          "Mengganti lube oil filter (4 buah) and lube oil filter bypass (1 buah).",
+          "Mengganti racor filter (2 buah).",
+          "Mengganti fuel filter (4 buah).",
+          "Mengecek indikasi kebocoran pendingin, kualitas air pendingin, level coolant, and membersihkan kisi-kisi radiator.",
+          "Mengecek kekencangan baut pengikat turbo, klam exhaust, pipa intake, and terminal baterai.",
+          "Membersihkan panel sinkron, cek fuse, cek bearing generator, and cek busbar."
+        ],
+        "penormalan": [
+          "Periksa dan bersihkan area kerja secara menyeleruh.",
+          "Lepaskan LOTO.",
+          "Mesin siap dioperasikan."
+        ]
+      }
+    },
+    {
+      "jenis_pm": "P4",
+      "jumlah_personil": 5,
+      "tools": [
+        "Kunci pas ring (1 Set)",
+        "Obeng minus dan plus",
+        "Multimeter",
+        "Filter Wrench",
+        "Feeler gauge (kunci katup)",
+        "Injector calibration kit"
+      ],
+      "apd": [
+        "Sarung tangan nitrile",
+        "Safety helmet",
+        "Safety shoes",
+        "Baju kerja",
+        "Ear plug",
+        "Kacamata safety"
+      ],
+      "material": [
+        "Kain lap majun secukupnya",
+        "Detergen secukupnya",
+        "Racor filter (2 buah)",
+        "Fuel filter (4 buah)",
+        "Lube oil filter (4 buah)",
+        "Lube oil filter bypass (1 buah)",
+        "Lube oil (320 liter)"
+      ],
+      "risiko": [
+        "Terjepit pada saat penyetelan katup",
+        "Terpeleset ceceran pelumas/bbm",
+        "Tersengat arus panel",
+        "Terkena semprotan injector saat kalibrasi"
+      ],
+      "detail_aktivitas": {
+        "persiapan": [
+          "Safety Briefing dan Review JSA.",
+          "Alihkan mesin, pasang LOTO."
+        ],
+        "pelaksanaan": [
+          "Melakukan seluruh pekerjaan penggantian P3 (Ganti pelumas 320L, lube oil filter, bypass, racor, and fuel filter).",
+          "Mengecek baut cylinder head, perpipaan, radiator, turbo, klam exhaust/intake, baterai, panel sinkron, bearing generator, busbar.",
+          "Melakukan penyetelan (adjust) clearance valve.",
+          "Melakukan penyetelan (adjust) tekanan injector."
+        ],
+        "penormalan": [
+          "Pastikan cover katup tertutup rapat dan kencang.",
+          "Bersihkan lokasi dari sisa peralatan dan fluida.",
+          "Lepaskan LOTO dan mesin siap standby."
+        ]
+      }
+    },
+    {
+      "jenis_pm": "P5",
+      "jumlah_personil": 5,
+      "tools": [
+        "Kunci pas ring (1 Set)",
+        "Kunci momen (Torque wrench)",
+        "Obeng minus dan plus",
+        "Multimeter",
+        "Filter Wrench",
+        "Feeler gauge",
+        "Alat kalibrasi injektor / pompa"
+      ],
+      "apd": [
+        "Sarung tangan mekanik / nitrile",
+        "Safety helmet",
+        "Safety shoes",
+        "Baju kerja",
+        "Ear plug",
+        "Kacamata safety"
+      ],
+      "material": [
+        "Kain lap majun secukupnya",
+        "Detergen secukupnya",
+        "Racor filter (2 buah)",
+        "Fuel filter (4 buah)",
+        "Lube oil filter (4 buah)",
+        "Lube oil filter bypass (1 buah)",
+        "Air filter (4 buah)",
+        "Lube oil (320 liter)"
+      ],
+      "risiko": [
+        "Tertimpa komponen berat (turbo, water pump)",
+        "Terjepit ruang mekanik yang sempit",
+        "Terpeleset akibat tumpahan besar pelumas",
+        "Tersengat listrik dari panel"
+      ],
+      "detail_aktivitas": {
+        "persiapan": [
+          "Safety Briefing dan Review JSA.",
+          "Alihkan mesin, pasang LOTO mekanik dan elektrik."
+        ],
+        "pelaksanaan": [
+          "Melakukan penggantian rutin P4 (Ganti pelumas, oil filter, bypass, racor, fuel filter) serta mengganti air filter (4 buah).",
+          "Melakukan penyetelan (adjust) clearance valve dan penyetelan tekanan injector.",
+          "Membersihkan dan melakukan kalibrasi pada injector.",
+          "Membersihkan dan melakukan kalibrasi pada PT pump.",
+          "Membersihkan dan melakukan kalibrasi pada STC tappets.",
+          "Membersihkan dan melakukan kalibrasi pada STC oil control valve.",
+          "Memeriksa, memperbaiki, atau mengganti komponen Turbocharger.",
+          "Memeriksa, memperbaiki, atau mengganti Fan hub.",
+          "Memeriksa, memperbaiki, atau mengganti Vibration damper.",
+          "Memeriksa, memperbaiki, atau mengganti Fan idler pulley.",
+          "Memeriksa, memperbaiki, atau mengganti Water pump."
+        ],
+        "penormalan": [
+          "Periksa dan bersihkan area kerja secara total dari parts bekas.",
+          "Lepaskan LOTO.",
+          "Posisikan mesin dalam keadaan siap dioperasikan."
+        ]
+      }
+    }
+  ],
+  "Cummins KTA50-G8": [
+    {
+      "jenis_pm": "P1",
+      "jumlah_personil": 5,
+      "tools": [
+        "Kunci pas ring (1 Set)",
+        "Obeng minus dan plus",
+        "Multimeter"
+      ],
+      "apd": [
+        "Sarung tangan",
+        "Safety helmet",
+        "Safety shoes",
+        "Baju kerja",
+        "Ear plug"
+      ],
+      "material": [
+        "Kain lap majun secukupnya",
+        "Detergen secukupnya",
+        "Filter racor (1 buah)"
+      ],
+      "risiko": [
+        "Terjepit",
+        "Terpeleset lantai basah/berminyak"
+      ],
+      "detail_aktivitas": {
+        "persiapan": [
+          "Safety Briefing dan Review JSA.",
+          "Alihkan mesin jika sedang beroperasi.",
+          "Pasang Lock Out / Tag Out (LOTO)."
+        ],
+        "pelaksanaan": [
+          "Memeriksa kebersihan mesin.",
+          "Membuang air kondensat dalam tangki bahan bakar.",
+          "Memeriksa kebocoran pelumas dan BBM.",
+          "Memeriksa kebocoran air, pelumas, and bahan bakar pada cylinder head.",
+          "Memeriksa kebocoran dan kekencangan sambungan pada cylinder block.",
+          "Memeriksa axial blower turbocharger.",
+          "Memeriksa kekencangan baut terminal baterai.",
+          "Memeriksa dan mengencangkan baut saluran udara masuk and saluran gas buang.",
+          "Memeriksa kebersihan lingkungan mesin sekitar.",
+          "Memeriksa kekencangan baut penutup and pondasi generator.",
+          "Memeriksa kondisi kabel busbar agar tidak ada gesekan dengan kabel tray.",
+          "Memeriksa kebersihan venting udara pendingin generator.",
+          "Mengecek level pelumas, air pendingin, oli trafo, and elektrolit baterai.",
+          "Mengecek kondisi liner and axial conrod.",
+          "Mengecek kondisi filter pelumas.",
+          "Mengganti filter racor (1 buah)."
+        ],
+        "penormalan": [
+          "Periksa dan bersihkan lokasi pekerjaan.",
+          "Lepaskan LOTO.",
+          "Mesin siap dioperasikan."
+        ]
+      }
+    },
+    {
+      "jenis_pm": "P2",
+      "jumlah_personil": 5,
+      "tools": [
+        "Kunci pas ring (1 Set)",
+        "Obeng minus dan plus",
+        "Multimeter",
+        "Filter wrench"
+      ],
+      "apd": [
+        "Sarung tangan nitrile",
+        "Safety helmet",
+        "Safety shoes",
+        "Baju kerja",
+        "Ear plug",
+        "Kacamata safety"
+      ],
+      "material": [
+        "Kain lap majun secukupnya",
+        "Detergen secukupnya",
+        "Filter bahan bakar (2 buah)",
+        "Filter Racor (1 buah)",
+        "Filter oli (5 buah)",
+        "Filter oli bypass (2 buah)",
+        "Minyak lumas (180 liter)"
+      ],
+      "risiko": [
+        "Terjepit komponen mekanik berputar",
+        "Terpeleset genangan 180L oli",
+        "Tersengat listrik dari baterai/alternator"
+      ],
+      "detail_aktivitas": {
+        "persiapan": [
+          "Safety Briefing dan Review JSA.",
+          "Alihkan mesin, pasang LOTO."
+        ],
+        "pelaksanaan": [
+          "Melakukan pemeriksaan dasar P1 (Air kondensat, busbar, venting, level cairan).",
+          "Mengecek baut pengikat cover cylinder head.",
+          "Mengecek kondisi pipa pelumasan, bahan bakar, and saluran pendingin.",
+          "Mengkuras dan mengganti pelumas mesin (180 liter) serta memeriksa saluran pelumas.",
+          "Mengganti lube oil filter (5 buah) and lube oil bypass (2 buah).",
+          "Mengganti fuel filter (2 buah).",
+          "Mengganti filter racor (1 buah).",
+          "Memeriksa saluran bahan bakar serta mengecek kondisi filter ROT.",
+          "Mengecek kebocoran saluran air pendingin, kualitas air pendingin, and level coolant.",
+          "Membersihkan kisi-kisi radiator, mengecek blade radiator, mengecek v-belt radiator, and bearing fan radiator.",
+          "Mengecek baut pengikat turbo, klam pipa exhaust, baut pipa air intake, and baut pengikat exhaust.",
+          "Mengecek kekencangan kabel terminal dan level air baterai, serta alternator (kekencangan v-belt).",
+          "Mengecek kekencangan baut pengikat terminal panel, membersihkan komponen, and mengecek fuse panel.",
+          "Mengecek baut pengikat pondasi and memeriksa bearing generator."
+        ],
+        "penormalan": [
+          "Bersihkan lokasi pekerjaan dari tumpahan minyak/oli.",
+          "Lepaskan LOTO.",
+          "Mesin siap dioperasikan."
+        ]
+      }
+    },
+    {
+      "jenis_pm": "P3",
+      "jumlah_personil": 5,
+      "tools": [
+        "Kunci pas ring (1 Set)",
+        "Obeng minus dan plus",
+        "Multimeter",
+        "Filter Wrench",
+        "Feeler gauge / Dial indicator",
+        "Bak penampung oli besar"
+      ],
+      "apd": [
+        "Sarung tangan nitrile / karet",
+        "Safety helmet",
+        "Safety shoes",
+        "Baju kerja",
+        "Ear plug",
+        "Kacamata safety"
+      ],
+      "material": [
+        "Kain lap majun secukupnya",
+        "Detergen secukupnya",
+        "Filter bahan bakar (2 buah)",
+        "Filter Racor (1 buah)",
+        "Filter oli (5 buah)",
+        "Filter oli bypass (2 buah)",
+        "Filter coolant (2 buah)",
+        "Minyak lumas (180 liter)"
+      ],
+      "risiko": [
+        "Terjepit pada area celah katup",
+        "Terpeleset tumpahan 180L oli / coolant",
+        "Tersengat listrik dari panel proteksi"
+      ],
+      "detail_aktivitas": {
+        "persiapan": [
+          "Safety Briefing dan Review JSA.",
+          "Alihkan mesin, pasang LOTO."
+        ],
+        "pelaksanaan": [
+          "Melakukan seluruh pemeriksaan dan penggantian P2 (Ganti pelumas, filter oli, bypass, fuel, racor, cek radiator, alternator, baterai, panel, generator).",
+          "Mengecek clearance valve (secara sampling).",
+          "Mengukur defleksi crankshaft (secara sampling).",
+          "Memeriksa kondisi bearing dan seal injection pump.",
+          "Mengganti filter coolant (2 buah).",
+          "Melakukan pengujian fungsi proteksi meliputi: temperatur, tekanan, eksitasi, and winding.",
+          "Melakukan pengujian fungsi emergency stop and memeriksa serta mengganti kabel yang abnormal."
+        ],
+        "penormalan": [
+          "Bersihkan sisa coolant dan oli.",
+          "Lepaskan LOTO.",
+          "Posisikan mesin dalam keadaan siap dioperasikan."
+        ]
+      }
+    },
+    {
+      "jenis_pm": "P4",
+      "jumlah_personil": 5,
+      "tools": [
+        "Kunci pas ring (1 Set)",
+        "Obeng minus dan plus",
+        "Multimeter",
+        "Filter Wrench",
+        "Insulating tester (Megger)"
+      ],
+      "apd": [
+        "Sarung tangan mekanik dan dielektrik",
+        "Safety helmet",
+        "Safety shoes",
+        "Baju kerja",
+        "Ear plug",
+        "Kacamata safety"
+      ],
+      "material": [
+        "Kain lap majun secukupnya",
+        "Detergen secukupnya",
+        "Filter bahan bakar (2 buah)",
+        "Filter Racor (1 buah)",
+        "Filter oli (5 buah)",
+        "Filter oli bypass (2 buah)",
+        "Filter coolant (2 buah)",
+        "Filter udara (2 buah)",
+        "Minyak lumas (180 liter)",
+        "Carbon brush (jika diperlukan)"
+      ],
+      "risiko": [
+        "Terjepit komponen mesin yang besar",
+        "Tersengat listrik dari proses pengukuran Megger / area alternator",
+        "Terpeleset genangan pelumas"
+      ],
+      "detail_aktivitas": {
+        "persiapan": [
+          "Safety Briefing dan Review JSA.",
+          "Alihkan mesin, pasang LOTO."
+        ],
+        "pelaksanaan": [
+          "Melakukan seluruh pekerjaan penggantian dan pengujian P3 (Ganti pelumas, oil filter, bypass, fuel filter, racor, coolant, cek valve, defleksi, uji proteksi & emergency stop) serta mengganti filter udara (2 buah).",
+          "Memeriksa dan membersihkan carbon brush alternator/generator.",
+          "Memeriksa dan membersihkan belitan alternator.",
+          "Mengkalibrasi dan menguji fungsi parameter sensor.",
+          "Mengukur tahanan isolasi (Megger) generator."
+        ],
+        "penormalan": [
+          "Amankan alat ukur megger.",
+          "Bersihkan area kerja.",
+          "Lepas LOTO, mesin siap dioperasikan."
+        ]
+      }
+    },
+    {
+      "jenis_pm": "P5",
+      "jumlah_personil": 5,
+      "tools": [
+        "Kunci pas ring (1 Set)",
+        "Kunci momen (Torque wrench)",
+        "Obeng minus dan plus",
+        "Filter Wrench",
+        "Multimeter",
+        "Insulating tester (Megger)",
+        "Alat kalibrasi injektor"
+      ],
+      "apd": [
+        "Sarung tangan (nitrile/karet & dielektrik)",
+        "Safety helmet",
+        "Safety shoes",
+        "Baju kerja",
+        "Ear plug",
+        "Kacamata safety"
+      ],
+      "material": [
+        "Kain lap majun secukupnya",
+        "Detergen secukupnya",
+        "Filter bahan bakar (2 buah)",
+        "Filter Racor (1 buah)",
+        "Filter oli (5 buah)",
+        "Filter oli bypass (2 buah)",
+        "Filter coolant (2 buah)",
+        "Filter udara (2 buah)",
+        "Minyak lumas (180 liter)"
+      ],
+      "risiko": [
+        "Terjepit saat membongkar part injeksi",
+        "Tersengat listrik saat uji trafo/bucholz",
+        "Terpeleset pelumas/coolant volume besar",
+        "Tertimpa part generator saat inspeksi PMG"
+      ],
+      "detail_aktivitas": {
+        "persiapan": [
+          "Safety Briefing dan Review JSA.",
+          "Alihkan mesin, pasang LOTO mekanik dan elektrik."
+        ],
+        "pelaksanaan": [
+          "Melakukan seluruh pekerjaan P4 (Ganti filter komplit, ganti pelumas, cek valve, defleksi, bersihkan carbon brush/belitan, kalibrasi sensor, megger generator).",
+          "Membersihkan dan melakukan pengecekan pada injector.",
+          "Membersihkan bagian injection pump.",
+          "Membersihkan dan mengecek STC tappets (injector).",
+          "Membersihkan dan mengecek STC oil control valve.",
+          "Mengukur tahanan isolasi (Megger) pada trafo.",
+          "Menguji relay bucholz.",
+          "Menguji fungsi PMG (Permanent Magnet Generator) generator."
+        ],
+        "penormalan": [
+          "Periksa peralatan uji dan pastikan tidak ada perkakas tertinggal.",
+          "Bersihkan lokasi pekerjaan secara total.",
+          "Lepaskan Lock Out dan Tag Out (LOTO).",
+          "Posisikan mesin siap dioperasikan."
+        ]
+      }
+    }
+  ]
+}

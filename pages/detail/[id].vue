@@ -140,7 +140,7 @@
             <div class="detail-info-list">
               <div class="detail-info-row">
                 <span class="detail-info-label">Tanggal PM</span>
-                <span class="detail-info-value">{{ eventData.tanggalPM || '-' }}</span>
+                <span class="detail-info-value">{{ formatFullDate(eventData.tanggalPM) }}</span>
               </div>
               <div class="detail-info-row">
                 <span class="detail-info-label">Estimasi</span>
@@ -153,6 +153,74 @@
                 <span class="detail-info-value font-mono">
                   {{ formatNumber(eventData.targetHours - eventData.currentHours) }} jam
                 </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SOP UI -->
+      <div v-if="selectedSop" class="card mt-6" style="border: 1px solid var(--primary-200);">
+        <div class="card-header cursor-pointer flex justify-between items-center" @click="showSop = !showSop" style="background: var(--bg-surface);">
+          <div class="flex items-center gap-2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <span class="font-semibold text-primary-700">Instruksi Kerja (SOP) - {{ eventData.pm }}</span>
+          </div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" :class="{'rotate-180': showSop}" style="transition: transform 0.2s; color: var(--primary-700);">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        
+        <div v-show="showSop" class="card-body animate-fade-in border-top pt-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h5 class="text-sm font-semibold mb-2" style="color: var(--gray-800);">🛠️ Persiapan & Alat</h5>
+              <ul class="list-disc text-sm mb-4 space-y-1" style="color: var(--gray-600); padding-left: 1.25rem;">
+                <li>
+                  <strong>Personil:</strong> {{ selectedSop.jumlah_personil }} orang
+                  <span class="text-muted" style="font-size: 0.8em; margin-left: 4px;">
+                    ({{ selectedSop.personil_mekanik }} Mekanik, {{ selectedSop.personil_listrik }} Listrik, {{ selectedSop.personil_hse }} HSE)
+                  </span>
+                </li>
+                <li><strong>APD:</strong> {{ selectedSop.apd.join(', ') }}</li>
+                <li><strong>Tools:</strong> {{ selectedSop.tools.join(', ') }}</li>
+              </ul>
+
+              <h5 class="text-sm font-semibold mb-2" style="color: var(--gray-800);">⚠️ Identifikasi Risiko</h5>
+              <ul class="list-disc text-sm mb-4 space-y-1" style="color: #b91c1c; padding-left: 1.25rem;">
+                <li v-for="(risk, idx) in selectedSop.risiko" :key="'risk-'+idx">{{ risk }}</li>
+              </ul>
+              
+              <h5 class="text-sm font-semibold mb-2" style="color: var(--gray-800);">📦 Material (Referensi)</h5>
+              <ul class="list-disc text-sm mb-4 space-y-1" style="color: var(--gray-600); padding-left: 1.25rem;">
+                <li v-for="(mat, idx) in selectedSop.material" :key="'mat-'+idx">{{ mat }}</li>
+              </ul>
+            </div>
+            <div>
+              <h5 class="text-sm font-semibold mb-3" style="color: var(--gray-800);">📋 Langkah Kerja</h5>
+              <div class="mb-3">
+                <h6 class="text-xs font-semibold text-primary-600 mb-1 uppercase tracking-wider">Persiapan</h6>
+                <ol class="list-decimal text-sm space-y-1" style="color: var(--gray-600); padding-left: 1.25rem;">
+                  <li v-for="(step, idx) in selectedSop.persiapan" :key="'prep-'+idx">{{ step }}</li>
+                </ol>
+              </div>
+              <div class="mb-3">
+                <h6 class="text-xs font-semibold text-primary-600 mb-1 uppercase tracking-wider">Pelaksanaan</h6>
+                <ol class="list-decimal text-sm space-y-1" style="color: var(--gray-600); padding-left: 1.25rem;">
+                  <li v-for="(step, idx) in selectedSop.pelaksanaan" :key="'exec-'+idx">{{ step }}</li>
+                </ol>
+              </div>
+              <div>
+                <h6 class="text-xs font-semibold text-primary-600 mb-1 uppercase tracking-wider">Penormalan</h6>
+                <ol class="list-decimal text-sm space-y-1" style="color: var(--gray-600); padding-left: 1.25rem;">
+                  <li v-for="(step, idx) in selectedSop.penormalan" :key="'norm-'+idx">{{ step }}</li>
+                </ol>
               </div>
             </div>
           </div>
@@ -274,6 +342,9 @@ const materialsPending = ref(false)
 const loaded = ref(false)
 const copied = ref(false)
 
+const selectedSop = ref<any>(null)
+const showSop = ref(true)
+
 onMounted(async () => {
   if (typeof localStorage !== 'undefined') {
     const stored = localStorage.getItem('selectedEvent')
@@ -288,6 +359,20 @@ onMounted(async () => {
       } finally {
         materialsPending.value = false
       }
+      // Load SOP from API
+      const mesinName = getEngineName(parsed.unit)
+      const pmClean = parsed.pm ? parsed.pm.replace(/\s.*/, '') : ''
+      if (mesinName && pmClean) {
+        try {
+          const sopRes = await fetch(`/api/sop?mesin=${encodeURIComponent(mesinName)}&jenis_pm=${pmClean}`)
+          if (sopRes.ok) {
+            const sopRows = await sopRes.json()
+            if (sopRows.length > 0) selectedSop.value = sopRows[0]
+          }
+        } catch (e) {
+          console.error('Failed to load SOP:', e)
+        }
+      }
     } else {
       loaded.value = true
     }
@@ -297,6 +382,21 @@ onMounted(async () => {
 const formatNumber = (num: any) => {
   if (!num && num !== 0) return '-'
   return Math.round(num).toLocaleString('id-ID')
+}
+
+const formatFullDate = (dateStr: string) => {
+  if (!dateStr) return '-'
+  try {
+    const date = new Date(dateStr)
+    return date.toLocaleDateString('id-ID', { 
+      weekday: 'long', 
+      day: 'numeric', 
+      month: 'long', 
+      year: 'numeric' 
+    })
+  } catch (e) {
+    return dateStr
+  }
 }
 
 const goBack = () => {
