@@ -59,6 +59,11 @@
               <div class="form-group mb-0 material-filter-action" style="flex: 1; display: flex; align-items: flex-end; justify-content: flex-end;">
                 <label class="form-label desktop-only">&nbsp;</label>
                 <div class="flex gap-2 flex-wrap justify-end">
+                  <button class="btn btn-secondary btn-sm" @click="downloadStockExcel" :disabled="isDownloading" style="background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border);">
+                    <span v-if="isDownloading" class="spinner spinner-sm mr-2"></span>
+                    <svg v-else width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    {{ isDownloading ? 'Menyiapkan...' : 'Download' }}
+                  </button>
                   <button class="btn btn-primary btn-sm ml-auto desktop-only" style="background-color: var(--primary-700);" @click="openMaterialForm">+ Tambah Material</button>
                 </div>
               </div>
@@ -421,6 +426,7 @@
 
 <script setup lang="ts">
 import { engines } from '~/utils/pmCycles'
+import ExcelJS from 'exceljs'
 
 const isCameraOpen = ref(false)
 const isUploading = ref(false)
@@ -651,6 +657,97 @@ const filteredInventory = computed(() => {
 
   return mapped
 })
+
+const isDownloading = ref(false)
+const downloadStockExcel = async () => {
+  if (isDownloading.value) return
+  isDownloading.value = true
+  
+  try {
+    const response = await fetch('/FORMAT STOK MATERIAL ESSENTIAL.xlsx')
+    if (!response.ok) throw new Error('Template file not found')
+    const buffer = await response.arrayBuffer()
+    
+    const workbook = new ExcelJS.Workbook()
+    await workbook.xlsx.load(buffer)
+    const worksheet = workbook.getWorksheet(1)
+    
+    if (!worksheet) throw new Error('Worksheet not found in template')
+
+    let currentRow = 5
+    filteredInventory.value.forEach((item, index) => {
+      const row = worksheet.getRow(currentRow)
+      row.getCell('A').value = index + 1
+      row.getCell('B').value = item.name
+      row.getCell('C').value = item.part_number || '-'
+      const getShortName = (text: string) => {
+        if (!text || text === '-' || text === 'Common') return text || '-';
+        return text.split(',').map(s => {
+          const t = s.trim().toLowerCase();
+          if (t.includes('mitsubishi')) return 'Mitsubishi';
+          if (t.includes('cummins')) return 'Cummins';
+          if (t.includes('deutz')) return 'Deutz';
+          if (t.includes('swd')) return 'SWD';
+          return s.trim().split(' ')[0];
+        }).join(', ');
+      };
+      row.getCell('D').value = getShortName(getMachineNames(item.mesin) || '-');
+      row.getCell('E').value = Number(item.current_stock)
+      
+      const borderStyle = {
+        top: { style: 'thin' as const },
+        left: { style: 'thin' as const },
+        bottom: { style: 'thin' as const },
+        right: { style: 'thin' as const }
+      };
+
+      for (let i = 1; i <= 5; i++) {
+        const cell = row.getCell(i);
+        cell.border = borderStyle;
+        cell.font = { bold: false };
+        cell.fill = { type: 'pattern', pattern: 'none' };
+        if (i === 2) {
+          cell.alignment = { vertical: 'middle', horizontal: 'left' };
+        } else {
+          cell.alignment = { vertical: 'middle', horizontal: 'center' };
+        }
+      }
+      
+      currentRow++
+    })
+
+    const todayStr = new Date().toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-');
+    
+    // Hapus placeholder lama jika ada di template
+    worksheet.eachRow((row) => {
+      row.eachCell((cell) => {
+        if (typeof cell.value === 'string' && cell.value.includes('Data terakhir:')) {
+          cell.value = null;
+        }
+      });
+    });
+
+    // Tulis di baris (currentRow + 1) untuk melompati 1 baris kosong
+    const dateRow = worksheet.getRow(currentRow + 1);
+    dateRow.getCell('A').value = `Data terakhir: ${todayStr}`;
+    dateRow.getCell('A').font = { bold: false };
+    dateRow.getCell('A').alignment = { horizontal: 'left' };
+    
+    const outBuffer = await workbook.xlsx.writeBuffer()
+    const blob = new Blob([outBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `Stok_Material_Essential_${new Date().toISOString().slice(0, 10)}.xlsx`
+    a.click()
+    URL.revokeObjectURL(url)
+  } catch (err) {
+    console.error('Failed to download excel', err)
+    alert('Gagal mengunduh Excel')
+  } finally {
+    isDownloading.value = false
+  }
+}
 
 // ===== TRANSACTIONS TAB =====
 const txnFilterData = reactive({ type: '', material_id: '' })
