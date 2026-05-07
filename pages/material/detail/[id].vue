@@ -143,8 +143,9 @@
         </div>
         
         <div class="card-body" style="padding: 0;">
-          <div v-if="txnPending" class="text-center py-8">
+          <div v-if="txnPending" class="loading-container" style="min-height: 150px; gap: var(--space-2);">
             <div class="spinner spinner-sm"></div>
+            <p class="text-muted text-xs">Memuat riwayat transaksi...</p>
           </div>
           <div v-else-if="txns.length === 0" class="text-center py-8 text-muted">
             Belum ada transaksi tercatat untuk material ini.

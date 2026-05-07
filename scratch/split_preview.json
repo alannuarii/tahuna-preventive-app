@@ -1,0 +1,409 @@
+[
+  {
+    "id": 16,
+    "mesin": "Cummins KTA50-G8",
+    "jenis_pm": "P1",
+    "pelaksanaan_count": 16,
+    "mekanik_count": 10,
+    "listrik_count": 6,
+    "mekanik": [
+      "Memeriksa kebersihan mesin.",
+      "Membuang air kondensat dalam tangki bahan bakar.",
+      "Memeriksa kebocoran air, pelumas, dan bahan bakar.",
+      "Memeriksa dan mengencangkan sambungan pada cylinder head and cylinder block.",
+      "Memeriksa dan mengencangkan baut saluran udara masuk dan saluran gas buang.",
+      "Memeriksa kebersihan lingkungan mesin sekitar.",
+      "Mengecek kondisi filter pelumas dan bahan bakar.",
+      "Mengganti filter racor (1 buah).",
+      "Membersihkan filter udara.",
+      "Memeriksa kondisi gas buang pada cerobong."
+    ],
+    "listrik": [
+      "Memeriksa kekencangan baut terminal baterai.",
+      "Memeriksa kekencangan baut penutup dan pondasi generator.",
+      "Memeriksa kondisi kabel busbar agar tidak ada gesekan dengan kabel tray.",
+      "Mengecek level pelumas, air pendingin, oli trafo, dan elektrolit baterai. Tambah jika diperlukan.",
+      "Mengecek fuse motor starter dan panel kontrol.",
+      "Mengecek kondisi kabel pada PT Pump."
+    ]
+  },
+  {
+    "id": 17,
+    "mesin": "Cummins KTA50-G8",
+    "jenis_pm": "P2",
+    "pelaksanaan_count": 14,
+    "mekanik_count": 10,
+    "listrik_count": 4,
+    "mekanik": [
+      "Melakukan seluruh pekerjaan P1",
+      "Mengecek baut pengikat cover cylinder head.",
+      "Mengecek kondisi pipa pelumasan, bahan bakar dan saluran pendingin.",
+      "Mengkuras dan mengganti pelumas mesin (180 liter) serta memeriksa saluran pelumas.",
+      "Mengganti filter oli (5 buah) dan filter oli bypass (2 buah).",
+      "Mengganti filter bahan bakar (2 buah).",
+      "Mengganti filter racor (1 buah).",
+      "Membersihkan kisi-kisi radiator",
+      "Mengecek baut pengikat turbo, clamp pipa exhaust, baut pipa air intake, dan baut pengikat exhaust.",
+      "Mengecek fan drive idler, fan belt tensioner dan bearing fan radiator."
+    ],
+    "listrik": [
+      "Memeriksa bearing generator.",
+      "Membersihkan komponen panel sinkron.",
+      "Membersihkan bushing trafo.",
+      "Membersihkan filter/strainer generator."
+    ]
+  },
+  {
+    "id": 18,
+    "mesin": "Cummins KTA50-G8",
+    "jenis_pm": "P3",
+    "pelaksanaan_count": 6,
+    "mekanik_count": 2,
+    "listrik_count": 4,
+    "mekanik": [
+      "Melakukan seluruh pekerjaan P2",
+      "Mengganti filter coolant (2 buah)."
+    ],
+    "listrik": [
+      "Membersihkan seluruh sensor menggunakan cairan pembersih non-konduktif.",
+      "Mengukur tahanan dari varistor, dioda putar dan exciter generator.",
+      "Mengukur tegangan baterai.",
+      "Membersihkan filter/strainer generator."
+    ]
+  },
+  {
+    "id": 19,
+    "mesin": "Cummins KTA50-G8",
+    "jenis_pm": "P4",
+    "pelaksanaan_count": 6,
+    "mekanik_count": 3,
+    "listrik_count": 3,
+    "mekanik": [
+      "Melakukan seluruh pekerjaan P3",
+      "Mengganti filter udara (2 buah)",
+      "Melakukan penyetelan (adjust) clearance valve."
+    ],
+    "listrik": [
+      "Membersihkan komponen dan pelapisan ulang vernis isolasi pada belitan generator",
+      "Mengukur tahanan isolasi generator.",
+      "Memberikan grease pada bearing radiator, bearing damper dan bearing generator"
+    ]
+  },
+  {
+    "id": 20,
+    "mesin": "Cummins KTA50-G8",
+    "jenis_pm": "P5",
+    "pelaksanaan_count": 5,
+    "mekanik_count": 4,
+    "listrik_count": 1,
+    "mekanik": [
+      "Melakukan seluruh pekerjaan P4",
+      "Membersihkan dan melakukan pengecekan pada injector.",
+      "Membersihkan dan mengecek STC tappets (injector).",
+      "Membersihkan dan mengecek STC oil control valve."
+    ],
+    "listrik": [
+      "Membersihkan bagian PT pump."
+    ]
+  },
+  {
+    "id": 6,
+    "mesin": "Deutz MWM TBD 616 V12",
+    "jenis_pm": "P1",
+    "pelaksanaan_count": 14,
+    "mekanik_count": 9,
+    "listrik_count": 5,
+    "mekanik": [
+      "Memeriksa kebersihan mesin.",
+      "Membuang air kondensat dalam tangki bahan bakar.",
+      "Memeriksa kebocoran air, pelumas, dan bahan bakar.\n",
+      "Memeriksa dan mengencangkan sambungan pada cylinder head and cylinder block.",
+      "Memeriksa dan mengencangkan baut saluran udara masuk dan saluran gas buang.",
+      "Memeriksa kebersihan lingkungan mesin sekitar.",
+      "Mengecek kondisi filter pelumas dan bahan bakar.",
+      "Membersihkan filter udara.",
+      "Memeriksa kondisi gas buang pada cerobong."
+    ],
+    "listrik": [
+      "Memeriksa kekencangan baut terminal baterai.",
+      "Memeriksa kekencangan baut penutup dan pondasi generator.",
+      "Memeriksa kondisi kabel busbar agar tidak ada gesekan dengan kabel tray.",
+      "Mengecek level pelumas, air pendingin, oli trafo, dan elektrolit baterai. Tambah jika diperlukan.",
+      "Memeriksa fungsi motor starter"
+    ]
+  },
+  {
+    "id": 7,
+    "mesin": "Deutz MWM TBD 616 V12",
+    "jenis_pm": "P2",
+    "pelaksanaan_count": 11,
+    "mekanik_count": 7,
+    "listrik_count": 4,
+    "mekanik": [
+      "Melakukan seluruh pekerjaan P1",
+      "Mengkuras dan mengganti minyak lumas (70 liter).",
+      "Mengganti filter bahan bakar (1 buah).",
+      "Mengganti filter oli (1 buah).",
+      "Mengecek baut pengikat cover cylinder head.",
+      "Mengecek kondisi dan mengencangkan baut pengikat pada pipa pelumasan, bahan bakar dan saluran pendingin.",
+      "Membersihkan kisi-kisi radiator"
+    ],
+    "listrik": [
+      "Membersihkan komponen panel generator dan panel kontrol mesin.",
+      "Memeriksa bearing generator.",
+      "Membersihkan bushing trafo.",
+      "Mengukur tegangan baterai."
+    ]
+  },
+  {
+    "id": 8,
+    "mesin": "Deutz MWM TBD 616 V12",
+    "jenis_pm": "P3",
+    "pelaksanaan_count": 4,
+    "mekanik_count": 3,
+    "listrik_count": 1,
+    "mekanik": [
+      "Melakukan seluruh pekerjaan P2.",
+      "Mengganti filter udara (2 buah)",
+      "Melakukan penyetelan (adjust) clearance valve."
+    ],
+    "listrik": [
+      "Mengukur tahanan dari varistor, dioda putar dan exciter generator."
+    ]
+  },
+  {
+    "id": 9,
+    "mesin": "Deutz MWM TBD 616 V12",
+    "jenis_pm": "P4",
+    "pelaksanaan_count": 6,
+    "mekanik_count": 2,
+    "listrik_count": 4,
+    "mekanik": [
+      "Melakukan seluruh pekerjaan P3.",
+      "Membersihkan dan melakukan kalibrasi pada injector."
+    ],
+    "listrik": [
+      "Membersihkan komponen dan pelapisan ulang vernis isolasi pada belitan generator",
+      "Mengukur tahanan isolasi generator.",
+      "Memberikan grease pada bearing motor fan radiator dan bearing generator.",
+      "Mengukur tahanan isolasi motor fan radiator."
+    ]
+  },
+  {
+    "id": 10,
+    "mesin": "Deutz MWM TBD 616 V12",
+    "jenis_pm": "P5",
+    "pelaksanaan_count": 2,
+    "mekanik_count": 2,
+    "listrik_count": 0,
+    "mekanik": [
+      "Melakukan seluruh pekerjaan P4.",
+      "Membersihkan core intercooler dan oil cooler."
+    ],
+    "listrik": []
+  },
+  {
+    "id": 11,
+    "mesin": "Mitsubishi S16R-PTA-S",
+    "jenis_pm": "P1",
+    "pelaksanaan_count": 16,
+    "mekanik_count": 10,
+    "listrik_count": 6,
+    "mekanik": [
+      "Memeriksa kebersihan mesin secara keseluruhan.",
+      "Membuang air kondensat di dalam tangki bahan bakar.",
+      "Memeriksa kebocoran air, pelumas, dan bahan bakar.",
+      "Memeriksa dan mengencangkan sambungan pada cylinder head and cylinder block.",
+      "Memeriksa dan mengencangkan baut saluran udara masuk dan saluran gas buang.",
+      "Memeriksa kebersihan lingkungan di sekitar area mesin.",
+      "Mengecek kondisi filter oli dan bahan bakar.",
+      "Mengganti filter racor (2 buah).",
+      "Membersihkan filter udara.",
+      "Memeriksa kondisi gas buang pada cerobong."
+    ],
+    "listrik": [
+      "Memeriksa kekencangan baut terminal baterai.",
+      "Memeriksa kekencangan baut penutup and pondasi generator.",
+      "Memeriksa kondisi kabel busbar untuk memastikan tidak ada gesekan dengan kabel tray.",
+      "Mengecek level pelumas, air pendingin, oli trafo, dan elektrolit baterai. Tambah jika diperlukan.",
+      "Memeriksa fungsi motor fan radiator dan motor fan exhaust.",
+      "Memeriksa fungsi kontaktor pada panel kontrol."
+    ]
+  },
+  {
+    "id": 12,
+    "mesin": "Mitsubishi S16R-PTA-S",
+    "jenis_pm": "P2",
+    "pelaksanaan_count": 10,
+    "mekanik_count": 7,
+    "listrik_count": 3,
+    "mekanik": [
+      "Melakukan seluruh pekerjaan P1.",
+      "Mengecek kekencangan baut pengikat cover cylinder head.",
+      "Mengecek kondisi pipa pelumasan, bahan bakar dan saluran pendinginan.",
+      "Mengganti filter oli (4 buah) dan filter oli bypass (1 buah).",
+      "Mengganti filter bahan bakar (4 buah).",
+      "Memeriksa kebersihan kisi-kisi radiator.",
+      "Mengecek kekencangan baut pengikat turbo, clamp pipa exhaust, pipa air intake dan pipa exhaust."
+    ],
+    "listrik": [
+      "Membersihkan komponen panel sinkron.",
+      "Memeriksa bearing generator.",
+      "Membersihkan bushing trafo."
+    ]
+  },
+  {
+    "id": 13,
+    "mesin": "Mitsubishi S16R-PTA-S",
+    "jenis_pm": "P3",
+    "pelaksanaan_count": 9,
+    "mekanik_count": 4,
+    "listrik_count": 5,
+    "mekanik": [
+      "Melakukan seluruh pekerjaan P2.",
+      "Mengkuras dan mengganti pelumas (320 liter).",
+      "Membersihkan kisi-kisi radiator.",
+      "Mengecek fungsi cooling jet menggunakan priming pump dan memastikan aliran oli lancar."
+    ],
+    "listrik": [
+      "Membersihkan seluruh sensor menggunakan cairan pembersih non-konduktif.",
+      "Mengecek bearing motor fan radiator.",
+      "Mengukur tahanan dari varistor, dioda putar dan exciter generator.",
+      "Mengukur tegangan baterai.",
+      "Membersihkan filter/strainer generator."
+    ]
+  },
+  {
+    "id": 14,
+    "mesin": "Mitsubishi S16R-PTA-S",
+    "jenis_pm": "P4",
+    "pelaksanaan_count": 6,
+    "mekanik_count": 2,
+    "listrik_count": 4,
+    "mekanik": [
+      "Melakukan seluruh pekerjaan P3.",
+      "Melakukan penyetelan (adjust) clearance valve."
+    ],
+    "listrik": [
+      "Membersihkan komponen dan pelapisan ulang vernis isolasi pada belitan generator",
+      "Mengukur tahanan isolasi generator.",
+      "Memberikan grease pada bearing generator.",
+      "Mengukur tahanan isolasi motor fan radiator."
+    ]
+  },
+  {
+    "id": 15,
+    "mesin": "Mitsubishi S16R-PTA-S",
+    "jenis_pm": "P5",
+    "pelaksanaan_count": 3,
+    "mekanik_count": 3,
+    "listrik_count": 0,
+    "mekanik": [
+      "Melakukan seluruh pekerjaan P4.",
+      "Membersihkan dan melakukan kalibrasi pada injector.",
+      "Mengganti filter udara (4 buah)."
+    ],
+    "listrik": []
+  },
+  {
+    "id": 1,
+    "mesin": "SWD 6FHD 240",
+    "jenis_pm": "P1",
+    "pelaksanaan_count": 16,
+    "mekanik_count": 10,
+    "listrik_count": 6,
+    "mekanik": [
+      "Memeriksa kebersihan mesin.",
+      "Membuang air kondensat dalam tangki bahan bakar.",
+      "Memeriksa kebocoran air, pelumas, dan bahan bakar.",
+      "Memeriksa dan mengencangkan sambungan pada cylinder head and cylinder block.",
+      "Memeriksa dan mengencangkan baut saluran udara masuk dan saluran gas buang.",
+      "Memeriksa kebersihan lingkungan mesin sekitar.",
+      "Mengecek kondisi filter pelumas dan bahan bakar.",
+      "Membersihkan filter udara.",
+      "Memeriksa kondisi gas buang pada cerobong.",
+      "Memeriksa fungsi sistem udara start"
+    ],
+    "listrik": [
+      "Memeriksa kekencangan baut terminal baterai.",
+      "Memeriksa kekencangan baut penutup dan pondasi generator.",
+      "Memeriksa kondisi kabel busbar agar tidak ada gesekan dengan kabel tray.",
+      "Mengecek level pelumas, air pendingin, oli trafo, dan elektrolit baterai. Tambah jika diperlukan.",
+      "Memeriksa fungsi motor fan radiator",
+      "Mengecek kondisi rubber coupling engine generator."
+    ]
+  },
+  {
+    "id": 2,
+    "mesin": "SWD 6FHD 240",
+    "jenis_pm": "P2",
+    "pelaksanaan_count": 10,
+    "mekanik_count": 5,
+    "listrik_count": 5,
+    "mekanik": [
+      "Melakukan seluruh pekerjaan P1",
+      "Mengganti filter bahan bakar (2 buah).",
+      "Mengecek baut pengikat cover cylinder head.",
+      "Mengecek kondisi dan mengencangkan baut pengikat pada pipa pelumasan, bahan bakar dan saluran pendingin.",
+      "Membersihkan kisi-kisi radiator"
+    ],
+    "listrik": [
+      "Membersihkan komponen panel generator dan panel kontrol mesin.",
+      "Mengecek bearing motor fan radiator dan bearing generator.",
+      "Membersihkan bushing trafo.",
+      "Membersihkan filter/strainer generator.",
+      "Mengukur tegangan baterai."
+    ]
+  },
+  {
+    "id": 3,
+    "mesin": "SWD 6FHD 240",
+    "jenis_pm": "P3",
+    "pelaksanaan_count": 7,
+    "mekanik_count": 6,
+    "listrik_count": 1,
+    "mekanik": [
+      "Melakukan seluruh pekerjaan P2.",
+      "Mengganti filter oli (4 buah)",
+      "Melakukan penyetelan (adjust) clearance valve.",
+      "Mengkuras dan mengganti pelumas (209 liter).",
+      "Memeriksa atau mengganti minyak pelumas governor dan melumasi batang penggerak governor.",
+      "Memeriksa atau mengganti minyak pelumas turbocharger."
+    ],
+    "listrik": [
+      "Mengukur tahanan dari varistor, dioda putar dan exciter generator."
+    ]
+  },
+  {
+    "id": 4,
+    "mesin": "SWD 6FHD 240",
+    "jenis_pm": "P4",
+    "pelaksanaan_count": 6,
+    "mekanik_count": 2,
+    "listrik_count": 4,
+    "mekanik": [
+      "Melakukan seluruh pekerjaan P3.",
+      "Membersihkan dan melakukan kalibrasi pada injector."
+    ],
+    "listrik": [
+      "Membersihkan komponen dan pelapisan ulang vernis isolasi pada belitan generator",
+      "Mengukur tahanan isolasi generator.",
+      "Memberikan grease pada bearing motor fan radiator dan bearing generator.",
+      "Mengukur tahanan isolasi motor fan radiator."
+    ]
+  },
+  {
+    "id": 5,
+    "mesin": "SWD 6FHD 240",
+    "jenis_pm": "P5",
+    "pelaksanaan_count": 3,
+    "mekanik_count": 3,
+    "listrik_count": 0,
+    "mekanik": [
+      "Melakukan seluruh pekerjaan P4.",
+      "Membersihkan core CAC dan oil cooler.",
+      "Membersihkan bagian dalam turbocharger."
+    ],
+    "listrik": []
+  }
+]

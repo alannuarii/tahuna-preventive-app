@@ -132,7 +132,7 @@ export const generatePMSchedule = (units: any[], startDateStr: string | null = n
         color: colorsByUnit[unit] || "#000000",
         extendedProps: {
           currentHours: currentGantiOli,
-          targetHours: 125,
+          targetHours: stepGantiOli,
           daysFromToday: (pmDate.getTime() - today.getTime()) / (1000 * 3600 * 24),
           unit: unit,
           url: `/detail/${eventId}`,

@@ -13,7 +13,8 @@ export default defineEventHandler(async (event) => {
     material,
     risiko,
     persiapan,
-    pelaksanaan,
+    pelaksanaan_mekanik,
+    pelaksanaan_listrik,
     penormalan,
   } = body
 
@@ -31,10 +32,11 @@ export default defineEventHandler(async (event) => {
         material = $7,
         risiko = $8,
         persiapan = $9,
-        pelaksanaan = $10,
-        penormalan = $11,
+        pelaksanaan_mekanik = $10,
+        pelaksanaan_listrik = $11,
+        penormalan = $12,
         updated_at = NOW()
-      WHERE id = $12
+      WHERE id = $13
       RETURNING *
     `
     const rows = await query(sql, [
@@ -47,7 +49,8 @@ export default defineEventHandler(async (event) => {
       JSON.stringify(material),
       JSON.stringify(risiko),
       JSON.stringify(persiapan),
-      JSON.stringify(pelaksanaan),
+      JSON.stringify(pelaksanaan_mekanik),
+      JSON.stringify(pelaksanaan_listrik),
       JSON.stringify(penormalan),
       id,
     ])

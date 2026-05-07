@@ -13,6 +13,18 @@
         <span v-if="eventData.pm" :class="['badge', getPMBadgeClass(eventData.pm)]">
           {{ eventData.pm }}
         </span>
+        <button 
+          v-if="publicSlug"
+          :class="['btn btn-sm flex items-center gap-1 ml-auto', copiedPublic ? 'btn-success' : 'btn-secondary']"
+          @click="copyPublicLink"
+          style="padding: 6px 12px; font-size: 0.8rem;"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+          {{ copiedPublic ? 'Tersalin' : 'Copy' }}
+        </button>
       </div>
     </div>
 
@@ -211,10 +223,19 @@
                 </ol>
               </div>
               <div class="mb-3">
-                <h6 class="text-xs font-semibold text-primary-600 mb-1 uppercase tracking-wider">Pelaksanaan</h6>
-                <ol class="list-decimal text-sm space-y-1" style="color: var(--gray-600); padding-left: 1.25rem;">
-                  <li v-for="(step, idx) in selectedSop.pelaksanaan" :key="'exec-'+idx">{{ step }}</li>
-                </ol>
+                <h6 class="text-xs font-semibold text-primary-600 mb-2 uppercase tracking-wider">Pelaksanaan Pekerjaan</h6>
+                <div class="mb-3" style="padding-left: 0.5rem; border-left: 2px solid rgba(74,222,128,0.3);">
+                  <div class="text-xs font-semibold mb-1 flex items-center gap-1" style="color: var(--success);">⚙️ Mekanik</div>
+                  <ol class="list-decimal text-sm space-y-1" style="color: var(--gray-600); padding-left: 1.25rem;">
+                    <li v-for="(step, idx) in selectedSop.pelaksanaan_mekanik" :key="'exec-m-'+idx">{{ step }}</li>
+                  </ol>
+                </div>
+                <div style="padding-left: 0.5rem; border-left: 2px solid rgba(96,165,250,0.3);">
+                  <div class="text-xs font-semibold mb-1 flex items-center gap-1" style="color: var(--primary-400);">⚡ Elektrik</div>
+                  <ol class="list-decimal text-sm space-y-1" style="color: var(--gray-600); padding-left: 1.25rem;">
+                    <li v-for="(step, idx) in selectedSop.pelaksanaan_listrik" :key="'exec-e-'+idx">{{ step }}</li>
+                  </ol>
+                </div>
               </div>
               <div>
                 <h6 class="text-xs font-semibold text-primary-600 mb-1 uppercase tracking-wider">Penormalan</h6>
@@ -227,68 +248,7 @@
         </div>
       </div>
 
-      <!-- Materials Table -->
-      <div class="card mt-6">
-        <div class="card-header">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
-          </svg>
-          Material yang Dibutuhkan
-          <span v-if="materialsData?.applicableCycles" class="badge-cycles">
-            {{ materialsData.applicableCycles.join(' + ') }}
-          </span>
-        </div>
-        <div class="card-body" style="padding: 0;">
-          <!-- Loading -->
-          <div v-if="materialsPending" class="loading-container" style="min-height: 200px;">
-            <div class="spinner"></div>
-            <p class="mt-2 text-muted">Memuat material...</p>
-          </div>
-          <!-- Empty -->
-          <div v-else-if="!materialsData?.materials?.length" class="text-center py-6">
-            <p class="text-muted">Tidak ada data material untuk unit ini</p>
-          </div>
-          <!-- Table -->
-          <div v-else class="materials-table-container">
-            <div class="table-responsive">
-              <table class="materials-table">
-                <thead>
-                  <tr>
-                    <th class="text-center" style="width: 50px;">No</th>
-                    <th>Nama Material</th>
-                    <th class="text-center" style="width: 100px;">Jumlah</th>
-                    <th class="text-center" style="width: 100px;">Satuan</th>
-                    <th class="text-center" style="width: 80px;">Siklus</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(item, index) in materialsData.materials" :key="index" :class="{ 'highlight-row': item.isCurrentCycle }">
-                    <td class="text-center">{{ index + 1 }}</td>
-                    <td>{{ item.nama }}</td>
-                    <td class="text-center font-semibold">{{ item.jumlah }}</td>
-                    <td class="text-center">{{ item.satuan }}</td>
-                    <td class="text-center">
-                      <span :class="['cycle-badge', 'cycle-' + String(item.cycle || '').toLowerCase()]">
-                        {{ item.cycle }}
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div v-if="materialsData?.materials?.length" class="materials-legend">
-              <div class="legend-item">
-                <span class="legend-dot current"></span>
-                <span class="text-muted text-sm">Material siklus {{ eventData.pm }} (saat ini)</span>
-              </div>
-              <div class="legend-item">
-                <span class="legend-dot inherited"></span>
-                <span class="text-muted text-sm">Material dari siklus sebelumnya</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
 
       <!-- Report Text Card -->
       <div class="card mt-6 mb-6">
@@ -341,6 +301,8 @@ const materialsData = ref<{ materials?: any[], applicableCycles?: string[] }>({}
 const materialsPending = ref(false)
 const loaded = ref(false)
 const copied = ref(false)
+const publicSlug = ref('')
+const copiedPublic = ref(false)
 
 const selectedSop = ref<any>(null)
 const showSop = ref(true)
@@ -362,6 +324,19 @@ onMounted(async () => {
       // Load SOP from API
       const mesinName = getEngineName(parsed.unit)
       const pmClean = parsed.pm ? parsed.pm.replace(/\s.*/, '') : ''
+
+      // Fetch public link slug
+      if (parsed.unit && pmClean) {
+        try {
+          const slugRes = await fetch(`/api/public/get-slug?unit=${parsed.unit}&pm=${pmClean}`)
+          if (slugRes.ok) {
+            const slugData = await slugRes.json()
+            publicSlug.value = slugData.slug
+          }
+        } catch (e) {
+          console.error('Failed to load public link slug:', e)
+        }
+      }
       if (mesinName && pmClean) {
         try {
           const sopRes = await fetch(`/api/sop?mesin=${encodeURIComponent(mesinName)}&jenis_pm=${pmClean}`)
@@ -467,6 +442,15 @@ const copyToClipboard = () => {
     navigator.clipboard.writeText(getReportText())
     copied.value = true
     setTimeout(() => { copied.value = false }, 2000)
+  }
+}
+
+const copyPublicLink = () => {
+  if (typeof window !== 'undefined' && publicSlug.value) {
+    const publicUrl = `${window.location.origin}/pub/${publicSlug.value}`
+    navigator.clipboard.writeText(publicUrl)
+    copiedPublic.value = true
+    setTimeout(() => { copiedPublic.value = false }, 2000)
   }
 }
 </script>

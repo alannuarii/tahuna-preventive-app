@@ -1,0 +1,856 @@
+◇ injected env (12) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
+Found 20 rows.
+Data written to scratch/sop_data_raw.json
+
+===========================================
+ID: 16 | Mesin: Cummins KTA50-G8 | PM: P1
+PELAKSANAAN (Array):
+[
+  "Memeriksa kebersihan mesin.",
+  "Membuang air kondensat dalam tangki bahan bakar.",
+  "Memeriksa kebocoran air, pelumas, dan bahan bakar.",
+  "Memeriksa dan mengencangkan sambungan pada cylinder head and cylinder block.",
+  "Memeriksa kekencangan baut terminal baterai.",
+  "Memeriksa dan mengencangkan baut saluran udara masuk dan saluran gas buang.",
+  "Memeriksa kebersihan lingkungan mesin sekitar.",
+  "Memeriksa kekencangan baut penutup dan pondasi generator.",
+  "Memeriksa kondisi kabel busbar agar tidak ada gesekan dengan kabel tray.",
+  "Mengecek level pelumas, air pendingin, oli trafo, dan elektrolit baterai. Tambah jika diperlukan.",
+  "Mengecek kondisi filter pelumas dan bahan bakar.",
+  "Mengganti filter racor (1 buah).",
+  "Membersihkan filter udara.",
+  "Mengecek fuse motor starter dan panel kontrol.",
+  "Mengecek kondisi kabel pada PT Pump.",
+  "Memeriksa kondisi gas buang pada cerobong."
+]
+TOOLS: [
+  "Kunci pas ring (1 Set)",
+  "Obeng minus dan plus",
+  "Multimeter"
+]
+APD: [
+  "Sarung tangan",
+  "Safety helmet",
+  "Safety shoes",
+  "Baju kerja",
+  "Ear plug"
+]
+MATERIAL: [
+  "Kain lap majun secukupnya",
+  "Detergen secukupnya",
+  "Filter racor (1 buah)"
+]
+RISIKO: [
+  "Terjepit",
+  "Terpeleset lantai basah/berminyak"
+]
+
+===========================================
+ID: 17 | Mesin: Cummins KTA50-G8 | PM: P2
+PELAKSANAAN (Array):
+[
+  "Melakukan seluruh pekerjaan P1",
+  "Mengecek baut pengikat cover cylinder head.",
+  "Mengecek kondisi pipa pelumasan, bahan bakar dan saluran pendingin.",
+  "Mengkuras dan mengganti pelumas mesin (180 liter) serta memeriksa saluran pelumas.",
+  "Mengganti filter oli (5 buah) dan filter oli bypass (2 buah).",
+  "Mengganti filter bahan bakar (2 buah).",
+  "Mengganti filter racor (1 buah).",
+  "Membersihkan kisi-kisi radiator",
+  "Mengecek baut pengikat turbo, clamp pipa exhaust, baut pipa air intake, dan baut pengikat exhaust.",
+  "Memeriksa bearing generator.",
+  "Membersihkan komponen panel sinkron.",
+  "Mengecek fan drive idler, fan belt tensioner dan bearing fan radiator.",
+  "Membersihkan bushing trafo.",
+  "Membersihkan filter/strainer generator."
+]
+TOOLS: [
+  "Kunci pas ring (1 Set)",
+  "Obeng minus dan plus",
+  "Multimeter",
+  "Filter wrench"
+]
+APD: [
+  "Sarung tangan nitrile",
+  "Safety helmet",
+  "Safety shoes",
+  "Baju kerja",
+  "Ear plug",
+  "Kacamata safety"
+]
+MATERIAL: [
+  "Kain lap majun secukupnya",
+  "Detergen secukupnya",
+  "Filter bahan bakar (2 buah)",
+  "Filter Racor (1 buah)",
+  "Filter oli (5 buah)",
+  "Filter oli bypass (2 buah)",
+  "Minyak lumas (180 liter)"
+]
+RISIKO: [
+  "Terjepit komponen mekanik berputar",
+  "Terpeleset genangan 180L oli",
+  "Tersengat listrik dari baterai/alternator"
+]
+
+===========================================
+ID: 18 | Mesin: Cummins KTA50-G8 | PM: P3
+PELAKSANAAN (Array):
+[
+  "Melakukan seluruh pekerjaan P2",
+  "Mengganti filter coolant (2 buah).",
+  "Membersihkan seluruh sensor menggunakan cairan pembersih non-konduktif.",
+  "Mengukur tahanan dari varistor, dioda putar dan exciter generator.",
+  "Mengukur tegangan baterai.",
+  "Membersihkan filter/strainer generator."
+]
+TOOLS: [
+  "Kunci pas ring (1 Set)",
+  "Obeng minus dan plus",
+  "Multimeter",
+  "Filter Wrench",
+  "Feeler gauge / Dial indicator",
+  "Bak penampung oli besar"
+]
+APD: [
+  "Sarung tangan nitrile / karet",
+  "Safety helmet",
+  "Safety shoes",
+  "Baju kerja",
+  "Ear plug",
+  "Kacamata safety"
+]
+MATERIAL: [
+  "Kain lap majun secukupnya",
+  "Detergen secukupnya",
+  "Filter bahan bakar (2 buah)",
+  "Filter Racor (1 buah)",
+  "Filter oli (5 buah)",
+  "Filter oli bypass (2 buah)",
+  "Filter coolant (2 buah)",
+  "Minyak lumas (180 liter)"
+]
+RISIKO: [
+  "Terjepit pada area celah katup",
+  "Terpeleset tumpahan 180L oli / coolant",
+  "Tersengat listrik dari panel proteksi"
+]
+
+===========================================
+ID: 19 | Mesin: Cummins KTA50-G8 | PM: P4
+PELAKSANAAN (Array):
+[
+  "Melakukan seluruh pekerjaan P3",
+  "Membersihkan komponen dan pelapisan ulang vernis isolasi pada belitan generator",
+  "Mengukur tahanan isolasi generator.",
+  "Mengganti filter udara (2 buah)",
+  "Memberikan grease pada bearing radiator, bearing damper dan bearing generator",
+  "Melakukan penyetelan (adjust) clearance valve."
+]
+TOOLS: [
+  "Kunci pas ring (1 Set)",
+  "Obeng minus dan plus",
+  "Multimeter",
+  "Filter Wrench",
+  "Insulating tester (Megger)"
+]
+APD: [
+  "Sarung tangan mekanik dan dielektrik",
+  "Safety helmet",
+  "Safety shoes",
+  "Baju kerja",
+  "Ear plug",
+  "Kacamata safety"
+]
+MATERIAL: [
+  "Kain lap majun secukupnya",
+  "Detergen secukupnya",
+  "Filter bahan bakar (2 buah)",
+  "Filter Racor (1 buah)",
+  "Filter oli (5 buah)",
+  "Filter oli bypass (2 buah)",
+  "Filter coolant (2 buah)",
+  "Filter udara (2 buah)",
+  "Minyak lumas (180 liter)",
+  "Carbon brush (jika diperlukan)"
+]
+RISIKO: [
+  "Terjepit komponen mesin yang besar",
+  "Tersengat listrik dari proses pengukuran Megger / area alternator",
+  "Terpeleset genangan pelumas"
+]
+
+===========================================
+ID: 20 | Mesin: Cummins KTA50-G8 | PM: P5
+PELAKSANAAN (Array):
+[
+  "Melakukan seluruh pekerjaan P4",
+  "Membersihkan dan melakukan pengecekan pada injector.",
+  "Membersihkan bagian PT pump.",
+  "Membersihkan dan mengecek STC tappets (injector).",
+  "Membersihkan dan mengecek STC oil control valve."
+]
+TOOLS: [
+  "Kunci pas ring (1 Set)",
+  "Kunci momen (Torque wrench)",
+  "Obeng minus dan plus",
+  "Filter Wrench",
+  "Multimeter",
+  "Insulating tester (Megger)",
+  "Alat kalibrasi injektor"
+]
+APD: [
+  "Sarung tangan (nitrile/karet & dielektrik)",
+  "Safety helmet",
+  "Safety shoes",
+  "Baju kerja",
+  "Ear plug",
+  "Kacamata safety"
+]
+MATERIAL: [
+  "Kain lap majun secukupnya",
+  "Detergen secukupnya",
+  "Filter bahan bakar (2 buah)",
+  "Filter Racor (1 buah)",
+  "Filter oli (5 buah)",
+  "Filter oli bypass (2 buah)",
+  "Filter coolant (2 buah)",
+  "Filter udara (2 buah)",
+  "Minyak lumas (180 liter)"
+]
+RISIKO: [
+  "Terjepit saat membongkar part injeksi",
+  "Tersengat listrik saat uji trafo/bucholz",
+  "Terpeleset pelumas/coolant volume besar",
+  "Tertimpa part generator saat inspeksi PMG"
+]
+
+===========================================
+ID: 6 | Mesin: Deutz MWM TBD 616 V12 | PM: P1
+PELAKSANAAN (Array):
+[
+  "Memeriksa kebersihan mesin.",
+  "Membuang air kondensat dalam tangki bahan bakar.",
+  "Memeriksa kebocoran air, pelumas, dan bahan bakar.\n",
+  "Memeriksa dan mengencangkan sambungan pada cylinder head and cylinder block.",
+  "Memeriksa kekencangan baut terminal baterai.",
+  "Memeriksa dan mengencangkan baut saluran udara masuk dan saluran gas buang.",
+  "Memeriksa kebersihan lingkungan mesin sekitar.",
+  "Memeriksa kekencangan baut penutup dan pondasi generator.",
+  "Memeriksa kondisi kabel busbar agar tidak ada gesekan dengan kabel tray.",
+  "Mengecek level pelumas, air pendingin, oli trafo, dan elektrolit baterai. Tambah jika diperlukan.",
+  "Mengecek kondisi filter pelumas dan bahan bakar.",
+  "Membersihkan filter udara.",
+  "Memeriksa kondisi gas buang pada cerobong.",
+  "Memeriksa fungsi motor starter"
+]
+TOOLS: [
+  "Kunci pas ring (1 Set)",
+  "Obeng minus dan plus",
+  "Multimeter",
+  "Tang Ampere"
+]
+APD: [
+  "Sarung tangan",
+  "Safety helmet",
+  "Safety shoes",
+  "Baju kerja",
+  "Ear plug"
+]
+MATERIAL: [
+  "Kain lap majun secukupnya",
+  "Detergen secukupnya"
+]
+RISIKO: [
+  "Terjepit komponen mekanik mesin",
+  "Terpeleset akibat lantai basah / oli",
+  "Tersengat arus listrik akibat kesalahan pemeliharaan"
+]
+
+===========================================
+ID: 7 | Mesin: Deutz MWM TBD 616 V12 | PM: P2
+PELAKSANAAN (Array):
+[
+  "Melakukan seluruh pekerjaan P1",
+  "Mengkuras dan mengganti minyak lumas (70 liter).",
+  "Mengganti filter bahan bakar (1 buah).",
+  "Mengganti filter oli (1 buah).",
+  "Membersihkan komponen panel generator dan panel kontrol mesin.",
+  "Mengecek baut pengikat cover cylinder head.",
+  "Mengecek kondisi dan mengencangkan baut pengikat pada pipa pelumasan, bahan bakar dan saluran pendingin.",
+  "Membersihkan kisi-kisi radiator",
+  "Memeriksa bearing generator.",
+  "Membersihkan bushing trafo.",
+  "Mengukur tegangan baterai."
+]
+TOOLS: [
+  "Kunci pas ring (1 Set)",
+  "Obeng minus dan plus",
+  "Multimeter",
+  "Tang Ampere"
+]
+APD: [
+  "Sarung tangan",
+  "Safety helmet",
+  "Safety shoes",
+  "Baju kerja",
+  "Ear plug"
+]
+MATERIAL: [
+  "Kain lap majun secukupnya",
+  "Detergen secukupnya",
+  "Filter bahan bakar (1 buah)",
+  "Minyak lumas (70 liter)"
+]
+RISIKO: [
+  "Terjepit komponen bergerak",
+  "Terpeleset ceceran minyak lumas 70L",
+  "Tersengat listrik dari panel"
+]
+
+===========================================
+ID: 8 | Mesin: Deutz MWM TBD 616 V12 | PM: P3
+PELAKSANAAN (Array):
+[
+  "Melakukan seluruh pekerjaan P2.",
+  "Mengganti filter udara (2 buah)",
+  "Melakukan penyetelan (adjust) clearance valve.",
+  "Mengukur tahanan dari varistor, dioda putar dan exciter generator."
+]
+TOOLS: [
+  "Kunci pas ring (1 Set)",
+  "Obeng minus dan plus",
+  "Multimeter",
+  "Tang Ampere"
+]
+APD: [
+  "Sarung tangan",
+  "Safety helmet",
+  "Safety shoes",
+  "Baju kerja",
+  "Ear plug"
+]
+MATERIAL: [
+  "Kain lap majun secukupnya",
+  "Detergen secukupnya",
+  "Filter bahan bakar (1 buah)",
+  "Filter minyak lumas (1 buah)",
+  "Minyak lumas (70 liter)"
+]
+RISIKO: [
+  "Terjepit saat melakukan adjust valve",
+  "Terpeleset genangan pelumas",
+  "Tersengat arus dari lidah kontaktor / terminal panel"
+]
+
+===========================================
+ID: 9 | Mesin: Deutz MWM TBD 616 V12 | PM: P4
+PELAKSANAAN (Array):
+[
+  "Melakukan seluruh pekerjaan P3.",
+  "Membersihkan dan melakukan kalibrasi pada injector.",
+  "Membersihkan komponen dan pelapisan ulang vernis isolasi pada belitan generator",
+  "Mengukur tahanan isolasi generator.",
+  "Memberikan grease pada bearing motor fan radiator dan bearing generator.",
+  "Mengukur tahanan isolasi motor fan radiator."
+]
+TOOLS: [
+  "Kunci pas ring (1 Set)",
+  "Obeng minus dan plus",
+  "Multimeter",
+  "Tang Ampere"
+]
+APD: [
+  "Sarung tangan",
+  "Safety helmet",
+  "Safety shoes",
+  "Baju kerja",
+  "Ear plug"
+]
+MATERIAL: [
+  "Kain lap majun secukupnya",
+  "Detergen secukupnya",
+  "Filter bahan bakar (1 buah)",
+  "Filter minyak lumas (1 buah)",
+  "Filter udara (2 buah)",
+  "Minyak lumas (70 liter)"
+]
+RISIKO: [
+  "Terjepit atau tertimpa saat inspeksi bearing/conrod",
+  "Terpeleset lantai licin",
+  "Tersengat listrik saat pengencangan terminal relay proteksi"
+]
+
+===========================================
+ID: 10 | Mesin: Deutz MWM TBD 616 V12 | PM: P5
+PELAKSANAAN (Array):
+[
+  "Melakukan seluruh pekerjaan P4.",
+  "Membersihkan core intercooler dan oil cooler."
+]
+TOOLS: [
+  "Kunci pas ring (1 Set)",
+  "Obeng minus dan plus",
+  "Multimeter",
+  "Tang Ampere",
+  "Insulating tester (megger)",
+  "Thermal Imager"
+]
+APD: [
+  "Sarung tangan",
+  "Safety helmet",
+  "Safety shoes",
+  "Baju kerja",
+  "Ear plug"
+]
+MATERIAL: [
+  "Kain lap majun secukupnya",
+  "Detergen secukupnya",
+  "Filter bahan bakar (1 buah)",
+  "Filter minyak lumas (1 buah)",
+  "Filter udara (2 buah)",
+  "Minyak lumas (70 liter)"
+]
+RISIKO: [
+  "Terjepit mekanisme timing camshaft/pump",
+  "Terpeleset ceceran pendingin",
+  "Tersengat listrik tegangan tinggi saat Megger",
+  "Paparan panas dari pengujian thermal"
+]
+
+===========================================
+ID: 11 | Mesin: Mitsubishi S16R-PTA-S | PM: P1
+PELAKSANAAN (Array):
+[
+  "Memeriksa kebersihan mesin secara keseluruhan.",
+  "Membuang air kondensat di dalam tangki bahan bakar.",
+  "Memeriksa kebocoran air, pelumas, dan bahan bakar.",
+  "Memeriksa dan mengencangkan sambungan pada cylinder head and cylinder block.",
+  "Memeriksa kekencangan baut terminal baterai.",
+  "Memeriksa dan mengencangkan baut saluran udara masuk dan saluran gas buang.",
+  "Memeriksa kebersihan lingkungan di sekitar area mesin.",
+  "Memeriksa kekencangan baut penutup and pondasi generator.",
+  "Memeriksa kondisi kabel busbar untuk memastikan tidak ada gesekan dengan kabel tray.",
+  "Mengecek level pelumas, air pendingin, oli trafo, dan elektrolit baterai. Tambah jika diperlukan.",
+  "Mengecek kondisi filter oli dan bahan bakar.",
+  "Mengganti filter racor (2 buah).",
+  "Membersihkan filter udara.",
+  "Memeriksa fungsi motor fan radiator dan motor fan exhaust.",
+  "Memeriksa fungsi kontaktor pada panel kontrol.",
+  "Memeriksa kondisi gas buang pada cerobong."
+]
+TOOLS: [
+  "Kunci pas ring (1 Set)",
+  "Obeng minus dan plus",
+  "Multimeter",
+  "Senter / alat penerangan"
+]
+APD: [
+  "Sarung tangan",
+  "Safety helmet",
+  "Safety shoes",
+  "Baju kerja",
+  "Ear plug"
+]
+MATERIAL: [
+  "Kain lap majun secukupnya",
+  "Detergen secukupnya",
+  "Filter racor (2 buah)"
+]
+RISIKO: [
+  "Terjepit komponen",
+  "Terpeleset akibat lantai basah",
+  "Tergores sisa material mesin"
+]
+
+===========================================
+ID: 12 | Mesin: Mitsubishi S16R-PTA-S | PM: P2
+PELAKSANAAN (Array):
+[
+  "Melakukan seluruh pekerjaan P1.",
+  "Mengecek kekencangan baut pengikat cover cylinder head.",
+  "Mengecek kondisi pipa pelumasan, bahan bakar dan saluran pendinginan.",
+  "Mengganti filter oli (4 buah) dan filter oli bypass (1 buah).",
+  "Mengganti filter bahan bakar (4 buah).",
+  "Memeriksa kebersihan kisi-kisi radiator.",
+  "Mengecek kekencangan baut pengikat turbo, clamp pipa exhaust, pipa air intake dan pipa exhaust.",
+  "Membersihkan komponen panel sinkron.",
+  "Memeriksa bearing generator.",
+  "Membersihkan bushing trafo."
+]
+TOOLS: [
+  "Kunci pas ring (1 Set)",
+  "Obeng minus dan plus",
+  "Multimeter",
+  "Filter Wrench"
+]
+APD: [
+  "Sarung tangan karet/nitrile",
+  "Safety helmet",
+  "Safety shoes",
+  "Baju kerja",
+  "Ear plug",
+  "Kacamata safety"
+]
+MATERIAL: [
+  "Kain lap majun secukupnya",
+  "Detergen secukupnya",
+  "Racor filter (2 buah)",
+  "Fuel filter (4 buah)",
+  "Lube oil filter (4 buah)",
+  "Lube oil filter bypass (1 buah)"
+]
+RISIKO: [
+  "Terjepit komponen mekanik",
+  "Terpeleset genangan cairan pelumas 320 liter",
+  "Paparan pelumas/BBM saat ganti filter"
+]
+
+===========================================
+ID: 13 | Mesin: Mitsubishi S16R-PTA-S | PM: P3
+PELAKSANAAN (Array):
+[
+  "Melakukan seluruh pekerjaan P2.",
+  "Mengkuras dan mengganti pelumas (320 liter).",
+  "Membersihkan kisi-kisi radiator.",
+  "Membersihkan seluruh sensor menggunakan cairan pembersih non-konduktif.",
+  "Mengecek fungsi cooling jet menggunakan priming pump dan memastikan aliran oli lancar.",
+  "Mengecek bearing motor fan radiator.",
+  "Mengukur tahanan dari varistor, dioda putar dan exciter generator.",
+  "Mengukur tegangan baterai.",
+  "Membersihkan filter/strainer generator."
+]
+TOOLS: [
+  "Kunci pas ring (1 Set)",
+  "Obeng minus dan plus",
+  "Multimeter",
+  "Filter Wrench",
+  "Bak penampung oli (320L)"
+]
+APD: [
+  "Sarung tangan karet/nitrile",
+  "Safety helmet",
+  "Safety shoes",
+  "Baju kerja",
+  "Ear plug",
+  "Kacamata safety"
+]
+MATERIAL: [
+  "Kain lap majun secukupnya",
+  "Detergen secukupnya",
+  "Racor filter (2 buah)",
+  "Fuel filter (4 buah)",
+  "Lube oil filter (4 buah)",
+  "Lube oil filter bypass (1 buah)",
+  "Lube oil (320 liter)"
+]
+RISIKO: [
+  "Terjepit atau tergores mesin",
+  "Terpeleset genangan 320L pelumas",
+  "Tersengat arus dari panel sinkron"
+]
+
+===========================================
+ID: 14 | Mesin: Mitsubishi S16R-PTA-S | PM: P4
+PELAKSANAAN (Array):
+[
+  "Melakukan seluruh pekerjaan P3.",
+  "Melakukan penyetelan (adjust) clearance valve.",
+  "Membersihkan komponen dan pelapisan ulang vernis isolasi pada belitan generator",
+  "Mengukur tahanan isolasi generator.",
+  "Memberikan grease pada bearing generator.",
+  "Mengukur tahanan isolasi motor fan radiator."
+]
+TOOLS: [
+  "Kunci pas ring (1 Set)",
+  "Obeng minus dan plus",
+  "Multimeter",
+  "Filter Wrench",
+  "Feeler gauge (kunci katup)",
+  "Injector calibration kit"
+]
+APD: [
+  "Sarung tangan nitrile",
+  "Safety helmet",
+  "Safety shoes",
+  "Baju kerja",
+  "Ear plug",
+  "Kacamata safety"
+]
+MATERIAL: [
+  "Kain lap majun secukupnya",
+  "Detergen secukupnya",
+  "Racor filter (2 buah)",
+  "Fuel filter (4 buah)",
+  "Lube oil filter (4 buah)",
+  "Lube oil filter bypass (1 buah)",
+  "Lube oil (320 liter)"
+]
+RISIKO: [
+  "Terjepit pada saat penyetelan katup",
+  "Terpeleset ceceran pelumas/bbm",
+  "Tersengat arus panel",
+  "Terkena semprotan injector saat kalibrasi"
+]
+
+===========================================
+ID: 15 | Mesin: Mitsubishi S16R-PTA-S | PM: P5
+PELAKSANAAN (Array):
+[
+  "Melakukan seluruh pekerjaan P4.",
+  "Membersihkan dan melakukan kalibrasi pada injector.",
+  "Mengganti filter udara (4 buah)."
+]
+TOOLS: [
+  "Kunci pas ring (1 Set)",
+  "Kunci momen (Torque wrench)",
+  "Obeng minus dan plus",
+  "Multimeter",
+  "Filter Wrench",
+  "Feeler gauge",
+  "Alat kalibrasi injektor / pompa"
+]
+APD: [
+  "Sarung tangan mekanik / nitrile",
+  "Safety helmet",
+  "Safety shoes",
+  "Baju kerja",
+  "Ear plug",
+  "Kacamata safety"
+]
+MATERIAL: [
+  "Kain lap majun secukupnya",
+  "Detergen secukupnya",
+  "Racor filter (2 buah)",
+  "Fuel filter (4 buah)",
+  "Lube oil filter (4 buah)",
+  "Lube oil filter bypass (1 buah)",
+  "Air filter (4 buah)",
+  "Lube oil (320 liter)"
+]
+RISIKO: [
+  "Tertimpa komponen berat (turbo, water pump)",
+  "Terjepit ruang mekanik yang sempit",
+  "Terpeleset akibat tumpahan besar pelumas",
+  "Tersengat listrik dari panel"
+]
+
+===========================================
+ID: 1 | Mesin: SWD 6FHD 240 | PM: P1
+PELAKSANAAN (Array):
+[
+  "Memeriksa kebersihan mesin.",
+  "Membuang air kondensat dalam tangki bahan bakar.",
+  "Memeriksa kebocoran air, pelumas, dan bahan bakar.",
+  "Memeriksa dan mengencangkan sambungan pada cylinder head and cylinder block.",
+  "Memeriksa kekencangan baut terminal baterai.",
+  "Memeriksa dan mengencangkan baut saluran udara masuk dan saluran gas buang.",
+  "Memeriksa kebersihan lingkungan mesin sekitar.",
+  "Memeriksa kekencangan baut penutup dan pondasi generator.",
+  "Memeriksa kondisi kabel busbar agar tidak ada gesekan dengan kabel tray.",
+  "Mengecek level pelumas, air pendingin, oli trafo, dan elektrolit baterai. Tambah jika diperlukan.",
+  "Mengecek kondisi filter pelumas dan bahan bakar.",
+  "Membersihkan filter udara.",
+  "Memeriksa kondisi gas buang pada cerobong.",
+  "Memeriksa fungsi sistem udara start",
+  "Memeriksa fungsi motor fan radiator",
+  "Mengecek kondisi rubber coupling engine generator."
+]
+TOOLS: [
+  "Kunci pas ring (1 Set)",
+  "Obeng minus dan plus",
+  "Multimeter",
+  "Tang Ampere",
+  "Senter / alat penerangan"
+]
+APD: [
+  "Sarung tangan (katun / karet)",
+  "Safety helmet",
+  "Safety shoes",
+  "Baju kerja",
+  "Ear plug"
+]
+MATERIAL: [
+  "Kain lap majun secukupnya",
+  "Detergen secukupnya"
+]
+RISIKO: [
+  "Terjepit komponen mekanik mesin",
+  "Terpeleset akibat permukaan lantai licin",
+  "Tersengat arus listrik akibat kesalahan penanganan"
+]
+
+===========================================
+ID: 2 | Mesin: SWD 6FHD 240 | PM: P2
+PELAKSANAAN (Array):
+[
+  "Melakukan seluruh pekerjaan P1",
+  "Mengganti filter bahan bakar (2 buah).",
+  "Membersihkan komponen panel generator dan panel kontrol mesin.",
+  "Mengecek baut pengikat cover cylinder head.",
+  "Mengecek kondisi dan mengencangkan baut pengikat pada pipa pelumasan, bahan bakar dan saluran pendingin.",
+  "Membersihkan kisi-kisi radiator",
+  "Mengecek bearing motor fan radiator dan bearing generator.",
+  "Membersihkan bushing trafo.",
+  "Membersihkan filter/strainer generator.",
+  "Mengukur tegangan baterai."
+]
+TOOLS: [
+  "Kunci pas ring (1 Set)",
+  "Obeng minus dan plus",
+  "Filter Wrench (Kunci Filter)",
+  "Multimeter",
+  "Tang Ampere",
+  "Grease gun",
+  "Senter / alat penerangan"
+]
+APD: [
+  "Sarung tangan (katun / karet)",
+  "Safety helmet",
+  "Safety shoes",
+  "Baju kerja",
+  "Ear plug",
+  "Kacamata safety"
+]
+MATERIAL: [
+  "Kain lap majun secukupnya",
+  "Detergen secukupnya",
+  "Filter bahan bakar (2 buah)",
+  "Grease secukupnya"
+]
+RISIKO: [
+  "Terjepit komponen mekanik berputar",
+  "Terpeleset akibat ceceran bahan bakar atau pelumas",
+  "Tersengat arus listrik dari panel",
+  "Paparan debu kotoran generator"
+]
+
+===========================================
+ID: 3 | Mesin: SWD 6FHD 240 | PM: P3
+PELAKSANAAN (Array):
+[
+  "Melakukan seluruh pekerjaan P2.",
+  "Mengganti filter oli (4 buah)",
+  "Melakukan penyetelan (adjust) clearance valve.",
+  "Mengukur tahanan dari varistor, dioda putar dan exciter generator.",
+  "Mengkuras dan mengganti pelumas (209 liter).",
+  "Memeriksa atau mengganti minyak pelumas governor dan melumasi batang penggerak governor.",
+  "Memeriksa atau mengganti minyak pelumas turbocharger."
+]
+TOOLS: [
+  "Kunci pas ring (1 Set)",
+  "Obeng minus dan plus",
+  "Filter Wrench (Kunci Filter)",
+  "Multimeter",
+  "Tang Ampere",
+  "Grease gun",
+  "Bak penampung oli (Oil pan)"
+]
+APD: [
+  "Sarung tangan mekanik dan karet nitrile",
+  "Safety helmet",
+  "Safety shoes",
+  "Baju kerja",
+  "Ear plug",
+  "Kacamata safety"
+]
+MATERIAL: [
+  "Kain lap majun secukupnya",
+  "Detergen secukupnya",
+  "Filter bahan bakar (2 buah)",
+  "Filter minyak lumas (4 buah)",
+  "Minyak lumas (209 liter)",
+  "Grease secukupnya"
+]
+RISIKO: [
+  "Terjepit bagian mekanik mesin",
+  "Terpeleset genangan 209L minyak lumas",
+  "Tersengat listrik panel tegangan tinggi",
+  "Paparan oli panas atau bahan bakar ke kulit/mata"
+]
+
+===========================================
+ID: 4 | Mesin: SWD 6FHD 240 | PM: P4
+PELAKSANAAN (Array):
+[
+  "Melakukan seluruh pekerjaan P3.",
+  "Membersihkan dan melakukan kalibrasi pada injector.",
+  "Membersihkan komponen dan pelapisan ulang vernis isolasi pada belitan generator",
+  "Mengukur tahanan isolasi generator.",
+  "Memberikan grease pada bearing motor fan radiator dan bearing generator.",
+  "Mengukur tahanan isolasi motor fan radiator."
+]
+TOOLS: [
+  "Kunci pas ring (1 Set)",
+  "Obeng minus dan plus",
+  "Filter Wrench",
+  "Multimeter",
+  "Tang Ampere",
+  "Grease gun",
+  "Bak penampung oli",
+  "Vibration meter"
+]
+APD: [
+  "Sarung tangan mekanik dan nitrile",
+  "Safety helmet",
+  "Safety shoes",
+  "Baju kerja",
+  "Ear plug",
+  "Kacamata safety"
+]
+MATERIAL: [
+  "Kain lap majun secukupnya",
+  "Detergen secukupnya",
+  "Filter bahan bakar (2 buah)",
+  "Filter minyak lumas (4 buah)",
+  "Minyak lumas (209 liter)",
+  "Grease secukupnya"
+]
+RISIKO: [
+  "Terjepit bantalan engkol atau komponen berat",
+  "Terpeleset akibat pelumas/basa",
+  "Tersengat listrik dari terminal relay/meter",
+  "Luka gores saat pengencangan baut pondasi/carter"
+]
+
+===========================================
+ID: 5 | Mesin: SWD 6FHD 240 | PM: P5
+PELAKSANAAN (Array):
+[
+  "Melakukan seluruh pekerjaan P4.",
+  "Membersihkan core CAC dan oil cooler.",
+  "Membersihkan bagian dalam turbocharger."
+]
+TOOLS: [
+  "Kunci pas ring (1 Set)",
+  "Kunci momen (Torque wrench)",
+  "Obeng minus dan plus",
+  "Filter Wrench",
+  "Multimeter",
+  "Tang Ampere",
+  "Grease gun",
+  "Insulating tester (Megger)",
+  "Thermal imager"
+]
+APD: [
+  "Sarung tangan safety dielektrik dan nitrile",
+  "Safety helmet",
+  "Safety shoes",
+  "Baju kerja",
+  "Ear plug",
+  "Kacamata safety"
+]
+MATERIAL: [
+  "Kain lap majun secukupnya",
+  "Detergen secukupnya",
+  "Filter bahan bakar (2 buah)",
+  "Filter minyak lumas (4 buah)",
+  "Minyak lumas (209 liter)",
+  "Grease secukupnya"
+]
+RISIKO: [
+  "Terjepit mekanisme timing/camshaft",
+  "Terpeleset ceceran pendingin/pelumas",
+  "Tersengat tegangan listrik saat uji tahanan (Megger)",
+  "Paparan suhu tinggi (thermal spot) and bahaya komponen internal mesin"
+]

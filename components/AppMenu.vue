@@ -118,8 +118,9 @@ const isActive = (path: string, exact?: boolean) => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex: 1;
   gap: 3px;
-  padding: 0.5rem 1.5rem;
+  padding: 0.5rem 0;
   color: var(--gray-400);
   font-size: 0.65rem;
   font-weight: 500;
@@ -205,6 +206,7 @@ const isActive = (path: string, exact?: boolean) => {
     flex-direction: row;
     justify-content: flex-start;
     width: 100%;
+    flex: none;
     padding: 0.75rem 1rem;
     font-size: 0.85rem;
     border-radius: 0.75rem;

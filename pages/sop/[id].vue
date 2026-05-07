@@ -114,10 +114,25 @@
               </ol>
             </div>
             <div>
-              <h5 class="sop-step-title sop-step-exec">Pelaksanaan</h5>
-              <ol class="sop-step-list">
-                <li v-for="(step, i) in sop.pelaksanaan" :key="'e'+i">{{ step }}</li>
-              </ol>
+              <h5 class="sop-step-title sop-step-exec">Pelaksanaan Pekerjaan</h5>
+              <div class="sop-sub-step-wrapper">
+                <div class="mb-4">
+                  <div class="font-semibold text-xs mb-2 flex items-center gap-1" style="color: var(--success); opacity: 0.9;">
+                    <span>⚙️ Mekanik</span>
+                  </div>
+                  <ol class="sop-step-list">
+                    <li v-for="(step, i) in sop.pelaksanaan_mekanik" :key="'em'+i">{{ step }}</li>
+                  </ol>
+                </div>
+                <div>
+                  <div class="font-semibold text-xs mb-2 flex items-center gap-1" style="color: var(--primary-300); opacity: 0.9;">
+                    <span>⚡ Elektrik</span>
+                  </div>
+                  <ol class="sop-step-list">
+                    <li v-for="(step, i) in sop.pelaksanaan_listrik" :key="'ee'+i">{{ step }}</li>
+                  </ol>
+                </div>
+              </div>
             </div>
             <div>
               <h5 class="sop-step-title sop-step-norm">Penormalan</h5>
@@ -162,9 +177,10 @@
           <SopEditList v-model="editForm.risiko" label="⚠️ Risiko" />
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
           <SopEditList v-model="editForm.persiapan" label="📋 Persiapan" numbered />
-          <SopEditList v-model="editForm.pelaksanaan" label="📋 Pelaksanaan" numbered />
+          <SopEditList v-model="editForm.pelaksanaan_mekanik" label="📋 Pelaksanaan Mekanik" numbered />
+          <SopEditList v-model="editForm.pelaksanaan_listrik" label="📋 Pelaksanaan Elektrik" numbered />
           <SopEditList v-model="editForm.penormalan" label="📋 Penormalan" numbered />
         </div>
 
@@ -197,7 +213,8 @@ const editForm = reactive({
   material: [] as string[],
   risiko: [] as string[],
   persiapan: [] as string[],
-  pelaksanaan: [] as string[],
+  pelaksanaan_mekanik: [] as string[],
+  pelaksanaan_listrik: [] as string[],
   penormalan: [] as string[],
 })
 
@@ -227,7 +244,8 @@ watch(isEditing, (val) => {
     editForm.material = [...sop.value.material]
     editForm.risiko = [...sop.value.risiko]
     editForm.persiapan = [...sop.value.persiapan]
-    editForm.pelaksanaan = [...sop.value.pelaksanaan]
+    editForm.pelaksanaan_mekanik = [...(sop.value.pelaksanaan_mekanik || [])]
+    editForm.pelaksanaan_listrik = [...(sop.value.pelaksanaan_listrik || [])]
     editForm.penormalan = [...sop.value.penormalan]
   }
 })

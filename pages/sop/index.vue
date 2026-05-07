@@ -77,7 +77,7 @@
               </div>
               <div class="sop-card-stat">
                 <span class="sop-card-stat-label">Langkah</span>
-                <span class="sop-card-stat-value">{{ sop.persiapan.length + sop.pelaksanaan.length + sop.penormalan.length }} step</span>
+                <span class="sop-card-stat-value">{{ sop.persiapan.length + (sop.pelaksanaan_mekanik?.length || 0) + (sop.pelaksanaan_listrik?.length || 0) + sop.penormalan.length }} step</span>
               </div>
               <div class="sop-card-stat">
                 <span class="sop-card-stat-label">Risiko</span>

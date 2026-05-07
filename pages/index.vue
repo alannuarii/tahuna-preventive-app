@@ -5,6 +5,11 @@
       <p class="mt-4 text-muted">Memuat data...</p>
     </div>
     
+    <!-- Real-time Clock -->
+    <div v-if="!isLoading && !pending" class="realtime-clock">
+      {{ formattedTime }}
+    </div>
+    
     <MaintenanceTable v-if="!isLoading && !pending" :data="tableData" />
   </div>
 </template>
@@ -44,9 +49,29 @@ const loadSchedule = async () => {
 
 
 
+const formattedTime = ref('')
+
+const updateTime = () => {
+  const now = new Date()
+  const dayName = now.toLocaleDateString('id-ID', { weekday: 'long' })
+  const dateNum = now.getDate()
+  const monthName = now.toLocaleDateString('id-ID', { month: 'long' })
+  const yearNum = now.getFullYear()
+  const timeStr = now.toLocaleTimeString('id-ID', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })
+  formattedTime.value = `${dayName}, ${dateNum} ${monthName} ${yearNum} ${timeStr} WITA`
+}
+
+let timer: any = null
+
 onMounted(() => {
   loadSchedule()
   fetchStatuses()
+  updateTime()
+  timer = setInterval(updateTime, 1000)
+})
+
+onUnmounted(() => {
+  if (timer) clearInterval(timer)
 })
 
 const tableData = computed(() => {
@@ -84,6 +109,28 @@ const tableData = computed(() => {
 </script>
 
 <style>
+.realtime-clock {
+  font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--gray-400);
+  margin-bottom: var(--space-4);
+  text-align: left;
+  letter-spacing: 0.02em;
+  opacity: 0.85;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+@media (max-width: 480px) {
+  .realtime-clock {
+    font-size: 0.7rem;
+    margin-bottom: var(--space-3);
+  }
+}
+
 @media (max-width: 767px) {
   .mobile-collapse-hidden {
     display: none !important;
