@@ -104,104 +104,149 @@
     <template v-if="!pending && realizations.length > 0 && viewMode === 'calendar'">
       <PMCalendar :events="calendarEvents" @event-click="handleEventClick" @download="handleDownloadCalendar" @month-change="handleMonthChange" />
       
-      <!-- Statistics Table -->
-      <div class="card mt-4 animate-fade-in">
-        <div class="card-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 1rem; padding-top: 1.25rem; padding-left: 1.5rem; padding-right: 1.5rem;">
-          <h3 class="card-title m-0 flex items-center gap-2" style="font-size: 1.1rem; font-weight: 600; color: var(--text-color); display: flex; align-items: center;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: #6366f1; margin-right: 6px;">
-              <line x1="18" y1="20" x2="18" y2="10"></line>
-              <line x1="12" y1="20" x2="12" y2="4"></line>
-              <line x1="6" y1="20" x2="6" y2="14"></line>
-            </svg>
-            Statistik Realisasi PM - {{ formatMonthYear(activeCalendarDate) }}
-          </h3>
+      <div class="realisasi-stats-grid mt-4">
+        <!-- Statistics Table (Left Column) -->
+        <div class="card animate-fade-in mb-0">
+          <div class="card-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 1rem; padding-top: 1.25rem; padding-left: 1.5rem; padding-right: 1.5rem;">
+            <h3 class="card-title m-0 flex items-center gap-2" style="font-size: 1.1rem; font-weight: 600; color: var(--text-color); display: flex; align-items: center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: #6366f1; margin-right: 6px;">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
+              Statistik Realisasi PM - {{ formatMonthYear(activeCalendarDate) }}
+            </h3>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-wrapper" style="overflow-x: auto;">
+              <table class="table table-mobile-optimized" style="margin-bottom: 0; width: 100%; border-collapse: collapse;">
+                <thead>
+                  <tr>
+                    <th style="min-width: 80px; text-align: center;">Unit</th>
+                    <th style="min-width: 150px; text-align: left;">Mesin</th>
+                    <th style="text-align: center; width: 60px;">P1</th>
+                    <th style="text-align: center; width: 60px;">P2</th>
+                    <th style="text-align: center; width: 60px;">P3</th>
+                    <th style="text-align: center; width: 60px;">P4</th>
+                    <th style="text-align: center; width: 60px;">P5</th>
+                    <th style="text-align: center; width: 80px; font-weight: bold; background-color: rgba(255, 255, 255, 0.02);">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="stat in monthlyStatistics" :key="stat.unit" style="border-bottom: 1px solid rgba(255, 255, 255, 0.04);">
+                    <td style="text-align: center; vertical-align: middle;" class="font-semibold">Unit {{ stat.unit }}</td>
+                    <td class="text-xs text-muted" style="vertical-align: middle; text-align: left;">
+                      <span class="mobile-hidden-mesin">{{ stat.mesin }}</span>
+                      <span class="mobile-only-mesin">{{ getShortEngineName(stat.mesin) }}</span>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                      <span :class="['badge-pm-count', stat.P1 > 0 ? 'active badge-info-subtle' : 'empty']">
+                        {{ stat.P1 }}
+                      </span>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                      <span :class="['badge-pm-count', stat.P2 > 0 ? 'active badge-success-subtle' : 'empty']">
+                        {{ stat.P2 }}
+                      </span>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                      <span :class="['badge-pm-count', stat.P3 > 0 ? 'active badge-warning-subtle' : 'empty']">
+                        {{ stat.P3 }}
+                      </span>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                      <span :class="['badge-pm-count', stat.P4 > 0 ? 'active badge-danger-subtle' : 'empty']">
+                        {{ stat.P4 }}
+                      </span>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                      <span :class="['badge-pm-count', stat.P5 > 0 ? 'active badge-primary-subtle' : 'empty']">
+                        {{ stat.P5 }}
+                      </span>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle; font-weight: bold; background-color: rgba(255, 255, 255, 0.01);">
+                      <span :class="['badge-pm-count', stat.total > 0 ? 'active badge-total' : 'empty']">
+                        {{ stat.total }}
+                      </span>
+                    </td>
+                  </tr>
+                  <!-- Total Row -->
+                  <tr style="background-color: rgba(255, 255, 255, 0.03); font-weight: bold;">
+                    <td colspan="2" style="text-align: right; padding-right: 2rem; vertical-align: middle;">Total Keseluruhan</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                      <span :class="['badge-pm-count', totalMonthlyStats.P1 > 0 ? 'active badge-info-subtle' : 'empty']">
+                        {{ totalMonthlyStats.P1 }}
+                      </span>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                      <span :class="['badge-pm-count', totalMonthlyStats.P2 > 0 ? 'active badge-success-subtle' : 'empty']">
+                        {{ totalMonthlyStats.P2 }}
+                      </span>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                      <span :class="['badge-pm-count', totalMonthlyStats.P3 > 0 ? 'active badge-warning-subtle' : 'empty']">
+                        {{ totalMonthlyStats.P3 }}
+                      </span>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                      <span :class="['badge-pm-count', totalMonthlyStats.P4 > 0 ? 'active badge-danger-subtle' : 'empty']">
+                        {{ totalMonthlyStats.P4 }}
+                      </span>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                      <span :class="['badge-pm-count', totalMonthlyStats.P5 > 0 ? 'active badge-primary-subtle' : 'empty']">
+                        {{ totalMonthlyStats.P5 }}
+                      </span>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle; background-color: rgba(255, 255, 255, 0.05);">
+                      <span :class="['badge-pm-count', totalMonthlyStats.total > 0 ? 'active badge-total' : 'empty']">
+                        {{ totalMonthlyStats.total }}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-        <div class="card-body p-0">
-          <div class="table-wrapper" style="overflow-x: auto;">
-            <table class="table table-mobile-optimized" style="margin-bottom: 0; width: 100%; border-collapse: collapse;">
-              <thead>
-                <tr>
-                  <th style="min-width: 80px; text-align: center;">Unit</th>
-                  <th style="min-width: 150px; text-align: left;">Mesin</th>
-                  <th style="text-align: center; width: 80px;">P1</th>
-                  <th style="text-align: center; width: 80px;">P2</th>
-                  <th style="text-align: center; width: 80px;">P3</th>
-                  <th style="text-align: center; width: 80px;">P4</th>
-                  <th style="text-align: center; width: 80px;">P5</th>
-                  <th style="text-align: center; width: 100px; font-weight: bold; background-color: rgba(255, 255, 255, 0.02);">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="stat in monthlyStatistics" :key="stat.unit" style="border-bottom: 1px solid rgba(255, 255, 255, 0.04);">
-                  <td style="text-align: center; vertical-align: middle;" class="font-semibold">Unit {{ stat.unit }}</td>
-                  <td class="text-xs text-muted" style="vertical-align: middle; text-align: left;">{{ stat.mesin }}</td>
-                  <td style="text-align: center; vertical-align: middle;">
-                    <span :class="['badge-pm-count', stat.P1 > 0 ? 'active badge-info-subtle' : 'empty']">
-                      {{ stat.P1 }}
-                    </span>
-                  </td>
-                  <td style="text-align: center; vertical-align: middle;">
-                    <span :class="['badge-pm-count', stat.P2 > 0 ? 'active badge-success-subtle' : 'empty']">
-                      {{ stat.P2 }}
-                    </span>
-                  </td>
-                  <td style="text-align: center; vertical-align: middle;">
-                    <span :class="['badge-pm-count', stat.P3 > 0 ? 'active badge-warning-subtle' : 'empty']">
-                      {{ stat.P3 }}
-                    </span>
-                  </td>
-                  <td style="text-align: center; vertical-align: middle;">
-                    <span :class="['badge-pm-count', stat.P4 > 0 ? 'active badge-danger-subtle' : 'empty']">
-                      {{ stat.P4 }}
-                    </span>
-                  </td>
-                  <td style="text-align: center; vertical-align: middle;">
-                    <span :class="['badge-pm-count', stat.P5 > 0 ? 'active badge-primary-subtle' : 'empty']">
-                      {{ stat.P5 }}
-                    </span>
-                  </td>
-                  <td style="text-align: center; vertical-align: middle; font-weight: bold; background-color: rgba(255, 255, 255, 0.01);">
-                    <span :class="['badge-pm-count', stat.total > 0 ? 'active badge-total' : 'empty']">
-                      {{ stat.total }}
-                    </span>
-                  </td>
-                </tr>
-                <!-- Total Row -->
-                <tr style="background-color: rgba(255, 255, 255, 0.03); font-weight: bold;">
-                  <td colspan="2" style="text-align: right; padding-right: 2rem; vertical-align: middle;">Total Keseluruhan</td>
-                  <td style="text-align: center; vertical-align: middle;">
-                    <span :class="['badge-pm-count', totalMonthlyStats.P1 > 0 ? 'active badge-info-subtle' : 'empty']">
-                      {{ totalMonthlyStats.P1 }}
-                    </span>
-                  </td>
-                  <td style="text-align: center; vertical-align: middle;">
-                    <span :class="['badge-pm-count', totalMonthlyStats.P2 > 0 ? 'active badge-success-subtle' : 'empty']">
-                      {{ totalMonthlyStats.P2 }}
-                    </span>
-                  </td>
-                  <td style="text-align: center; vertical-align: middle;">
-                    <span :class="['badge-pm-count', totalMonthlyStats.P3 > 0 ? 'active badge-warning-subtle' : 'empty']">
-                      {{ totalMonthlyStats.P3 }}
-                    </span>
-                  </td>
-                  <td style="text-align: center; vertical-align: middle;">
-                    <span :class="['badge-pm-count', totalMonthlyStats.P4 > 0 ? 'active badge-danger-subtle' : 'empty']">
-                      {{ totalMonthlyStats.P4 }}
-                    </span>
-                  </td>
-                  <td style="text-align: center; vertical-align: middle;">
-                    <span :class="['badge-pm-count', totalMonthlyStats.P5 > 0 ? 'active badge-primary-subtle' : 'empty']">
-                      {{ totalMonthlyStats.P5 }}
-                    </span>
-                  </td>
-                  <td style="text-align: center; vertical-align: middle; background-color: rgba(255, 255, 255, 0.05);">
-                    <span :class="['badge-pm-count', totalMonthlyStats.total > 0 ? 'active badge-total' : 'empty']">
-                      {{ totalMonthlyStats.total }}
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+
+        <!-- Material Consumption Card (Right Column) -->
+        <div class="card animate-fade-in mb-0">
+          <div class="card-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 1rem; padding-top: 1.25rem; padding-left: 1.5rem; padding-right: 1.5rem;">
+            <h3 class="card-title m-0 flex items-center gap-2" style="font-size: 1.1rem; font-weight: 600; color: var(--text-color); display: flex; align-items: center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: #10b981; margin-right: 6px;">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22" x2="12" y2="12"></line>
+              </svg>
+              Realisasi Pemakaian Material - {{ formatMonthYear(activeCalendarDate) }}
+            </h3>
+          </div>
+          <div class="card-body" style="padding: 1.25rem; overflow-y: auto; max-height: 400px;">
+            <div v-if="monthlyMaterialUsage.length === 0" class="text-center py-8 text-muted">
+              <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">📦</span>
+              <p class="text-sm">Tidak ada realisasi pemakaian material pada bulan ini.</p>
+            </div>
+            <div v-else class="material-usage-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <div v-for="item in monthlyMaterialUsage" :key="item.nama" class="material-usage-row" style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 0.75rem 1rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <div class="font-semibold" style="font-size: 0.875rem; color: #ffffff;">{{ item.nama }}</div>
+                  <div class="text-xs text-muted flex items-center gap-2 mt-1">
+                    <span>Part No: <strong style="color: rgba(255, 255, 255, 0.7);">{{ item.part_number }}</strong></span>
+                    <span style="color: rgba(255, 255, 255, 0.2);">|</span>
+                    <span class="badge badge-secondary" style="font-size: 0.65rem; padding: 0.15rem 0.35rem;">{{ item.unitsText }}</span>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="font-bold text-success" style="font-size: 1rem; color: #10b981;">
+                    {{ item.jumlah }} <span class="text-xs font-normal text-muted" style="color: rgba(255, 255, 255, 0.4);">{{ item.satuan }}</span>
+                  </div>
+                  <div v-if="getDrumEquivalent(item.nama, item.jumlah)" class="text-xs text-muted mt-0.5" style="font-style: italic; opacity: 0.8;">
+                    {{ getDrumEquivalent(item.nama, item.jumlah) }}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -256,7 +301,7 @@
 </template>
 
 <script setup lang="ts">
-import { engines } from '~/utils/pmCycles'
+import { engines, fastMovingMaterials } from '~/utils/pmCycles'
 
 const viewMode = ref('table')
 const filters = reactive({ start: '', end: '', unit: [] as number[], jenis_pm: [] as string[], sort: 'desc', page: 1, limit: 10 })
@@ -326,6 +371,80 @@ const totalMonthlyStats = computed(() => {
     return acc
   }, { P1: 0, P2: 0, P3: 0, P4: 0, P5: 0, total: 0 })
 })
+
+const monthlyMaterialUsage = computed(() => {
+  const sourceData = calendarData.value?.data || []
+  const month = activeCalendarDate.value.getMonth()
+  const year = activeCalendarDate.value.getFullYear()
+
+  // Filter realizations by active month
+  const monthlyRealizations = sourceData.filter((item: any) => {
+    const d = new Date(item.tanggal_pelaksanaan)
+    return d.getMonth() === month && d.getFullYear() === year
+  })
+
+  // Collect actual material usage: { nama, part_number, jumlah, satuan, units: Set<number> }
+  const usageMap = new Map<string, { nama: string, part_number: string, jumlah: number, satuan: string, units: Set<number> }>()
+
+  monthlyRealizations.forEach((realization: any) => {
+    const unitNumber = Number(realization.unit)
+    const actualMaterials = realization.materials || []
+
+    actualMaterials.forEach((mat: any) => {
+      // We only sum up materials with positive realized quantity (jumlah_realisasi > 0)
+      const qty = Number(mat.jumlah_realisasi || 0)
+      if (qty <= 0) return
+
+      const matName = mat.nama_material
+      // Try to find the part_number of this material from our fastMovingMaterials definition so we have complete data
+      let partNumber = '-'
+      const unitFm = fastMovingMaterials.find(f => f.unit === unitNumber)
+      if (unitFm) {
+        const match = unitFm.material.find(m => m.nama.toLowerCase() === matName.toLowerCase())
+        if (match && match.part_number) {
+          partNumber = match.part_number
+        }
+      }
+
+      const key = `${matName}-${partNumber}`
+      if (usageMap.has(key)) {
+        usageMap.get(key)!.jumlah += qty
+        usageMap.get(key)!.units.add(unitNumber)
+      } else {
+        usageMap.set(key, {
+          nama: matName,
+          part_number: partNumber,
+          jumlah: qty,
+          satuan: mat.satuan || 'buah',
+          units: new Set([unitNumber])
+        })
+      }
+    })
+  })
+
+  return Array.from(usageMap.values()).map(item => ({
+    ...item,
+    unitsText: `Unit ${Array.from(item.units).sort((a, b) => a - b).join(', ')}`
+  })).sort((a, b) => a.nama.localeCompare(b.nama))
+})
+
+const getDrumEquivalent = (nama: string, jumlah: number) => {
+  if (nama.toLowerCase().includes('lube oil') || nama.toLowerCase().includes('oli')) {
+    const drums = (jumlah / 209).toFixed(1)
+    return `≈ ${drums} Drum`
+  }
+  return null
+}
+
+const getShortEngineName = (name: string) => {
+  if (!name) return '-'
+  const lower = name.toLowerCase()
+  if (lower.includes('swd')) return 'SWD'
+  if (lower.includes('deutz')) return 'Deutz'
+  if (lower.includes('mitsubishi')) return 'Mitsubishi'
+  if (lower.includes('cummins')) return 'Cummins'
+  return name
+}
 
 const router = useRouter()
 
@@ -528,5 +647,31 @@ const viewOptions = [
   background-color: rgba(255, 255, 255, 0.08);
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Grid Layout for Stats & Materials */
+.realisasi-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .realisasi-stats-grid {
+    grid-template-columns: 1.4fr 1fr;
+  }
+}
+
+.mobile-only-mesin {
+  display: none;
+}
+@media (max-width: 767px) {
+  .mobile-hidden-mesin {
+    display: none;
+  }
+  .mobile-only-mesin {
+    display: inline;
+  }
 }
 </style>

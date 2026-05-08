@@ -71,6 +71,16 @@ export default defineEventHandler(async (event) => {
 
     const realizations = await query(dataSql, dataParams)
 
+    if (realizations.length > 0) {
+      const ids = realizations.map((r: any) => r.id)
+      const placeholders = ids.map((_, i) => `$${i + 1}`).join(', ')
+      const materials = await query(`SELECT * FROM pm_realization_materials WHERE realization_id IN (${placeholders})`, ids)
+      
+      realizations.forEach((r: any) => {
+        r.materials = materials.filter((m: any) => m.realization_id === r.id)
+      })
+    }
+
     return {
       data: realizations,
       meta: {
