@@ -101,7 +101,111 @@
     </div>
 
     <!-- Calendar View -->
-    <PMCalendar v-if="!pending && realizations.length > 0 && viewMode === 'calendar'" :events="calendarEvents" @event-click="handleEventClick" @download="handleDownloadCalendar" />
+    <template v-if="!pending && realizations.length > 0 && viewMode === 'calendar'">
+      <PMCalendar :events="calendarEvents" @event-click="handleEventClick" @download="handleDownloadCalendar" @month-change="handleMonthChange" />
+      
+      <!-- Statistics Table -->
+      <div class="card mt-4 animate-fade-in">
+        <div class="card-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 1rem; padding-top: 1.25rem; padding-left: 1.5rem; padding-right: 1.5rem;">
+          <h3 class="card-title m-0 flex items-center gap-2" style="font-size: 1.1rem; font-weight: 600; color: var(--text-color); display: flex; align-items: center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: #6366f1; margin-right: 6px;">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            Statistik Realisasi PM - {{ formatMonthYear(activeCalendarDate) }}
+          </h3>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-wrapper" style="overflow-x: auto;">
+            <table class="table table-mobile-optimized" style="margin-bottom: 0; width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr>
+                  <th style="min-width: 80px; text-align: center;">Unit</th>
+                  <th style="min-width: 150px; text-align: left;">Mesin</th>
+                  <th style="text-align: center; width: 80px;">P1</th>
+                  <th style="text-align: center; width: 80px;">P2</th>
+                  <th style="text-align: center; width: 80px;">P3</th>
+                  <th style="text-align: center; width: 80px;">P4</th>
+                  <th style="text-align: center; width: 80px;">P5</th>
+                  <th style="text-align: center; width: 100px; font-weight: bold; background-color: rgba(255, 255, 255, 0.02);">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="stat in monthlyStatistics" :key="stat.unit" style="border-bottom: 1px solid rgba(255, 255, 255, 0.04);">
+                  <td style="text-align: center; vertical-align: middle;" class="font-semibold">Unit {{ stat.unit }}</td>
+                  <td class="text-xs text-muted" style="vertical-align: middle; text-align: left;">{{ stat.mesin }}</td>
+                  <td style="text-align: center; vertical-align: middle;">
+                    <span :class="['badge-pm-count', stat.P1 > 0 ? 'active badge-info-subtle' : 'empty']">
+                      {{ stat.P1 }}
+                    </span>
+                  </td>
+                  <td style="text-align: center; vertical-align: middle;">
+                    <span :class="['badge-pm-count', stat.P2 > 0 ? 'active badge-success-subtle' : 'empty']">
+                      {{ stat.P2 }}
+                    </span>
+                  </td>
+                  <td style="text-align: center; vertical-align: middle;">
+                    <span :class="['badge-pm-count', stat.P3 > 0 ? 'active badge-warning-subtle' : 'empty']">
+                      {{ stat.P3 }}
+                    </span>
+                  </td>
+                  <td style="text-align: center; vertical-align: middle;">
+                    <span :class="['badge-pm-count', stat.P4 > 0 ? 'active badge-danger-subtle' : 'empty']">
+                      {{ stat.P4 }}
+                    </span>
+                  </td>
+                  <td style="text-align: center; vertical-align: middle;">
+                    <span :class="['badge-pm-count', stat.P5 > 0 ? 'active badge-primary-subtle' : 'empty']">
+                      {{ stat.P5 }}
+                    </span>
+                  </td>
+                  <td style="text-align: center; vertical-align: middle; font-weight: bold; background-color: rgba(255, 255, 255, 0.01);">
+                    <span :class="['badge-pm-count', stat.total > 0 ? 'active badge-total' : 'empty']">
+                      {{ stat.total }}
+                    </span>
+                  </td>
+                </tr>
+                <!-- Total Row -->
+                <tr style="background-color: rgba(255, 255, 255, 0.03); font-weight: bold;">
+                  <td colspan="2" style="text-align: right; padding-right: 2rem; vertical-align: middle;">Total Keseluruhan</td>
+                  <td style="text-align: center; vertical-align: middle;">
+                    <span :class="['badge-pm-count', totalMonthlyStats.P1 > 0 ? 'active badge-info-subtle' : 'empty']">
+                      {{ totalMonthlyStats.P1 }}
+                    </span>
+                  </td>
+                  <td style="text-align: center; vertical-align: middle;">
+                    <span :class="['badge-pm-count', totalMonthlyStats.P2 > 0 ? 'active badge-success-subtle' : 'empty']">
+                      {{ totalMonthlyStats.P2 }}
+                    </span>
+                  </td>
+                  <td style="text-align: center; vertical-align: middle;">
+                    <span :class="['badge-pm-count', totalMonthlyStats.P3 > 0 ? 'active badge-warning-subtle' : 'empty']">
+                      {{ totalMonthlyStats.P3 }}
+                    </span>
+                  </td>
+                  <td style="text-align: center; vertical-align: middle;">
+                    <span :class="['badge-pm-count', totalMonthlyStats.P4 > 0 ? 'active badge-danger-subtle' : 'empty']">
+                      {{ totalMonthlyStats.P4 }}
+                    </span>
+                  </td>
+                  <td style="text-align: center; vertical-align: middle;">
+                    <span :class="['badge-pm-count', totalMonthlyStats.P5 > 0 ? 'active badge-primary-subtle' : 'empty']">
+                      {{ totalMonthlyStats.P5 }}
+                    </span>
+                  </td>
+                  <td style="text-align: center; vertical-align: middle; background-color: rgba(255, 255, 255, 0.05);">
+                    <span :class="['badge-pm-count', totalMonthlyStats.total > 0 ? 'active badge-total' : 'empty']">
+                      {{ totalMonthlyStats.total }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </template>
 
     <!-- Table View -->
     <template v-if="!pending && realizations.length > 0 && viewMode === 'table'">
@@ -160,6 +264,68 @@ const responseData = ref<any>(null)
 const calendarData = ref<any>(null)
 const pending = ref(false)
 const showMobileFilter = ref(false)
+
+const activeCalendarDate = ref(new Date())
+
+const handleMonthChange = (date: Date) => {
+  activeCalendarDate.value = date
+}
+
+const formatMonthYear = (date: Date) => {
+  const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
+  return `${monthNames[date.getMonth()]} ${date.getFullYear()}`
+}
+
+const monthlyStatistics = computed(() => {
+  const sourceData = calendarData.value?.data || []
+  const month = activeCalendarDate.value.getMonth()
+  const year = activeCalendarDate.value.getFullYear()
+
+  // Filter realizations by active month
+  const monthlyRealizations = sourceData.filter((item: any) => {
+    const d = new Date(item.tanggal_pelaksanaan)
+    return d.getMonth() === month && d.getFullYear() === year
+  })
+
+  // Initialize statistics for each engine/unit
+  const stats = engines.map(engine => ({
+    unit: engine.unit,
+    mesin: engine.mesin,
+    P1: 0,
+    P2: 0,
+    P3: 0,
+    P4: 0,
+    P5: 0,
+    total: 0
+  }))
+
+  // Count PM types for each monthly realization
+  monthlyRealizations.forEach((item: any) => {
+    const stat = stats.find(s => s.unit === Number(item.unit))
+    if (stat) {
+      const pmType = item.jenis_pm
+      if (pmType && ['P1', 'P2', 'P3', 'P4', 'P5'].includes(pmType)) {
+        stat[pmType as 'P1' | 'P2' | 'P3' | 'P4' | 'P5']++
+      }
+      stat.total++
+    }
+  })
+
+  return stats
+})
+
+const totalMonthlyStats = computed(() => {
+  const stats = monthlyStatistics.value
+  return stats.reduce((acc, curr) => {
+    acc.P1 += curr.P1
+    acc.P2 += curr.P2
+    acc.P3 += curr.P3
+    acc.P4 += curr.P4
+    acc.P5 += curr.P5
+    acc.total += curr.total
+    return acc
+  }, { P1: 0, P2: 0, P3: 0, P4: 0, P5: 0, total: 0 })
+})
 
 const router = useRouter()
 
@@ -311,4 +477,56 @@ const viewOptions = [
 
 .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
 .whitespace-nowrap { white-space: nowrap; }
+
+/* Statistics Badge Styles */
+.badge-pm-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.85rem;
+  height: 1.85rem;
+  padding: 0 0.35rem;
+  border-radius: 6px;
+  font-size: 0.825rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+.badge-pm-count.empty {
+  color: rgba(255, 255, 255, 0.12);
+  background-color: transparent;
+  font-weight: 400;
+}
+.badge-pm-count.active {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+.badge-info-subtle {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+.badge-success-subtle {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.badge-warning-subtle {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+.badge-danger-subtle {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.badge-primary-subtle {
+  background-color: rgba(139, 92, 246, 0.15);
+  color: #a78bfa;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+.badge-total {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
 </style>
