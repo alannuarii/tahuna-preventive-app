@@ -98,7 +98,7 @@
             <line x1="1" y1="15" x2="4" y2="15"></line>
           </svg>
         </span>
-        <span class="menu-item-label">Mesin</span>
+        <span class="menu-item-label">Spesifikasi</span>
       </NuxtLink>
     </div>
   </div>

@@ -140,6 +140,8 @@ const termDictionary: Record<string, { en: string, id: string }> = {
   'capacities': { en: 'Capacities', id: 'Kapasitas' },
   'pressures': { en: 'Pressures', id: 'Tekanan' },
   'engine_oil_capacity': { en: 'Engine Oil Capacity', id: 'Kapasitas Oli Mesin' },
+  'performance_at_1500_RPM_50Hz': { en: 'Performance at 1500 RPM (50Hz)', id: 'Performa pada 1500 RPM (50Hz)' },
+  'fuel_system': { en: 'Fuel System', id: 'Sistem Bahan Bakar' },
 
   // Detailed keys
   'engine_model': { en: 'Engine Model', id: 'Model Mesin' },
@@ -179,7 +181,17 @@ const termDictionary: Record<string, { en: string, id: string }> = {
   'volume_minyak_lumas_carter': { en: 'Lube Oil Carter Vol', id: 'Volume Minyak Lumas Carter' },
   'volume_cairan_pendingin_mesin': { en: 'Engine Coolant Vol', id: 'Volume Cairan Pendingin Mesin' },
   'cooling_system_capacity_standard_radiator': { en: 'Radiator Capacity', id: 'Kapasitas Sistem Pendingin' },
+  'cooling_system_standard_radiator': { en: 'Cooling System Std Radiator', id: 'Sistem Pendingin Radiator Standar' },
   'lubricating_system_oil_capacity_with_filters': { en: 'Total Lube Oil Capacity', id: 'Total Kapasitas Oli Pelumas' },
+  'lubricating_system_with_filters': { en: 'Lube System (With Filters)', id: 'Sistem Pelumasan (Termasuk Filter)' },
+  'aspiration': { en: 'Aspiration System', id: 'Sistem Aspirasi Udara' },
+  'bore_and_stroke': { en: 'Bore and Stroke', id: 'Diameter dan Langkah Piston' },
+  'displacement': { en: 'Displacement', id: 'Volume Langkah / Isi Silinder' },
+  'maximum_weight_dry': { en: 'Maximum Weight (Dry)', id: 'Berat Maksimum (Kering)' },
+  'standby_power': { en: 'Standby Power', id: 'Daya Siaga (Standby)' },
+  'prime_power': { en: 'Prime Power', id: 'Daya Utama (Prime)' },
+  'fuel_consumption_standby_full_load': { en: 'Fuel Consumption Standby (100%)', id: 'Konsumsi BB Standby (Beban Penuh)' },
+  'fuel_consumption_prime_full_load': { en: 'Fuel Consumption Prime (100%)', id: 'Konsumsi BB Prime (Beban Penuh)' },
   'oil_filling_crankcase': { en: 'Crankcase Oil Filling', id: 'Pengisian Oli Bak Mesin' },
   'cooling_water_without_heat_exchanger': { en: 'Cooling Water (No HX)', id: 'Air Pendingin (Tanpa Heat Exch.)' },
   'oil_pan': { en: 'Oil Pan', id: 'Bak Oli' },
@@ -237,6 +249,8 @@ const unitsMap = [
   { suffix: '_celcius', label: '°C' },
   { suffix: '_rpm', label: 'RPM' },
   { suffix: '_liters', label: 'Liters' },
+  { suffix: '_BHP', label: 'BHP' },
+  { suffix: '_F', label: '°F' },
 ]
 
 const processEntry = (rawKey: string, rawValue: any) => {

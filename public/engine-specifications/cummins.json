@@ -1,23 +1,32 @@
 {
   "engine_model": "Cummins KTA50-G8",
   "general_specifications": {
-    "maximum_weight_wet_kg": 10626,
-    "maximum_weight_wet_lb": 23426,
-    "cooling_system_capacity_standard_radiator_L": 310,
-    "lubricating_system_oil_capacity_with_filters_L": 178
+    "engine_type": "4 cycle, 60 degree vee, 16 cylinder",
+    "bore_and_stroke_mm": "159 x 159",
+    "displacement_L": 50.3,
+    "aspiration": "Turbocharged and Aftercooled",
+    "compression_ratio": "13.5:1 to 15.5:1",
+    "maximum_weight_dry_kg": 5361,
+    "maximum_weight_wet_kg": 10626
+  },
+  "performance_at_1500_RPM_50Hz": {
+    "standby_power_BHP": 1915,
+    "prime_power_BHP": 1725,
+    "fuel_consumption_standby_full_load_L_hr": 345,
+    "fuel_consumption_prime_full_load_L_hr": 289
+  },
+  "capacities": {
+    "cooling_system_standard_radiator_L": 310,
+    "lubricating_system_with_filters_L": 178
+  },
+  "fuel_system": {
+    "max_fuel_inlet_restriction_mmHg": 101,
+    "max_fuel_return_restriction_mmHg": 165,
+    "fuel_pump_flow_rate_L_hr": 550
   },
   "electrical_system": {
     "starting_voltage_DC": 24,
     "battery_group_number": 31,
     "cca_minimum_A_at_0_to_32_F": 1400
-  },
-  "fuel_system_specifications": {
-    "max_fuel_inlet_restriction_mmHg": 101,
-    "max_fuel_return_restriction_mmHg": 165,
-    "fuel_pump_flow_rate_L_hr": 550
-  },
-  "fuel_consumption_at_1500_RPM_50Hz": {
-    "standby_full_load_L_hr": 345,
-    "prime_full_load_L_hr": 289
   }
 }
