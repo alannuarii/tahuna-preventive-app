@@ -145,12 +145,12 @@
         "Detergen secukupnya",
         "Filter bahan bakar (2 buah)",
         "Filter minyak lumas (4 buah)",
-        "Minyak lumas (209 liter)",
+        "Minyak lumas (190 liter)",
         "Grease secukupnya"
       ],
       "risiko": [
         "Terjepit bagian mekanik mesin",
-        "Terpeleset genangan 209L minyak lumas",
+        "Terpeleset genangan 190 liter minyak lumas",
         "Tersengat listrik panel tegangan tinggi",
         "Paparan oli panas atau bahan bakar ke kulit/mata"
       ],
@@ -163,7 +163,7 @@
         "pelaksanaan": [
           "Melakukan semua pengecekan visual, elektrikal, trafo, fuse, dan kebersihan panel (sama seperti cakupan P2).",
           "Membersihkan filter/strainer kompressor.",
-          "Mengkuras oli lama dan mengganti minyak lumas baru (209 liter).",
+          "Mengkuras oli lama dan mengganti minyak lumas baru (190 liter).",
           "Mengganti filter minyak lumas (4 buah).",
           "Mengganti filter bahan bakar (2 buah).",
           "Membersihkan filter udara, sistem pendingin udara, fin radiator/cooler, dan CAC.",
@@ -209,7 +209,7 @@
         "Detergen secukupnya",
         "Filter bahan bakar (2 buah)",
         "Filter minyak lumas (4 buah)",
-        "Minyak lumas (209 liter)",
+        "Minyak lumas (190 liter)",
         "Grease secukupnya"
       ],
       "risiko": [
@@ -225,7 +225,7 @@
           "Pasang Lock Out / Tag Out (LOTO)."
         ],
         "pelaksanaan": [
-          "Melakukan seluruh pekerjaan rutin P3 (Ganti pelumas 209L, ganti filter lumas, ganti filter bb, bersihkan filter udara, cek trafo, panel, fuse, dll).",
+          "Melakukan seluruh pekerjaan rutin P3 (Ganti pelumas 190 liter, ganti filter lumas, ganti filter bb, bersihkan filter udara, cek trafo, panel, fuse, dll).",
           "Memeriksa dan memperbaiki clearance inlet/exhaust valve serta tekanan pengkabutan nozzle.",
           "Membersihkan dan melumasi batang governor, mengganti lumas governor/turbo/kompresor, membersihkan spring safety valve kompresor.",
           "Memeriksa posisi dan melumasi crankpin bearing.",
@@ -274,7 +274,7 @@
         "Detergen secukupnya",
         "Filter bahan bakar (2 buah)",
         "Filter minyak lumas (4 buah)",
-        "Minyak lumas (209 liter)",
+        "Minyak lumas (190 liter)",
         "Grease secukupnya"
       ],
       "risiko": [
@@ -675,11 +675,11 @@
         "Fuel filter (4 buah)",
         "Lube oil filter (4 buah)",
         "Lube oil filter bypass (1 buah)",
-        "Lube oil (320 liter)"
+        "Lube oil (362 liter)"
       ],
       "risiko": [
         "Terjepit komponen mekanik",
-        "Terpeleset genangan cairan pelumas 320 liter",
+        "Terpeleset genangan cairan pelumas 362 liter",
         "Paparan pelumas/BBM saat ganti filter"
       ],
       "detail_aktivitas": {
@@ -692,7 +692,7 @@
           "Melakukan pemeriksaan dasar P1 (Warna gas buang, air kondensat, busbar, venting, level baterai/trafo).",
           "Mengecek kekencangan baut pengikat cover cylinder head.",
           "Mengecek kondisi pipa pelumasan, bahan bakar, and saluran pendinginan.",
-          "Mengkuras oli lama dan mengganti dengan pelumas baru (320 liter).",
+          "Mengkuras oli lama dan mengganti dengan pelumas baru (362 liter).",
           "Memeriksa keseluruhan saluran pelumas and saluran bahan bakar.",
           "Mengganti lube oil filter (4 buah) and lube oil filter bypass (1 buah).",
           "Mengganti racor filter (2 buah).",
@@ -719,7 +719,7 @@
         "Obeng minus dan plus",
         "Multimeter",
         "Filter Wrench",
-        "Bak penampung oli (320L)"
+        "Bak penampung oli (362 liter)"
       ],
       "apd": [
         "Sarung tangan karet/nitrile",
@@ -736,11 +736,11 @@
         "Fuel filter (4 buah)",
         "Lube oil filter (4 buah)",
         "Lube oil filter bypass (1 buah)",
-        "Lube oil (320 liter)"
+        "Lube oil (362 liter)"
       ],
       "risiko": [
         "Terjepit atau tergores mesin",
-        "Terpeleset genangan 320L pelumas",
+        "Terpeleset genangan 362 liter pelumas",
         "Tersengat arus dari panel sinkron"
       ],
       "detail_aktivitas": {
@@ -751,7 +751,7 @@
         ],
         "pelaksanaan": [
           "Melakukan seluruh pemeriksaan P2 (Baut cylinder head, pipa pelumas/air/bb, trafo, baterai, panel sinkron).",
-          "Mengkuras dan mengganti pelumas (320 liter).",
+          "Mengkuras dan mengganti pelumas (362 liter).",
           "Mengganti lube oil filter (4 buah) and lube oil filter bypass (1 buah).",
           "Mengganti racor filter (2 buah).",
           "Mengganti fuel filter (4 buah).",
@@ -792,7 +792,7 @@
         "Fuel filter (4 buah)",
         "Lube oil filter (4 buah)",
         "Lube oil filter bypass (1 buah)",
-        "Lube oil (320 liter)"
+        "Lube oil (362 liter)"
       ],
       "risiko": [
         "Terjepit pada saat penyetelan katup",
@@ -806,7 +806,7 @@
           "Alihkan mesin, pasang LOTO."
         ],
         "pelaksanaan": [
-          "Melakukan seluruh pekerjaan penggantian P3 (Ganti pelumas 320L, lube oil filter, bypass, racor, and fuel filter).",
+          "Melakukan seluruh pekerjaan penggantian P3 (Ganti pelumas 362 liter, lube oil filter, bypass, racor, and fuel filter).",
           "Mengecek baut cylinder head, perpipaan, radiator, turbo, klam exhaust/intake, baterai, panel sinkron, bearing generator, busbar.",
           "Melakukan penyetelan (adjust) clearance valve.",
           "Melakukan penyetelan (adjust) tekanan injector."
@@ -846,7 +846,7 @@
         "Lube oil filter (4 buah)",
         "Lube oil filter bypass (1 buah)",
         "Air filter (4 buah)",
-        "Lube oil (320 liter)"
+        "Lube oil (362 liter)"
       ],
       "risiko": [
         "Tertimpa komponen berat (turbo, water pump)",
@@ -960,11 +960,11 @@
         "Filter Racor (1 buah)",
         "Filter oli (5 buah)",
         "Filter oli bypass (2 buah)",
-        "Minyak lumas (180 liter)"
+        "Minyak lumas (178 liter)"
       ],
       "risiko": [
         "Terjepit komponen mekanik berputar",
-        "Terpeleset genangan 180L oli",
+        "Terpeleset genangan 178 liter oli",
         "Tersengat listrik dari baterai/alternator"
       ],
       "detail_aktivitas": {
@@ -976,7 +976,7 @@
           "Melakukan pemeriksaan dasar P1 (Air kondensat, busbar, venting, level cairan).",
           "Mengecek baut pengikat cover cylinder head.",
           "Mengecek kondisi pipa pelumasan, bahan bakar, and saluran pendingin.",
-          "Mengkuras dan mengganti pelumas mesin (180 liter) serta memeriksa saluran pelumas.",
+          "Mengkuras dan mengganti pelumas mesin (178 liter) serta memeriksa saluran pelumas.",
           "Mengganti lube oil filter (5 buah) and lube oil bypass (2 buah).",
           "Mengganti fuel filter (2 buah).",
           "Mengganti filter racor (1 buah).",
@@ -1022,11 +1022,11 @@
         "Filter oli (5 buah)",
         "Filter oli bypass (2 buah)",
         "Filter coolant (2 buah)",
-        "Minyak lumas (180 liter)"
+        "Minyak lumas (178 liter)"
       ],
       "risiko": [
         "Terjepit pada area celah katup",
-        "Terpeleset tumpahan 180L oli / coolant",
+        "Terpeleset tumpahan 178 liter oli / coolant",
         "Tersengat listrik dari panel proteksi"
       ],
       "detail_aktivitas": {
@@ -1077,7 +1077,7 @@
         "Filter oli bypass (2 buah)",
         "Filter coolant (2 buah)",
         "Filter udara (2 buah)",
-        "Minyak lumas (180 liter)",
+        "Minyak lumas (178 liter)",
         "Carbon brush (jika diperlukan)"
       ],
       "risiko": [
@@ -1133,7 +1133,7 @@
         "Filter oli bypass (2 buah)",
         "Filter coolant (2 buah)",
         "Filter udara (2 buah)",
-        "Minyak lumas (180 liter)"
+        "Minyak lumas (178 liter)"
       ],
       "risiko": [
         "Terjepit saat membongkar part injeksi",

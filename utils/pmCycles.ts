@@ -63,17 +63,17 @@ export const fastMovingMaterials = [
     material: [
       { nama: "Lube Oil Filter", part_number: "LF3414", jumlah: 4, satuan: "buah", cycle: "P3" },
       { nama: "Fuel Filter", part_number: "BF 1018/1", jumlah: 2, satuan: "buah", cycle: "P2" },
-      { nama: "Lube Oil", part_number: "Pertamina Meditran S SAE 40", jumlah: 209, satuan: "liter", cycle: "P3" },
+      { nama: "Lube Oil", part_number: "Pertamina Meditran S SAE 40", jumlah: 190, satuan: "liter", cycle: "P3" },
     ],
   },
   {
     unit: 4,
     mesin: "Deutz MWM TBD 616 V12",
     material: [
-      { nama: "Lube Oil Filter", part_number: "0118-2001", jumlah: 1, satuan: "buah", cycle: "P3" },
+      { nama: "Lube Oil Filter", part_number: "0118-2001", jumlah: 1, satuan: "buah", cycle: "P2" },
       { nama: "Fuel Filter", part_number: "0117-4423", jumlah: 1, satuan: "buah", cycle: "P2" },
-      { nama: "Air Filter", part_number: "0118-0870", jumlah: 2, satuan: "buah", cycle: "P5" },
-      { nama: "Lube Oil", part_number: "Pertamina Meditran S SAE 40", jumlah: 70, satuan: "liter", cycle: "P2" },
+      { nama: "Air Filter", part_number: "0118-0870", jumlah: 2, satuan: "buah", cycle: "P3" },
+      { nama: "Lube Oil", part_number: "Pertamina Meditran S SAE 40", jumlah: 64, satuan: "liter", cycle: "P2" },
     ],
   },
   {
@@ -83,7 +83,7 @@ export const fastMovingMaterials = [
       { nama: "Lube Oil Filter", part_number: "0118-2001", jumlah: 1, satuan: "buah", cycle: "P3" },
       { nama: "Fuel Filter", part_number: "0117-4423", jumlah: 1, satuan: "buah", cycle: "P2" },
       { nama: "Air Filter", part_number: "0118-0870", jumlah: 2, satuan: "buah", cycle: "P5" },
-      { nama: "Lube Oil", part_number: "Pertamina Meditran S SAE 40", jumlah: 70, satuan: "liter", cycle: "P2" },
+      { nama: "Lube Oil", part_number: "Pertamina Meditran S SAE 40", jumlah: 64, satuan: "liter", cycle: "P2" },
     ],
   },
   {
@@ -95,7 +95,7 @@ export const fastMovingMaterials = [
       { nama: "Air Filter", part_number: "47220-38802", jumlah: 4, satuan: "buah", cycle: "P5" },
       { nama: "Lube Oil Filter Bypass", part_number: "37540-02100", jumlah: 1, satuan: "buah", cycle: "P2" },
       { nama: "Racor Filter", part_number: "2020TM", jumlah: 2, satuan: "buah", cycle: "P1" },
-      { nama: "Lube Oil", part_number: "Pertamina Meditran SX SAE 15W-40", jumlah: 320, satuan: "liter", cycle: "P3" },
+      { nama: "Lube Oil", part_number: "Pertamina Meditran SX SAE 15W-40", jumlah: 362, satuan: "liter", cycle: "P3" },
     ],
   },
   {
@@ -107,7 +107,7 @@ export const fastMovingMaterials = [
       { nama: "Air Filter", part_number: "47220-38802", jumlah: 4, satuan: "buah", cycle: "P5" },
       { nama: "Lube Oil Filter Bypass", part_number: "37540-02100", jumlah: 1, satuan: "buah", cycle: "P2" },
       { nama: "Racor Filter", part_number: "2020TM", jumlah: 2, satuan: "buah", cycle: "P1" },
-      { nama: "Lube Oil", part_number: "Pertamina Meditran SX SAE 15W-40", jumlah: 320, satuan: "liter", cycle: "P3" },
+      { nama: "Lube Oil", part_number: "Pertamina Meditran SX SAE 15W-40", jumlah: 362, satuan: "liter", cycle: "P3" },
     ],
   },
   {
@@ -120,7 +120,7 @@ export const fastMovingMaterials = [
       { nama: "Lube Oil Filter Bypass", part_number: "LF777", jumlah: 2, satuan: "buah", cycle: "P2" },
       { nama: "Racor Filter", part_number: "2020TM", jumlah: 1, satuan: "buah", cycle: "P1" },
       { nama: "Water Filter", part_number: "WF2076", jumlah: 2, satuan: "buah", cycle: "P3" },
-      { nama: "Lube Oil", part_number: "Pertamina Meditran SX SAE 15W-40", jumlah: 180, satuan: "liter", cycle: "P2" },
+      { nama: "Lube Oil", part_number: "Pertamina Meditran SX SAE 15W-40", jumlah: 178, satuan: "liter", cycle: "P2" },
     ],
   },
   {
@@ -133,7 +133,7 @@ export const fastMovingMaterials = [
       { nama: "Lube Oil Filter Bypass", part_number: "LF777", jumlah: 2, satuan: "buah", cycle: "P2" },
       { nama: "Racor Filter", part_number: "2020TM", jumlah: 1, satuan: "buah", cycle: "P1" },
       { nama: "Water Filter", part_number: "WF2076", jumlah: 2, satuan: "buah", cycle: "P3" },
-      { nama: "Lube Oil", part_number: "Pertamina Meditran SX SAE 15W-40", jumlah: 180, satuan: "liter", cycle: "P2" },
+      { nama: "Lube Oil", part_number: "Pertamina Meditran SX SAE 15W-40", jumlah: 178, satuan: "liter", cycle: "P2" },
     ],
   },
 ]
