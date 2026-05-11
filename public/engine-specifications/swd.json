@@ -1,0 +1,25 @@
+{
+  "engine_model": "SWD 6 FHD 240 / 6 FDHD 240",
+  "engine_type": "4-Stroke diesel engine with trunk pistons and direct fuel injection",
+  "number_of_cylinders": 6,
+  "cylinder_bore_mm": 240,
+  "stroke_mm": 260,
+  "swept_volume_per_cylinder_liters": 11.8,
+  "maximum_speed_rpm": 1000,
+  "compression_ratio": "13 : 1",
+  "firing_order": "1 - 4 - 2 - 6 - 3 - 5",
+  "weights": {
+    "dry_weight_approx_kg": 11150,
+    "wet_weight_approx_kg": 11600,
+    "piston_and_connecting_rod_kg": 88,
+    "cylinder_head_kg": 100
+  },
+  "capacities": {
+    "oil_filling_crankcase_liters": 190,
+    "cooling_water_without_heat_exchanger_liters": 300
+  },
+  "pressures": {
+    "starting_air_kg_cm2": "20 - 30",
+    "atomiser_opening_pressure_kg_cm2": 300
+  }
+}

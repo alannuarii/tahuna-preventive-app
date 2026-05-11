@@ -385,11 +385,11 @@
         "Kain lap majun secukupnya",
         "Detergen secukupnya",
         "Filter bahan bakar (1 buah)",
-        "Minyak lumas (70 liter)"
+        "Minyak lumas (64 liter)"
       ],
       "risiko": [
         "Terjepit komponen bergerak",
-        "Terpeleset ceceran minyak lumas 70L",
+        "Terpeleset ceceran minyak lumas 64L",
         "Tersengat listrik dari panel"
       ],
       "detail_aktivitas": {
@@ -401,7 +401,7 @@
         "pelaksanaan": [
           "Melakukan pengecekan visual dan pengukuran elektrik standar.",
           "Membersihkan filter/strainer minyak pelumas.",
-          "Mengkuras dan mengganti minyak lumas (70 liter).",
+          "Mengkuras dan mengganti minyak lumas (64 liter).",
           "Mengganti filter bahan bakar (1 buah).",
           "Membersihkan filter udara, badan, and sistem pendingin udara kompresi.",
           "Memeriksa kondisi air pendingin and memperbaiki kebocoran air/bb pada pompa.",
@@ -418,7 +418,7 @@
           "Memeriksa dan mengencangkan baut flanges pipa bahan bakar, minyak lumas, and air pendingin mesin."
         ],
         "penormalan": [
-          "Bersihkan lokasi pekerjaan dari tumpahan oli 70L.",
+          "Bersihkan lokasi pekerjaan dari tumpahan oli 64L.",
           "Lepaskan LOTO.",
           "Mesin siap dioperasikan."
         ]
@@ -445,7 +445,7 @@
         "Detergen secukupnya",
         "Filter bahan bakar (1 buah)",
         "Filter minyak lumas (1 buah)",
-        "Minyak lumas (70 liter)"
+        "Minyak lumas (64 liter)"
       ],
       "risiko": [
         "Terjepit saat melakukan adjust valve",
@@ -462,7 +462,7 @@
           "Melakukan pekerjaan rutin elektrikal P2 (Cek fuse, baterai, panel, trafo, motor listrik).",
           "Mengganti filter minyak lumas (1 buah).",
           "Mengganti filter bahan bakar (1 buah).",
-          "Mengganti minyak lumas (70 liter).",
+          "Mengganti minyak lumas (64 liter).",
           "Membersihkan filter udara, sistem pendingin udara, fin radiator/cooler, CAC.",
           "Memeriksa dan mengencangkan baut gas buang, baut flanges pipa bb/lumas/air.",
           "Melumasi (greasing) bearing motor and fan radiator.",
@@ -498,7 +498,7 @@
         "Filter bahan bakar (1 buah)",
         "Filter minyak lumas (1 buah)",
         "Filter udara (2 buah)",
-        "Minyak lumas (70 liter)"
+        "Minyak lumas (64 liter)"
       ],
       "risiko": [
         "Terjepit atau tertimpa saat inspeksi bearing/conrod",
@@ -556,7 +556,7 @@
         "Filter bahan bakar (1 buah)",
         "Filter minyak lumas (1 buah)",
         "Filter udara (2 buah)",
-        "Minyak lumas (70 liter)"
+        "Minyak lumas (64 liter)"
       ],
       "risiko": [
         "Terjepit mekanisme timing camshaft/pump",

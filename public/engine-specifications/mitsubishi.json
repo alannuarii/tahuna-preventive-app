@@ -1,0 +1,35 @@
+
+{
+  "engine_model": "S16R-PTA-S",
+  "mgs_set_model": "MGS1500C(M16R-G)",
+  "type": "Water-cooled 4-stroke cycle, turbocharged with air cooler",
+  "no_of_cylinders_arrangement": "16-V type",
+  "cylinder_bore_x_stroke": "ø170 × 180 mm [6.69 × 7.09 in.]",
+  "total_displacement": "65.37 L [3989.72 cu in.]",
+  "combustion_system": "Direct injection system",
+  "compression_ratio": "14.0 : 1",
+  "firing_order": "1 - 9 - 6 - 14 - 2 - 10 - 4 - 12 - 8 - 16 - 3 - 11 - 7 - 15 - 5 - 13",
+  "direction_of_rotation": "Counterclockwise as viewed from flywheel side",
+  "dimensions_l_x_w_x_h": "Approx. 2875.5 × 1432 × 1960 mm [113.20 × 56.37 × 77.16 in.](with out fan)",
+  "dry_weight": "Approx. 6995 kg [15421 lb](with fan)",
+  "fuel": "Diesel fuel",
+  "fuel_injection_pump": "Mitsubishi PS8",
+  "governor": "Electric type",
+  "fuel_filter": "Paper element type",
+  "fuel_injection_nozzle": "Hole type",
+  "fuel_injection_starting_pressure": "30.4 MPa {309.99 kgf/cm2} [4409-16 psi]",
+  "lubricating_method": "Forced circulation (pressure feed by oil pump)",
+  "engine_oil": "CF or CH-4 grade oil (API service classification)",
+  "engine_oil_capacity": {
+    "oil_pan": "362 L [95.64 US gal.]",
+    "entire_engine": "392 L [103.6 US gal.](engine main body only)"
+  },
+  "oil_filter": "Paper element type",
+  "oil_cooler": "Water-cooled, multi-plate type",
+  "cooling_method": "Forced water cooling",
+  "coolant_capacity": "Approx. 170 L [44.91 US gal.] (engine main body only)",
+  "starting_system": "Electric motor starting",
+  "starter": "DC 24V - 7.5 kW × 2",
+  "alternator": "DC 24V - 30 A",
+  "turbocharger": "Mitsubishi TD10 type"
+}

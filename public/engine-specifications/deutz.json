@@ -1,0 +1,35 @@
+
+{
+  "spesifikasi_utama": {
+    "model_mesin": "Deutz MWM TBD 616 V12",
+    "mode_operasi": "Empat langkah (Four-stroke), Injeksi langsung (Direct injection), Turbocharging gas buang, Intercooling",
+    "konfigurasi_silinder": "V",
+    "jumlah_silinder": "12",
+    "diameter_bor_mm": "132",
+    "langkah_piston_mm": "160",
+    "kapasitas_per_silinder_dm3": "2.19",
+    "rasio_kompresi": "15",
+    "urutan_pengapian": "A1 B5 A5 B3 A3 B6 A6 B2 A2 B4 A4 B1"
+  },
+  "dimensi_dan_berat": {
+    "panjang_A_mm": "2100",
+    "lebar_B_mm": "1200",
+    "tinggi_C_mm": "1300",
+    "berat_kg": "2100"
+  },
+  "kapasitas_fluida": {
+    "volume_minyak_lumas_carter_dm3": "64",
+    "volume_cairan_pendingin_mesin_dm3": "100"
+  },
+  "data_penyesuaian": {
+    "celah_katup_masuk_mm": "0.3",
+    "celah_katup_buang_mm": "0.5",
+    "tekanan_pembukaan_injektor_bar": "280"
+  },
+  "data_operasi": {
+    "laju_aliran_pompa_minyak_lumas_dm3_min": "216",
+    "suhu_maksimal_minyak_lumas_celcius": "120",
+    "laju_aliran_pompa_pendingin_HT_m3_h": "55",
+    "tekanan_aliran_pompa_pendingin_HT_bar": "2.3"
+  }
+}

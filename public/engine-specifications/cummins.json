@@ -1,0 +1,23 @@
+{
+  "engine_model": "Cummins KTA50-G8",
+  "general_specifications": {
+    "maximum_weight_wet_kg": 10626,
+    "maximum_weight_wet_lb": 23426,
+    "cooling_system_capacity_standard_radiator_L": 310,
+    "lubricating_system_oil_capacity_with_filters_L": 178
+  },
+  "electrical_system": {
+    "starting_voltage_DC": 24,
+    "battery_group_number": 31,
+    "cca_minimum_A_at_0_to_32_F": 1400
+  },
+  "fuel_system_specifications": {
+    "max_fuel_inlet_restriction_mmHg": 101,
+    "max_fuel_return_restriction_mmHg": 165,
+    "fuel_pump_flow_rate_L_hr": 550
+  },
+  "fuel_consumption_at_1500_RPM_50Hz": {
+    "standby_full_load_L_hr": 345,
+    "prime_full_load_L_hr": 289
+  }
+}
