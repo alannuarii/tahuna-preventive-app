@@ -1,14 +1,19 @@
 export const useMaintenanceData = () => {
+  const { engines, fetchEngines } = useEngines()
   const serviceHours = ref<any[]>([])
   const isLoading = ref(false)
 
-  // Oil change cycles per unit
-  const gantiOliCycles = [500, 250, 250, 500, 500, 250, 250]
-  const overhaulCycles = [6000, 6000, 6000, 5000, 5000, 6000, 6000]
+  const gantiOliCycles = computed(() => {
+    return engines.value.map((e: any) => e.ganti_oli_cycle || 500)
+  })
+  const overhaulCycles = computed(() => {
+    return engines.value.map((e: any) => e.overhaul_cycle || 6000)
+  })
 
   const refreshServiceHours = async () => {
     isLoading.value = true
     try {
+      await fetchEngines()
       const res = await fetch('/api/service-hours')
       if (res.ok) serviceHours.value = await res.json()
     } finally {

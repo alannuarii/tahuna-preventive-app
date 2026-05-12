@@ -59,8 +59,8 @@ const materialAliases: Array<{
   {
     // "Filter Racor", "Racor", "Racor Filter"
     patterns: [
-      /(?:filter\s*)?racor/i,
-      /racor\s*filter/i,
+      /(?:filter\s*)?racc?or/i,
+      /racc?or\s*filter/i,
     ],
     dbName: 'Racor Filter',
     partNumberHints: ['2020TM'],
@@ -68,7 +68,7 @@ const materialAliases: Array<{
   {
     // "Water Filter", "Water Coolant", "WF", "water coolant filter"
     patterns: [
-      /water\s*(?:coolant\s*)?(?:filter)?/i,
+      /water\s*(?:coolant\s*filter|filter|coolant)/i,
       /wf\s*\d/i,
     ],
     dbName: 'Water Filter',
@@ -330,7 +330,7 @@ export function parseWhatsAppReport(rawText: string): ParsedReport {
   for (const line of lines) {
     // Skip metadata lines
     if (/^\s*[-•]\s*$/.test(line)) continue
-    if (/^(semangat|info\s*har\b|rh\.|personil|durasi|pekerjaan|material\s*consumable|closing|clossing)/i.test(line.replace(/[-,\s]/g, ''))) continue
+    if (/^(semangat|info\s*har\b|rh\.|personil|durasi|pekerjaan|material\s*consumable|closing|clossing|accu|aki)/i.test(line.replace(/[-,\s]/g, ''))) continue
     
     // Check if this line is a skip action (bersih, periksa, etc.)
     if (!isReplacementAction(line)) continue

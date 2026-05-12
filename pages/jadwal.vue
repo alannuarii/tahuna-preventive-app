@@ -47,22 +47,11 @@
           </div>
         </div>
 
-        <div class="flex flex-col md:flex-row gap-4 items-end justify-between">
-          <div class="grid grid-cols-2 gap-4 flex-1 w-full md:w-auto">
-            <div class="form-group mb-0">
-              <label class="form-label text-muted" style="font-size: 0.875rem;">Dari Tanggal</label>
-              <input type="date" v-model="startDate" class="form-input form-input-sm mt-1 w-full" />
-            </div>
-            <div class="form-group mb-0">
-              <label class="form-label text-muted" style="font-size: 0.875rem;">Sampai Tanggal</label>
-              <input type="date" v-model="endDate" class="form-input form-input-sm mt-1 w-full" />
-            </div>
-          </div>
-          
-          <div class="form-group mb-0 flex gap-2 w-full md:w-auto mt-2 md:mt-0">
-            <button class="btn btn-primary btn-sm flex-1 md:flex-none px-4" style="border-radius: 99px;" @click="loadSchedule">Filter</button>
-            <button class="btn btn-secondary btn-sm flex-1 md:flex-none px-4" style="border-radius: 99px;" @click="resetFilter">Reset</button>
-          </div>
+        <div class="flex justify-end mt-2">
+          <button class="btn btn-secondary btn-sm px-4" style="border-radius: 99px;" @click="resetFilter">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            Reset Filter
+          </button>
         </div>
       </div>
     </div>
@@ -116,12 +105,10 @@
 </template>
 
 <script setup lang="ts">
-import { engines } from '~/utils/pmCycles'
+const { engines } = useEngines()
 
 const router = useRouter()
 const viewMode = ref('calendar')
-const startDate = ref('')
-const endDate = ref('')
 const selectedUnits = ref<number[]>([])
 const selectedPMs = ref<string[]>([])
 const showMobileFilter = ref(false)
@@ -148,15 +135,13 @@ const fetchStatuses = async () => {
 const loadSchedule = async () => {
   pending.value = true
   try {
-    pmSchedule.value = await fetchPMSchedule(startDate.value || null, endDate.value || null)
+    pmSchedule.value = await fetchPMSchedule()
   } finally {
     pending.value = false
   }
 }
 
 const resetFilter = () => {
-  startDate.value = ''
-  endDate.value = ''
   selectedUnits.value = []
   selectedPMs.value = []
   loadSchedule()

@@ -20,14 +20,15 @@ export default defineEventHandler(async (event) => {
           m.name as nama,
           m.unit as satuan,
           mmc.qty_per_pm as jumlah,
-          mmc.interval_pm as cycle
+          mmc.interval_pm as cycle,
+          mmc.unit as machine_unit
       FROM materials m
       JOIN machine_material_configs mmc ON m.id = mmc.material_id
-      WHERE mmc.machine_name = $1
+      WHERE mmc.machine_name = $1 AND (mmc.unit IS NULL OR mmc.unit = $2)
       ORDER BY m.name ASC
     `
 
-    const rows = await query(sql, [engine.mesin])
+    const rows = await query(sql, [engine.mesin, engine.unit])
 
     return {
       materials: rows.map((row: any) => ({

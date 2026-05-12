@@ -1,15 +1,6 @@
 import { query } from '~/server/utils/db'
 import { generatePMSchedule } from '~/server/utils/pmSchedule'
 
-const engines = [
-  { unit: 1, mesin: "SWD 6FHD 240" },
-  { unit: 4, mesin: "Deutz MWM TBD 616 V12" },
-  { unit: 5, mesin: "Deutz MWM TBD 616 V12" },
-  { unit: 6, mesin: "Mitsubishi S16R-PTA-S" },
-  { unit: 7, mesin: "Mitsubishi S16R-PTA-S" },
-  { unit: 8, mesin: "Cummins KTA50-G8" },
-  { unit: 9, mesin: "Cummins KTA50-G8" },
-]
 
 export default defineEventHandler(async (event) => {
   const slug = event.context.params?.slug
@@ -31,7 +22,7 @@ export default defineEventHandler(async (event) => {
 
     const { unit, jenis_pm } = mappingRes[0]
 
-    // 2. Fetch schedule data to generate dynamic event hours and dates
+    // 2. Fetch data needed for schedule generation
     const sqlUnits = `
       SELECT unit, overhaul AS jamoperasi, ganti_oli FROM (
         SELECT unit, overhaul, ganti_oli
@@ -41,8 +32,12 @@ export default defineEventHandler(async (event) => {
       ) AS subquery
       ORDER BY unit ASC;
     `
-    const unitsData = await query(sqlUnits)
-    const downtimes = await query('SELECT unit, status, start_date, end_date FROM engine_downtime')
+    const [unitsData, cycles, downtimes, engineProfiles] = await Promise.all([
+      query(sqlUnits),
+      query(`SELECT min_hours as min, max_hours as max, pm_type as pm FROM pm_cycle_definitions ORDER BY min_hours ASC`),
+      query('SELECT unit, status, start_date, end_date FROM engine_downtime'),
+      query('SELECT unit_id as unit, mesin_merek, mesin_tipe FROM units_profile')
+    ])
     
     let averages = []
     try {
@@ -58,10 +53,10 @@ export default defineEventHandler(async (event) => {
     }
 
     // Generate schedule
-    const schedule = generatePMSchedule(unitsData, null, null, downtimes, averages)
+    const schedule = generatePMSchedule(unitsData, cycles, null, null, downtimes, averages)
 
     // Find the first upcoming schedule event matching unit and jenis_pm
-    const matchedEvent = schedule.find(evt => {
+    const matchedEvent = schedule.find((evt: any) => {
       const pmClean = evt.extendedProps?.unit === unit && evt.title.startsWith(jenis_pm)
       return pmClean
     })
@@ -84,13 +79,13 @@ export default defineEventHandler(async (event) => {
     }
 
     // 3. Fetch corresponding SOP Document
-    const engineEntry = engines.find(e => e.unit === unit)
-    const mesinName = engineEntry?.mesin || ''
+    const engineEntry = engineProfiles.find((e: any) => e.unit === unit)
+    const mesinName = engineEntry ? `${engineEntry.mesin_merek} ${engineEntry.mesin_tipe}` : ''
 
     let selectedSop = null
     if (mesinName) {
       const sopRes = await query(
-        'SELECT * FROM sop_documents WHERE mesin = $1 AND jenis_pm = $2 LIMIT 1',
+        'SELECT * FROM sop_documents WHERE LOWER(mesin) = LOWER($1) AND jenis_pm = $2 LIMIT 1',
         [mesinName, jenis_pm]
       )
       if (sopRes.length > 0) {

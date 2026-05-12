@@ -292,7 +292,7 @@
 </template>
 
 <script setup lang="ts">
-import { engines } from '~/utils/pmCycles'
+const { engines } = useEngines()
 
 const route = useRoute()
 const router = useRouter()
@@ -379,7 +379,7 @@ const goBack = () => {
 }
 
 const getEngineName = (unit: number) => {
-  const engine = engines.find(e => e.unit === unit)
+  const engine = engines.value.find((e: any) => e.unit === unit)
   return engine?.mesin || `Engine Unit ${unit}`
 }
 

@@ -1,5 +1,3 @@
-import { pmCycles } from './pmCycles'
-
 // Random ID generator
 export const generateRandomId = (length = 8) => {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
@@ -11,7 +9,7 @@ export const generateRandomId = (length = 8) => {
 }
 
 // Generate PM schedule for all units
-export const generatePMSchedule = (units: any[], startDateStr: string | null = null, endDateStr: string | null = null, downtimes: any[] = [], averages: any[] = []) => {
+export const generatePMSchedule = (units: any[], cycles: any[], startDateStr: string | null = null, endDateStr: string | null = null, downtimes: any[] = [], averages: any[] = []) => {
   const colorsByUnit: Record<number, string> = {
     1: "#FF5733",
     4: "#33FF57",
@@ -65,7 +63,7 @@ export const generatePMSchedule = (units: any[], startDateStr: string | null = n
       while (targetOverhaul > 3000) targetOverhaul -= 3000
       if (targetOverhaul <= 0) targetOverhaul += 3000
 
-      const pmCycle = pmCycles.find(cycle => cycle.max === targetOverhaul)
+      const pmCycle = cycles.find(cycle => cycle.max === targetOverhaul)
       if (!pmCycle) break
 
       let hoursNeeded = 0

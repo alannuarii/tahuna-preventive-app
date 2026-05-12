@@ -425,7 +425,7 @@
 </template>
 
 <script setup lang="ts">
-import { engines } from '~/utils/pmCycles'
+const { engines } = useEngines()
 import ExcelJS from 'exceljs'
 
 const isCameraOpen = ref(false)
@@ -459,7 +459,7 @@ const showMaterialForm = ref(false)
 
 const availableEngines = computed(() => {
   const groups: Record<string, number[]> = {}
-  engines.forEach(e => {
+  engines.value.forEach((e: any) => {
     if (!groups[e.mesin]) groups[e.mesin] = []
     groups[e.mesin].push(e.unit)
   })
@@ -617,7 +617,7 @@ const stockMachineFilter = ref('')
 
 const uniqueMachineOptions = computed(() => {
   const machines = new Set<string>()
-  engines.forEach(e => machines.add(e.mesin))
+  engines.value.forEach((e: any) => machines.add(e.mesin))
   return ['Common', ...Array.from(machines)]
 })
 
@@ -641,7 +641,7 @@ const filteredInventory = computed(() => {
       if (!item.mesin) return false
       const units = item.mesin.split(',').map((u: string) => u.trim())
       return units.some((u: string) => {
-        const eng = engines.find(e => e.unit.toString() === u)
+        const eng = engines.value.find((e: any) => e.unit.toString() === u)
         return eng && eng.mesin === stockMachineFilter.value
       })
     })
@@ -846,7 +846,7 @@ const getMachineNames = (val: string) => {
   const unitNumbers = val.split(',').map(v => v.trim()).filter(Boolean)
   const names = new Set<string>()
   unitNumbers.forEach(uStr => {
-    const eng = engines.find(e => e.unit.toString() === uStr)
+    const eng = engines.value.find((e: any) => e.unit.toString() === uStr)
     if (eng) names.add(eng.mesin)
   })
   if (names.size === 0) return val

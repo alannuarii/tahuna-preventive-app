@@ -8,6 +8,7 @@ export default defineEventHandler(async (event) => {
       SELECT 
         mmc.id,
         mmc.machine_name,
+        mmc.unit,
         m.id AS material_id,
         m.name AS material_name,
         m.part_number,
@@ -27,22 +28,23 @@ export default defineEventHandler(async (event) => {
       params.push(machine)
     }
 
-    sql += ` ORDER BY mmc.machine_name ASC, mmc.interval_pm ASC, m.name ASC`
+    sql += ` ORDER BY mmc.machine_name ASC, mmc.unit ASC, mmc.interval_pm ASC, m.name ASC`
 
     const rows = await query(sql, params)
 
-    // Map interval_pm to PM cycle name
+    // Map interval_pm to PM cycle name (sync with pm_cycle_definitions table)
     const intervalToCycle: Record<number, string> = {
-      250: 'P1/P2',
+      125: 'P1',
+      250: 'P2',
       500: 'P3',
-      1000: 'P4',
-      6000: 'P5',
+      1500: 'P4',
+      3000: 'P5',
     }
 
-    // Group by machine
+    // Group by machine + unit
     const grouped: Record<string, any[]> = {}
     for (const row of rows) {
-      const key = row.machine_name
+      const key = row.unit ? `${row.machine_name} (Unit ${row.unit})` : row.machine_name
       if (!grouped[key]) grouped[key] = []
       grouped[key].push({
         ...row,

@@ -15,7 +15,6 @@
 </template>
 
 <script setup lang="ts">
-import { engines } from '~/utils/pmCycles'
 
 const router = useRouter()
 
@@ -41,7 +40,7 @@ const fetchStatuses = async () => {
 const loadSchedule = async () => {
   pending.value = true
   try {
-    pmSchedule.value = await fetchPMSchedule(null, null)
+    pmSchedule.value = await fetchPMSchedule()
   } finally {
     pending.value = false
   }
@@ -98,8 +97,8 @@ const tableData = computed(() => {
       ...item,
       pm,
       currentStatus,
-      gantiOliCycles: gantiOliCycles[index] || 250,
-      overhaulCycles: overhaulCycles[index] || 6000,
+      gantiOliCycles: gantiOliCycles.value[index] || 250,
+      overhaulCycles: overhaulCycles.value[index] || 6000,
       mesin: getEngineName(item.unit)
     }
   })

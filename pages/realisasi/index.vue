@@ -301,7 +301,7 @@
 </template>
 
 <script setup lang="ts">
-import { engines, fastMovingMaterials } from '~/utils/pmCycles'
+const { engines } = useEngines()
 
 const viewMode = ref('table')
 const filters = reactive({ start: '', end: '', unit: [] as number[], jenis_pm: [] as string[], sort: 'desc', page: 1, limit: 10 })
@@ -311,6 +311,37 @@ const pending = ref(false)
 const showMobileFilter = ref(false)
 
 const activeCalendarDate = ref(new Date())
+
+const materialConfigs = ref<any[]>([])
+
+const loadConfigs = async () => {
+  try {
+    const res = await fetch('/api/materials/usage')
+    if (res.ok) {
+      const json = await res.json()
+      const flat: any[] = []
+      for (const [key, items] of Object.entries(json.data as Record<string, any[]>)) {
+        const unitMatch = key.match(/\(Unit (\d+)\)/)
+        const unit = unitMatch ? parseInt(unitMatch[1]) : 0
+        const mesin = key.replace(/\s\(Unit \d+\)/, '')
+        flat.push({
+          unit,
+          mesin,
+          material: items.map((it: any) => ({
+            nama: it.material_name,
+            part_number: it.part_number,
+            jumlah: it.qty_per_pm,
+            satuan: it.satuan,
+            cycle: it.cycle
+          }))
+        })
+      }
+      materialConfigs.value = flat
+    }
+  } catch (err) {
+    console.error('Failed to load configs', err)
+  }
+}
 
 const handleMonthChange = (date: Date) => {
   activeCalendarDate.value = date
@@ -333,7 +364,7 @@ const monthlyStatistics = computed(() => {
   })
 
   // Initialize statistics for each engine/unit
-  const stats = engines.map(engine => ({
+  const stats = engines.value.map((engine: any) => ({
     unit: engine.unit,
     mesin: engine.mesin,
     P1: 0,
@@ -346,7 +377,7 @@ const monthlyStatistics = computed(() => {
 
   // Count PM types for each monthly realization
   monthlyRealizations.forEach((item: any) => {
-    const stat = stats.find(s => s.unit === Number(item.unit))
+    const stat = stats.find((s: any) => s.unit === Number(item.unit))
     if (stat) {
       const pmType = item.jenis_pm
       if (pmType && ['P1', 'P2', 'P3', 'P4', 'P5'].includes(pmType)) {
@@ -361,7 +392,7 @@ const monthlyStatistics = computed(() => {
 
 const totalMonthlyStats = computed(() => {
   const stats = monthlyStatistics.value
-  return stats.reduce((acc, curr) => {
+  return stats.reduce((acc: any, curr: any) => {
     acc.P1 += curr.P1
     acc.P2 += curr.P2
     acc.P3 += curr.P3
@@ -398,9 +429,9 @@ const monthlyMaterialUsage = computed(() => {
       const matName = mat.nama_material
       // Try to find the part_number of this material from our fastMovingMaterials definition so we have complete data
       let partNumber = '-'
-      const unitFm = fastMovingMaterials.find(f => f.unit === unitNumber)
+      const unitFm = materialConfigs.value.find((f: any) => f.unit === unitNumber)
       if (unitFm) {
-        const match = unitFm.material.find(m => m.nama.toLowerCase() === matName.toLowerCase())
+        const match = unitFm.material.find((m: any) => m.nama.toLowerCase() === matName.toLowerCase())
         if (match && match.part_number) {
           partNumber = match.part_number
         }
@@ -480,6 +511,7 @@ const loadCalendarData = async () => {
 
 onMounted(() => {
   refresh()
+  loadConfigs()
 })
 
 watch(viewMode, (val) => {

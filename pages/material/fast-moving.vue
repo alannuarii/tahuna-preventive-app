@@ -656,7 +656,15 @@
 </template>
 
 <script setup lang="ts">
-import { engines, fastMovingMaterials, getCycleRange } from '~/utils/pmCycles'
+const { engines } = useEngines()
+
+const getCycleRange = (baseCycle: string): string => {
+  if (!baseCycle) return '-'
+  const level = parseInt(baseCycle.replace('P', ''))
+  if (isNaN(level)) return baseCycle
+  if (level >= 5) return 'P5'
+  return `${baseCycle} – P5`
+}
 import ExcelJS from 'exceljs'
 
 const categoryOptions = [
@@ -702,7 +710,7 @@ const inventoryData = ref<any[]>([])
 
 const machineOptions = computed(() => {
   const groups: Record<string, number[]> = {}
-  engines.forEach(e => {
+  engines.value.forEach((e: any) => {
     if (!groups[e.mesin]) groups[e.mesin] = []
     groups[e.mesin].push(e.unit)
   })
@@ -718,11 +726,44 @@ const machineOptions = computed(() => {
   })
 })
 
+const materialConfigs = ref<any[]>([])
+
+const loadConfigs = async () => {
+  try {
+    const res = await fetch('/api/materials/usage')
+    if (res.ok) {
+      const json = await res.json()
+      // Transform grouped data back to the flat structure for easier lookup
+      const flat: any[] = []
+      for (const [key, items] of Object.entries(json.data as Record<string, any[]>)) {
+        const unitMatch = key.match(/\(Unit (\d+)\)/)
+        const unit = unitMatch ? parseInt(unitMatch[1]) : 0
+        const mesin = key.replace(/\s\(Unit \d+\)/, '')
+        
+        flat.push({
+          unit,
+          mesin,
+          material: items.map((it: any) => ({
+            nama: it.material_name,
+            part_number: it.part_number,
+            jumlah: it.qty_per_pm,
+            satuan: it.satuan,
+            cycle: it.cycle
+          }))
+        })
+      }
+      materialConfigs.value = flat
+    }
+  } catch (err) {
+    console.error('Failed to load material configs', err)
+  }
+}
+
 const materialUsageMap = computed(() => {
   const map = new Map<string, Array<{ unit: number, jumlah: number, minLevel: number }>>()
-  fastMovingMaterials.forEach(fm => {
+  materialConfigs.value.forEach(fm => {
     const unitNumber = fm.unit
-    fm.material.forEach(mat => {
+    fm.material.forEach((mat: any) => {
       const keysToMap = [mat.nama.toLowerCase()]
       if ((mat as any).part_number) keysToMap.push((mat as any).part_number.toLowerCase())
       
@@ -757,7 +798,7 @@ const getMaterialEngines = (item: any) => {
   if (!usageRules || usageRules.length === 0) return ''
   const unitNumbers = [...new Set(usageRules.map((r: any) => r.unit))]
   const engineNames = [...new Set(unitNumbers.map(u => {
-    const engine = engines.find(e => e.unit === u)
+    const engine = engines.value.find((e: any) => e.unit === u)
     return engine ? engine.mesin : `Unit ${u}`
   }))]
   return engineNames.join(', ')
@@ -1035,7 +1076,7 @@ const submitTxn = async () => {
 const machineGroupedUsageData = computed(() => {
   const grouped: Record<string, any[]> = {}
   
-  fastMovingMaterials.forEach(item => {
+  materialConfigs.value.forEach(item => {
     if (!grouped[item.mesin]) {
       grouped[item.mesin] = item.material
     }
@@ -1097,7 +1138,7 @@ const calculatePlanning = async () => {
     const materialMap = new Map<string, { nama: string; part_number: string; totalJumlah: number; currentStock: number; selisih: number; satuan: string; isLubeOil: boolean }>()
 
     targetUnits.forEach(unitNum => {
-      const unitData = fastMovingMaterials.find(fm => fm.unit === unitNum)
+      const unitData = materialConfigs.value.find(fm => fm.unit === unitNum)
       if (!unitData) return
 
       // Count PMs for this specific unit
@@ -1110,7 +1151,7 @@ const calculatePlanning = async () => {
         }
       })
 
-      unitData.material.forEach(mat => {
+      unitData.material.forEach((mat: any) => {
         const baseCycleLevel = parseInt(mat.cycle.replace('P', ''))
         // This material is used in all PM types >= baseCycleLevel
         let timesUsed = 0
@@ -1153,7 +1194,7 @@ const calculatePlanning = async () => {
     const materials = Array.from(materialMap.values())
 
     // Build labels
-    const unitEngines = targetUnits.map(u => engines.find(e => e.unit === u)!).filter(Boolean)
+    const unitEngines = targetUnits.map(u => engines.value.find((e: any) => e.unit === u)!).filter(Boolean)
     const unitLabel = targetUnits.length === 1
       ? 'Unit ' + targetUnits[0]
       : 'Unit ' + targetUnits.join(' & ')
@@ -1187,7 +1228,12 @@ watch(activeTab, (tab) => {
   if (tab === 'transactions' && !txnLoaded.value) { loadTransactions(); txnLoaded.value = true }
 })
 
-onMounted(() => { loadSchedules(); loadInventory(); stockLoaded.value = true })
+onMounted(() => { 
+  loadSchedules()
+  loadInventory()
+  loadConfigs()
+  stockLoaded.value = true 
+})
 
 // ===== HELPERS =====
 const formatNumber = (num: any) => {

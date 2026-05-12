@@ -323,7 +323,7 @@
 </template>
 
 <script setup lang="ts">
-import { engines } from '~/utils/pmCycles'
+const { engines } = useEngines()
 const route = useRoute()
 const router = useRouter()
 const itemId = route.params.id as string
@@ -361,12 +361,17 @@ const handleTouchEnd = (e: TouchEvent) => {
   if (touchEndX - touchStartX.value > 50) prevImage() // swipe right
 }
 
+const getEngineName = (unit: number) => {
+  const engine = engines.value.find((e: any) => e.unit === unit)
+  return engine?.mesin || `Engine Unit ${unit}`
+}
+
 const getMachineNames = (val: string) => {
   if (!val || val === 'Common') return 'Common'
   const unitNumbers = val.split(',').map(v => v.trim()).filter(Boolean)
   const names = new Set<string>()
   unitNumbers.forEach(uStr => {
-    const eng = engines.find(e => e.unit.toString() === uStr)
+    const eng = engines.value.find((e: any) => e.unit.toString() === uStr)
     if (eng) names.add(eng.mesin)
     else names.add(uStr) // fallback
   })
@@ -461,7 +466,7 @@ const toggleTxnSort = () => {
 // ==== Form Editing Logic ====
 const availableEngines = computed(() => {
   const groups: Record<string, number[]> = {}
-  engines.forEach(e => {
+  engines.value.forEach((e: any) => {
     if (!groups[e.mesin]) groups[e.mesin] = []
     groups[e.mesin].push(e.unit)
   })
