@@ -46,6 +46,7 @@ export default defineEventHandler(async (event) => {
     ORDER BY unit ASC;
   `
   const units = await query(sqlQuery)
+  const cycles = await query(`SELECT min_hours as min, max_hours as max, pm_type as pm FROM pm_cycle_definitions ORDER BY min_hours ASC`)
   const downtimes = await query(`SELECT unit, status, start_date, end_date FROM engine_downtime`)
   
   let averages = []
@@ -62,7 +63,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // Generate schedule
-  const schedule = generatePMSchedule(units, startStr, endStr, downtimes, averages)
+  const schedule = generatePMSchedule(units, cycles, startStr, endStr, downtimes, averages)
 
   // Load template
   let templatePath = path.resolve('public', '00. Realisasi PM MOUNT YEAR.xlsx')

@@ -1,5 +1,5 @@
 
-import { query } from '../server/utils/db.ts'
+import { query } from '../server/utils/db'
 
 async function listTables() {
   try {
