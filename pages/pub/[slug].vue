@@ -127,13 +127,45 @@
                 <div class="mb-3" style="padding-left: 0.5rem; border-left: 2px solid rgba(74,222,128,0.3);">
                   <div class="text-xs font-semibold mb-1 flex items-center gap-1" style="color: var(--success);">⚙️ Mekanik</div>
                   <ol class="list-decimal text-sm space-y-1" style="color: var(--gray-600); padding-left: 1.25rem;">
-                    <li v-for="(step, idx) in data.selectedSop.pelaksanaan_mekanik" :key="'exec-m-'+idx">{{ step }}</li>
+                    <li v-for="(step, idx) in data.selectedSop.pelaksanaan_mekanik" :key="'exec-m-'+idx">
+                      <template v-if="parsePmStepLink(step, data.selectedSop.related_slugs, '/pub/')">
+                        <span>
+                          {{ parsePmStepLink(step, data.selectedSop.related_slugs, '/pub/')?.originalText }}
+                          <span class="text-xs ml-1" style="opacity: 0.85;">
+                            (
+                            <NuxtLink :to="parsePmStepLink(step, data.selectedSop.related_slugs, '/pub/')?.url || ''" class="text-primary-600 hover:underline font-semibold" style="color: var(--primary-600);">
+                              Lihat detail pekerjaan {{ parsePmStepLink(step, data.selectedSop.related_slugs, '/pub/')?.pmLevel }}
+                            </NuxtLink>
+                            ).
+                          </span>
+                        </span>
+                      </template>
+                      <template v-else>
+                        {{ step }}
+                      </template>
+                    </li>
                   </ol>
                 </div>
                 <div style="padding-left: 0.5rem; border-left: 2px solid rgba(96,165,250,0.3);">
                   <div class="text-xs font-semibold mb-1 flex items-center gap-1" style="color: var(--primary-400);">⚡ Elektrik</div>
                   <ol class="list-decimal text-sm space-y-1" style="color: var(--gray-600); padding-left: 1.25rem;">
-                    <li v-for="(step, idx) in data.selectedSop.pelaksanaan_listrik" :key="'exec-e-'+idx">{{ step }}</li>
+                    <li v-for="(step, idx) in data.selectedSop.pelaksanaan_listrik" :key="'exec-e-'+idx">
+                      <template v-if="parsePmStepLink(step, data.selectedSop.related_slugs, '/pub/')">
+                        <span>
+                          {{ parsePmStepLink(step, data.selectedSop.related_slugs, '/pub/')?.originalText }}
+                          <span class="text-xs ml-1" style="opacity: 0.85;">
+                            (
+                            <NuxtLink :to="parsePmStepLink(step, data.selectedSop.related_slugs, '/pub/')?.url || ''" class="text-primary-600 hover:underline font-semibold" style="color: var(--primary-600);">
+                              Lihat detail pekerjaan {{ parsePmStepLink(step, data.selectedSop.related_slugs, '/pub/')?.pmLevel }}
+                            </NuxtLink>
+                            ).
+                          </span>
+                        </span>
+                      </template>
+                      <template v-else>
+                        {{ step }}
+                      </template>
+                    </li>
                   </ol>
                 </div>
               </div>
@@ -239,6 +271,24 @@ const getTimeToGoClass = () => {
   if (days < 0) return 'text-danger-glow'
   if (days <= 7) return 'text-warning-glow'
   return 'text-success-glow'
+}
+
+const parsePmStepLink = (step: string, mapping: any, linkPrefix: string) => {
+  if (!step) return null
+  const pmRegex = /(Melakukan seluruh pekerjaan (?:mekanik|listrik)\s+)(P[1-5])(\.?)/i
+  const match = step.match(pmRegex)
+  if (match && mapping) {
+    const pmLevel = match[2].toUpperCase()
+    const target = mapping[pmLevel]
+    if (target) {
+      return {
+        originalText: step,
+        pmLevel: pmLevel,
+        url: `${linkPrefix}${target}`
+      }
+    }
+  }
+  return null
 }
 </script>
 

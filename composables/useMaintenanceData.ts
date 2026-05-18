@@ -1,3 +1,5 @@
+import { useEngines } from './useEngines'
+
 export const useMaintenanceData = () => {
   const { engines, fetchEngines } = useEngines()
   const serviceHours = ref<any[]>([])

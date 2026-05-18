@@ -1,7 +1,18 @@
 import { query } from '~/server/utils/db'
+import { getCascadedSop } from '~/server/utils/sopCascade'
 
 export default defineEventHandler(async (event) => {
   const { mesin, jenis_pm } = getQuery(event)
+
+  if (mesin && jenis_pm) {
+    try {
+      const cascaded = await getCascadedSop(String(mesin), String(jenis_pm))
+      return cascaded ? [cascaded] : []
+    } catch (error) {
+      console.error('Error fetching cascaded SOP:', error)
+      throw createError({ statusCode: 500, statusMessage: 'Failed to fetch SOP data' })
+    }
+  }
 
   let sql = 'SELECT * FROM sop_documents'
   const params: any[] = []

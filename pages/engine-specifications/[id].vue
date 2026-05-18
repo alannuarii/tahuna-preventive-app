@@ -253,15 +253,16 @@ const unitsMap = [
   { suffix: '_F', label: '°F' },
 ]
 
-const processEntry = (rawKey: string, rawValue: any) => {
-  let baseKey = rawKey
+const processEntry = (rawKey: string | number, rawValue: any) => {
+  const keyStr = String(rawKey)
+  let baseKey = keyStr
   let unitDisplay = null
 
   // Strip unit suffix first
   for (const item of unitsMap) {
-    if (rawKey.endsWith(item.suffix)) {
+    if (keyStr.endsWith(item.suffix)) {
       unitDisplay = item.label
-      baseKey = rawKey.slice(0, -item.suffix.length)
+      baseKey = keyStr.slice(0, -item.suffix.length)
       break
     }
   }
@@ -273,9 +274,9 @@ const processEntry = (rawKey: string, rawValue: any) => {
   if (termDictionary[baseKey]) {
     formattedKeyEn = termDictionary[baseKey].en
     formattedKeyId = termDictionary[baseKey].id
-  } else if (termDictionary[rawKey]) { // fallback if rawKey without stripping had a match
-    formattedKeyEn = termDictionary[rawKey].en
-    formattedKeyId = termDictionary[rawKey].id
+  } else if (termDictionary[keyStr]) { // fallback if keyStr without stripping had a match
+    formattedKeyEn = termDictionary[keyStr].en
+    formattedKeyId = termDictionary[keyStr].id
   }
   
   let formattedValue = rawValue

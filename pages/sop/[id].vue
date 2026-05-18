@@ -121,7 +121,23 @@
                     <span>⚙️ Mekanik</span>
                   </div>
                   <ol class="sop-step-list">
-                    <li v-for="(step, i) in sop.pelaksanaan_mekanik" :key="'em'+i">{{ step }}</li>
+                    <li v-for="(step, i) in sop.pelaksanaan_mekanik" :key="'em'+i">
+                      <template v-if="parsePmStepLink(step, sop.related_pms, '/sop/')">
+                        <span>
+                          {{ parsePmStepLink(step, sop.related_pms, '/sop/')?.originalText }}
+                          <span class="text-xs ml-1" style="opacity: 0.85;">
+                            (
+                            <NuxtLink :to="parsePmStepLink(step, sop.related_pms, '/sop/')?.url || ''" class="text-primary-400 hover:underline font-semibold" style="color: var(--primary-400);">
+                              Lihat detail pekerjaan {{ parsePmStepLink(step, sop.related_pms, '/sop/')?.pmLevel }}
+                            </NuxtLink>
+                            ).
+                          </span>
+                        </span>
+                      </template>
+                      <template v-else>
+                        {{ step }}
+                      </template>
+                    </li>
                   </ol>
                 </div>
                 <div>
@@ -129,7 +145,23 @@
                     <span>⚡ Elektrik</span>
                   </div>
                   <ol class="sop-step-list">
-                    <li v-for="(step, i) in sop.pelaksanaan_listrik" :key="'ee'+i">{{ step }}</li>
+                    <li v-for="(step, i) in sop.pelaksanaan_listrik" :key="'ee'+i">
+                      <template v-if="parsePmStepLink(step, sop.related_pms, '/sop/')">
+                        <span>
+                          {{ parsePmStepLink(step, sop.related_pms, '/sop/')?.originalText }}
+                          <span class="text-xs ml-1" style="opacity: 0.85;">
+                            (
+                            <NuxtLink :to="parsePmStepLink(step, sop.related_pms, '/sop/')?.url || ''" class="text-primary-400 hover:underline font-semibold" style="color: var(--primary-400);">
+                              Lihat detail pekerjaan {{ parsePmStepLink(step, sop.related_pms, '/sop/')?.pmLevel }}
+                            </NuxtLink>
+                            ).
+                          </span>
+                        </span>
+                      </template>
+                      <template v-else>
+                        {{ step }}
+                      </template>
+                    </li>
                   </ol>
                 </div>
               </div>
@@ -234,19 +266,27 @@ const loadSop = async () => {
 
 onMounted(() => loadSop())
 
-watch(isEditing, (val) => {
+watch(isEditing, async (val) => {
   if (val && sop.value) {
-    editForm.personil_mekanik = sop.value.personil_mekanik ?? 2
-    editForm.personil_listrik = sop.value.personil_listrik ?? 2
-    editForm.personil_hse = sop.value.personil_hse ?? 1
-    editForm.tools = [...sop.value.tools]
-    editForm.apd = [...sop.value.apd]
-    editForm.material = [...sop.value.material]
-    editForm.risiko = [...sop.value.risiko]
-    editForm.persiapan = [...sop.value.persiapan]
-    editForm.pelaksanaan_mekanik = [...(sop.value.pelaksanaan_mekanik || [])]
-    editForm.pelaksanaan_listrik = [...(sop.value.pelaksanaan_listrik || [])]
-    editForm.penormalan = [...sop.value.penormalan]
+    try {
+      const res = await fetch(`/api/sop/${sopId}?raw=true`)
+      if (res.ok) {
+        const rawSop = await res.json()
+        editForm.personil_mekanik = rawSop.personil_mekanik ?? 2
+        editForm.personil_listrik = rawSop.personil_listrik ?? 2
+        editForm.personil_hse = rawSop.personil_hse ?? 1
+        editForm.tools = Array.isArray(rawSop.tools) ? [...rawSop.tools] : []
+        editForm.apd = Array.isArray(rawSop.apd) ? [...rawSop.apd] : []
+        editForm.material = Array.isArray(rawSop.material) ? [...rawSop.material] : []
+        editForm.risiko = Array.isArray(rawSop.risiko) ? [...rawSop.risiko] : []
+        editForm.persiapan = Array.isArray(rawSop.persiapan) ? [...rawSop.persiapan] : []
+        editForm.pelaksanaan_mekanik = Array.isArray(rawSop.pelaksanaan_mekanik) ? [...rawSop.pelaksanaan_mekanik] : []
+        editForm.pelaksanaan_listrik = Array.isArray(rawSop.pelaksanaan_listrik) ? [...rawSop.pelaksanaan_listrik] : []
+        editForm.penormalan = Array.isArray(rawSop.penormalan) ? [...rawSop.penormalan] : []
+      }
+    } catch (err) {
+      console.error('Failed to load raw SOP for editing:', err)
+    }
   }
 })
 
@@ -274,6 +314,24 @@ const handleSave = async () => {
   } finally {
     saving.value = false
   }
+}
+
+const parsePmStepLink = (step: string, mapping: any, linkPrefix: string) => {
+  if (!step) return null
+  const pmRegex = /(Melakukan seluruh pekerjaan (?:mekanik|listrik)\s+)(P[1-5])(\.?)/i
+  const match = step.match(pmRegex)
+  if (match && mapping) {
+    const pmLevel = match[2].toUpperCase()
+    const target = mapping[pmLevel]
+    if (target) {
+      return {
+        originalText: step,
+        pmLevel: pmLevel,
+        url: `${linkPrefix}${target}`
+      }
+    }
+  }
+  return null
 }
 </script>
 

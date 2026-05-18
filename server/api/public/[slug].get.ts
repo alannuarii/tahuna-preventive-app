@@ -1,5 +1,6 @@
 import { query } from '~/server/utils/db'
 import { generatePMSchedule } from '~/server/utils/pmSchedule'
+import { getCascadedSop } from '~/server/utils/sopCascade'
 
 
 export default defineEventHandler(async (event) => {
@@ -84,18 +85,22 @@ export default defineEventHandler(async (event) => {
 
     let selectedSop = null
     if (mesinName) {
-      const sopRes = await query(
-        'SELECT * FROM sop_documents WHERE LOWER(mesin) = LOWER($1) AND jenis_pm = $2 LIMIT 1',
-        [mesinName, jenis_pm]
-      )
-      if (sopRes.length > 0) {
-        selectedSop = sopRes[0]
-      }
+      selectedSop = await getCascadedSop(mesinName, jenis_pm)
+    }
+
+    // 4. Fetch related public slugs for same unit for public SOP navigation links
+    const publicLinks = await query(
+      'SELECT public_slug, jenis_pm FROM pm_public_links WHERE unit = $1',
+      [unit]
+    )
+    const related_slugs: Record<string, string> = {}
+    for (const pl of publicLinks) {
+      related_slugs[pl.jenis_pm] = pl.public_slug
     }
 
     return {
       eventData,
-      selectedSop,
+      selectedSop: selectedSop ? { ...selectedSop, related_slugs } : null,
       mesin: mesinName
     }
 

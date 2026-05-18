@@ -271,9 +271,11 @@ Filter udara 2 bh
 </template>
 
 <script setup lang="ts">
-const { engines } = useEngines()
+import { useEngines } from '~/composables/useEngines'
 import { parseWhatsAppReport } from '~/utils/waReportParser'
 import type { ParsedReport } from '~/utils/waReportParser'
+
+const { engines } = useEngines()
 
 const route = useRoute()
 const router = useRouter()

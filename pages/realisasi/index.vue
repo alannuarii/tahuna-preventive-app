@@ -301,6 +301,7 @@
 </template>
 
 <script setup lang="ts">
+import { useEngines } from '~/composables/useEngines'
 const { engines } = useEngines()
 
 const viewMode = ref('table')
