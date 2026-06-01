@@ -7,10 +7,12 @@ export const useEngines = () => {
     if (engines.value.length > 0) return
     loading.value = true
     try {
-      const { data } = await useFetch('/api/pm/engines')
-      if (data.value) {
-        engines.value = data.value as any[]
+      const data = await $fetch<any[]>('/api/pm/engines')
+      if (data) {
+        engines.value = data
       }
+    } catch (err) {
+      console.error('Failed to fetch engines:', err)
     } finally {
       loading.value = false
     }

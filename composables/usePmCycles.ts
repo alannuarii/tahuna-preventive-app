@@ -7,10 +7,12 @@ export const usePmCycles = () => {
     if (pmCycles.value.length > 0) return
     loading.value = true
     try {
-      const { data } = await useFetch('/api/pm/cycles')
-      if (data.value) {
-        pmCycles.value = data.value as any[]
+      const data = await $fetch<any[]>('/api/pm/cycles')
+      if (data) {
+        pmCycles.value = data
       }
+    } catch (err) {
+      console.error('Failed to fetch pm cycles:', err)
     } finally {
       loading.value = false
     }

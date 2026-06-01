@@ -18,7 +18,7 @@
 
 const router = useRouter()
 
-const { serviceHours, isLoading, gantiOliCycles, overhaulCycles, fetchPMSchedule } = useMaintenanceData()
+const { serviceHours, isLoading, engines, fetchPMSchedule } = useMaintenanceData()
 
 const pmSchedule = ref<any[]>([])
 const engineStatuses = ref<any[]>([])
@@ -77,7 +77,7 @@ const tableData = computed(() => {
   const sh = serviceHours.value
   if (!sh || sh.length === 0) return []
   
-  return sh.map((item: any, index: number) => {
+  return sh.map((item: any) => {
     const pm = pmSchedule.value?.find(pm => pm.extendedProps?.unit === item.unit) || {
       title: 'No PM Scheduled',
       id: '',
@@ -93,13 +93,15 @@ const tableData = computed(() => {
       }
     }
     
+    const engine = engines.value.find((e: any) => e.unit === item.unit)
+    
     return {
       ...item,
       pm,
       currentStatus,
-      gantiOliCycles: gantiOliCycles.value[index] || 250,
-      overhaulCycles: overhaulCycles.value[index] || 6000,
-      mesin: getEngineName(item.unit)
+      gantiOliCycles: engine?.ganti_oli_cycle || 250,
+      overhaulCycles: engine?.overhaul_cycle || 6000,
+      mesin: engine?.mesin || getEngineName(item.unit)
     }
   })
 })
