@@ -2,6 +2,61 @@ import { query } from './db'
 
 const PM_ORDER = ['P1', 'P2', 'P3', 'P4', 'P5']
 
+const FORMULIR_MAPPING = [
+  {
+    regex: /tahanan\s+isolasi\s+generator/i,
+    title: 'Formulir Pengukuran Tahanan Isolasi Generator',
+    path: '/formulir/FORMULIR PENGUKURAN TAHANAN ISOLASI GENERATOR.pdf'
+  },
+  {
+    regex: /mengukur\s+tegangan\s+baterai/i,
+    title: 'Formulir Pengukuran Baterai',
+    path: '/formulir/FORMULIR PENGUKURAN BATERAI.pdf'
+  },
+  {
+    regex: /tahanan\s+isolasi\s+motor\s+fan\s+radiator/i,
+    title: 'Formulir Pengukuran Tahanan Isolasi Motor Listrik Auxiliary',
+    path: '/formulir/FORMULIR PENGUKURAN TAHANAN ISOLASI MOTOR LISTRIK AUXILIARY.pdf'
+  },
+  {
+    regex: /tahanan\s+isolasi\s+trafo/i,
+    title: 'Formulir Pengukuran Tahanan Isolasi Trafo',
+    path: '/formulir/FORMULIR PENGUKURAN TAHANAN ISOLASI TRAFO.pdf'
+  },
+  {
+    regex: /clearance\s+valve/i,
+    title: 'Formulir Pengukuran Clearance Valve',
+    path: '/formulir/FORMULIR PENGUKURAN CLEREANCE VALVE.pdf'
+  }
+]
+
+export function getLampiranFormulir(rows: any[]): any[] {
+  const matchedPaths = new Set<string>()
+  const result: any[] = []
+
+  for (const doc of rows) {
+    const mekanik = parseJsonField(doc.pelaksanaan_mekanik)
+    const listrik = parseJsonField(doc.pelaksanaan_listrik)
+    const allSteps = [...mekanik, ...listrik]
+
+    for (const step of allSteps) {
+      if (typeof step !== 'string') continue
+      for (const form of FORMULIR_MAPPING) {
+        if (form.regex.test(step)) {
+          if (!matchedPaths.has(form.path)) {
+            matchedPaths.add(form.path)
+            result.push({
+              title: form.title,
+              path: form.path
+            })
+          }
+        }
+      }
+    }
+  }
+  return result
+}
+
 export function parseJsonField(val: any): any[] {
   if (typeof val === 'string') {
     try {
@@ -77,6 +132,7 @@ export async function getCascadedSop(mesin: string, jenis_pm: string) {
       pelaksanaan_listrik: parseJsonField(doc.pelaksanaan_listrik),
       penormalan: parseJsonField(doc.penormalan),
       related_pms,
+      lampiran_formulir: getLampiranFormulir([doc]),
     }
   }
 
@@ -152,5 +208,6 @@ export async function getCascadedSop(mesin: string, jenis_pm: string) {
     jumlah_personil: finalJumlahPersonil,
     
     related_pms,
+    lampiran_formulir: getLampiranFormulir(rows),
   }
 }

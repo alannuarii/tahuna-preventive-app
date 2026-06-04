@@ -91,6 +91,57 @@
               </ul>
             </div>
           </div>
+
+          <!-- Lampiran Formulir Card -->
+          <div v-if="sop.lampiran_formulir && sop.lampiran_formulir.length > 0" class="card">
+            <div class="card-header" style="color: var(--primary-300);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary-300)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+              </svg>
+              Lampiran Formulir
+            </div>
+            <div class="card-body">
+              <div class="flex flex-col gap-2">
+                <div 
+                  v-for="(form, i) in sop.lampiran_formulir" 
+                  :key="'f'+i" 
+                  class="formulir-item"
+                >
+                  <!-- View Link (Opens natively in new tab) -->
+                  <a 
+                    :href="form.path" 
+                    target="_blank" 
+                    class="formulir-view-link"
+                  >
+                    <div class="formulir-icon-wrapper">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                      </svg>
+                    </div>
+                    <span class="formulir-text">
+                      {{ form.title }}
+                    </span>
+                  </a>
+
+                  <!-- Download Button -->
+                  <a 
+                    :href="form.path" 
+                    download 
+                    class="formulir-download-btn"
+                    title="Unduh Formulir"
+                    aria-label="Unduh Formulir"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="7 10 12 15 17 10"/>
+                      <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -353,4 +404,74 @@ const parsePmStepLink = (step: string, mapping: any, linkPrefix: string) => {
 
 .sop-step-list { list-style: decimal; padding-left: 1.25rem; margin: 0; }
 .sop-step-list li { font-size: var(--font-size-sm); color: var(--gray-600); padding: 4px 0; line-height: 1.6; }
+
+.formulir-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--glass-border);
+  transition: all var(--transition-fast);
+  overflow: hidden;
+}
+
+.formulir-item:hover {
+  border-color: var(--primary-400);
+  background: rgba(99, 102, 241, 0.04);
+}
+
+.formulir-view-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  flex: 1;
+  text-decoration: none !important;
+  color: inherit;
+}
+
+.formulir-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.formulir-text {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--gray-700);
+  transition: color var(--transition-fast);
+}
+
+.formulir-view-link:hover .formulir-text {
+  color: var(--primary-300);
+}
+
+.formulir-download-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  margin-right: var(--space-2);
+  border-radius: var(--radius-md);
+  color: var(--gray-400);
+  background: transparent;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.formulir-download-btn:hover {
+  color: var(--primary-300);
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.25);
+}
 </style>

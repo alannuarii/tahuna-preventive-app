@@ -1,5 +1,5 @@
 import { query } from '~/server/utils/db'
-import { getCascadedSop, parseJsonField } from '~/server/utils/sopCascade'
+import { getCascadedSop, parseJsonField, getLampiranFormulir } from '~/server/utils/sopCascade'
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
@@ -25,7 +25,10 @@ export default defineEventHandler(async (event) => {
     }
 
     if (raw === 'true') {
-      return parsedDoc
+      return {
+        ...parsedDoc,
+        lampiran_formulir: getLampiranFormulir([doc])
+      }
     }
 
     const cascaded = await getCascadedSop(doc.mesin, doc.jenis_pm)
