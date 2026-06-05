@@ -1,7 +1,5 @@
 import { query } from '~/server/utils/db'
 import ExcelJS from 'exceljs'
-import path from 'path'
-import fs from 'fs'
 
 const monthNames = [
   'JANUARI', 'FEBRUARI', 'MARET', 'APRIL', 'MEI', 'JUNI',
@@ -44,20 +42,17 @@ export default defineEventHandler(async (event) => {
     WHERE r.tanggal_pelaksanaan >= $1 AND r.tanggal_pelaksanaan <= $2
   `
   const realizations = await query(sql, [startStr, endStr])
-
   // Load template
-  let templatePath = path.resolve('public', '00. Realisasi PM MOUNT YEAR.xlsx')
-  if (!fs.existsSync(templatePath)) {
-    // Fallback for production where the public folder is in .output/public
-    templatePath = path.resolve(process.cwd(), '.output', 'public', '00. Realisasi PM MOUNT YEAR.xlsx')
+  const templateUrl = 'https://aurastorage.serveer.biz.id/api/files/602d3863-5085-42e1-9b38-cad9ec3ee13c.xlsx'
+  const response = await fetch(templateUrl)
+  if (!response.ok) {
+    throw createError({ statusCode: 500, statusMessage: 'Failed to fetch template from Aurastorage' })
   }
-
-  if (!fs.existsSync(templatePath)) {
-    throw createError({ statusCode: 500, statusMessage: 'Template file not found at: ' + templatePath })
-  }
+  const arrayBuffer = await response.arrayBuffer()
+  const templateBuffer = Buffer.from(arrayBuffer)
 
   const workbook = new ExcelJS.Workbook()
-  await workbook.xlsx.readFile(templatePath)
+  await workbook.xlsx.load(templateBuffer)
   
   const worksheet = workbook.getWorksheet('Realisasi') || workbook.worksheets[0]
 

@@ -6,27 +6,27 @@ const FORMULIR_MAPPING = [
   {
     regex: /tahanan\s+isolasi\s+generator/i,
     title: 'Formulir Pengukuran Tahanan Isolasi Generator',
-    path: '/formulir/FORMULIR PENGUKURAN TAHANAN ISOLASI GENERATOR.pdf'
+    path: 'https://aurastorage.serveer.biz.id/api/files/ee402a39-d942-4abd-b36f-3d8b5d908ad8.pdf'
   },
   {
     regex: /mengukur\s+tegangan\s+baterai/i,
     title: 'Formulir Pengukuran Baterai',
-    path: '/formulir/FORMULIR PENGUKURAN BATERAI.pdf'
+    path: 'https://aurastorage.serveer.biz.id/api/files/fdb510d9-74e2-4c81-84bb-07027244e0ea.pdf'
   },
   {
     regex: /tahanan\s+isolasi\s+motor\s+fan\s+radiator/i,
     title: 'Formulir Pengukuran Tahanan Isolasi Motor Listrik Auxiliary',
-    path: '/formulir/FORMULIR PENGUKURAN TAHANAN ISOLASI MOTOR LISTRIK AUXILIARY.pdf'
+    path: 'https://aurastorage.serveer.biz.id/api/files/9113c2d2-5e33-419a-8cd3-45eb1b1e7a7c.pdf'
   },
   {
     regex: /tahanan\s+isolasi\s+trafo/i,
     title: 'Formulir Pengukuran Tahanan Isolasi Trafo',
-    path: '/formulir/FORMULIR PENGUKURAN TAHANAN ISOLASI TRAFO.pdf'
+    path: 'https://aurastorage.serveer.biz.id/api/files/aaf65eb3-0ef8-49de-8187-00578cbcaa6b.pdf'
   },
   {
     regex: /clearance\s+valve/i,
     title: 'Formulir Pengukuran Clearance Valve',
-    path: '/formulir/FORMULIR PENGUKURAN CLEREANCE VALVE.pdf'
+    path: 'https://aurastorage.serveer.biz.id/api/files/b6d9598e-bb23-408e-92bf-e46ea42e3d68.pdf'
   }
 ]
 

@@ -881,7 +881,7 @@ const downloadStockExcel = async () => {
   isDownloading.value = true
   
   try {
-    const response = await fetch('/FORMAT STOK MATERIAL FAST MOVING.xlsx')
+    const response = await fetch('https://aurastorage.serveer.biz.id/api/files/168c5024-a4f5-4e0a-896e-7dacf8041242.xlsx')
     if (!response.ok) throw new Error('Template file not found')
     const buffer = await response.arrayBuffer()
     
