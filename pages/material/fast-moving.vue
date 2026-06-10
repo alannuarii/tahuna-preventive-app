@@ -262,6 +262,27 @@
               </div>
             </div>
             <div v-if="item.notes" class="material-txn-notes">{{ item.notes }}</div>
+            
+            <div class="material-txn-actions mt-3 pt-3 flex justify-end gap-2" style="border-top: 1px solid var(--glass-border);">
+              <template v-if="item.reference_doc && item.reference_doc.startsWith('PM_REALIZATION_')">
+                <span class="text-xs text-muted italic flex items-center gap-1">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                  Sistem (Realisasi PM)
+                </span>
+              </template>
+              <template v-else>
+                <button type="button" class="btn btn-secondary btn-xs flex items-center gap-1" @click="openEditTxnModal(item)">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  Edit
+                </button>
+                <button type="button" class="btn btn-xs flex items-center gap-1" style="border: 1px solid #ef4444; color: #ef4444; background: rgba(239,68,68,0.1);" @click="handleDeleteTxn(item)">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  Hapus
+                </button>
+              </template>
+            </div>
           </div>
         </div>
 
@@ -278,6 +299,7 @@
                   <th class="text-center" style="width: 100px;">Jumlah</th>
                   <th style="width: 80px;">Satuan</th>
                   <th>Catatan</th>
+                  <th class="text-center" style="width: 100px;">Aksi</th>
                 </tr>
               </thead>
               <tbody>
@@ -293,6 +315,32 @@
                   <td class="text-center font-semibold">{{ formatNumber(item.quantity) }}</td>
                   <td>{{ item.satuan }}</td>
                   <td class="text-muted truncate-cell" :title="item.notes">{{ item.notes || '-' }}</td>
+                  <td class="text-center">
+                    <div class="flex justify-center gap-2">
+                      <template v-if="item.reference_doc && item.reference_doc.startsWith('PM_REALIZATION_')">
+                        <span class="inline-flex items-center justify-center text-gray-500 opacity-60 cursor-help" title="Transaksi otomatis dari Realisasi PM tidak dapat diubah/dihapus">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                          </svg>
+                        </span>
+                      </template>
+                      <template v-else>
+                        <button type="button" class="btn-action-icon edit" @click="openEditTxnModal(item)" title="Edit Transaksi">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                          </svg>
+                        </button>
+                        <button type="button" class="btn-action-icon delete" @click="handleDeleteTxn(item)" title="Hapus Transaksi">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"/>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                          </svg>
+                        </button>
+                      </template>
+                    </div>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -318,7 +366,7 @@
               <polyline points="12 19 5 12 12 5"/>
             </svg>
           </button>
-          <h1 class="home-title m-0" style="font-size: 1.5rem;">Input Transaksi</h1>
+          <h1 class="home-title m-0" style="font-size: 1.5rem;">{{ editingTxnId ? 'Edit Transaksi' : 'Input Transaksi' }}</h1>
         </div>
 
         <form @submit.prevent="submitTxn" class="card">
@@ -362,7 +410,7 @@
             <div class="flex justify-end gap-3 mt-6 pt-5" style="border-top: 1px solid var(--glass-border);">
               <button type="button" class="btn btn-secondary" @click="closeTxnModal">Batal</button>
               <button type="submit" class="btn btn-primary" :disabled="isSubmittingTxn">
-                {{ isSubmittingTxn ? 'Menyimpan...' : 'Simpan' }}
+                {{ isSubmittingTxn ? 'Menyimpan...' : (editingTxnId ? 'Perbarui' : 'Simpan') }}
               </button>
             </div>
           </div>
@@ -1022,6 +1070,7 @@ const changeTxnPage = (p: number) => { txnFilters.page = p; loadTransactions(); 
 // ===== TXN MODAL FORM =====
 const showTxnModal = ref(false)
 const isSubmittingTxn = ref(false)
+const editingTxnId = ref<number | null>(null)
 const txnForm = reactive({
   material_id: '',
   transaction_type: 'OUT',
@@ -1031,6 +1080,7 @@ const txnForm = reactive({
 })
 
 const openTxnModal = () => {
+  editingTxnId.value = null
   txnForm.material_id = ''
   txnForm.transaction_type = 'OUT'
   txnForm.quantity = '1'
@@ -1039,8 +1089,19 @@ const openTxnModal = () => {
   showTxnModal.value = true
 }
 
+const openEditTxnModal = (item: any) => {
+  editingTxnId.value = item.id
+  txnForm.material_id = item.material_id.toString()
+  txnForm.transaction_type = item.transaction_type
+  txnForm.quantity = item.quantity.toString()
+  txnForm.transaction_date = new Date(item.transaction_date).toISOString().slice(0, 10)
+  txnForm.notes = item.notes || ''
+  showTxnModal.value = true
+}
+
 const closeTxnModal = () => {
   showTxnModal.value = false
+  editingTxnId.value = null
 }
 
 const submitTxn = async () => {
@@ -1050,12 +1111,18 @@ const submitTxn = async () => {
   }
   isSubmittingTxn.value = true
   try {
-    const res = await fetch('/api/materials/transactions', {
-      method: 'POST',
+    const url = editingTxnId.value 
+      ? `/api/materials/transactions/${editingTxnId.value}`
+      : '/api/materials/transactions'
+    const method = editingTxnId.value ? 'PUT' : 'POST'
+
+    const res = await fetch(url, {
+      method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(txnForm)
     })
     if (res.ok) {
+      showAlert(editingTxnId.value ? 'Transaksi berhasil diperbarui' : 'Transaksi berhasil disimpan', 'success')
       closeTxnModal()
       loadInventory() // update stock
       if (activeTab.value === 'transactions') {
@@ -1069,6 +1136,29 @@ const submitTxn = async () => {
     showAlert('Gagal menyimpan transaksi', 'error')
   } finally {
     isSubmittingTxn.value = false
+  }
+}
+
+const handleDeleteTxn = async (item: any) => {
+  const confirmMsg = `Transaksi ini akan dihapus secara permanen dari log transaksi dan stok material "${item.material_name}" akan disesuaikan kembali.`
+  const isConfirmed = await showConfirm(confirmMsg, 'Hapus Transaksi?')
+  if (!isConfirmed) return
+
+  try {
+    const res = await fetch(`/api/materials/transactions/${item.id}`, {
+      method: 'DELETE'
+    })
+    if (res.ok) {
+      showAlert('Transaksi berhasil dihapus', 'success')
+      loadInventory() // update stock
+      loadTransactions() // refresh list
+    } else {
+      const err = await res.json()
+      showAlert(err.statusMessage || 'Gagal menghapus transaksi', 'error')
+    }
+  } catch (err) {
+    console.error('Error deleting transaction:', err)
+    showAlert('Gagal menghapus transaksi', 'error')
   }
 }
 
@@ -1651,5 +1741,44 @@ const tabOptions = [
   color: var(--primary-500);
   font-weight: 700;
   font-size: var(--font-size-sm);
+}
+
+/* Custom styles for transaction actions */
+.btn-action-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--gray-400);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.btn-action-icon:hover {
+  color: var(--gray-800);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-action-icon.edit:hover {
+  color: var(--primary-400);
+  background: rgba(99, 102, 241, 0.1);
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+.btn-action-icon.delete:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.btn-xs {
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: var(--radius-md);
 }
 </style>
