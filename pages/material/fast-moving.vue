@@ -824,7 +824,7 @@ const loadSchedules = async () => {
 
 // ===== STOCK TAB =====
 const stockSearch = ref('')
-const stockSort = ref('name_asc')
+const stockSort = ref('rop_status_desc')
 const stockMachineFilter = ref('')
 const stockLoading = ref(false)
 const inventoryData = ref<any[]>([])
@@ -985,7 +985,25 @@ const enrichedInventory = computed(() => {
     })
   }
 
-  if (stockSort.value === 'est_asc' || stockSort.value === 'est_desc') {
+  if (stockSort.value === 'rop_status_desc') {
+    mapped.sort((a, b) => {
+      const weight: Record<string, number> = { 'CRITICAL': 3, 'REORDER': 2, 'SAFE': 1 }
+      const weightA = weight[a.rop_status] || 1
+      const weightB = weight[b.rop_status] || 1
+      
+      if (weightB !== weightA) {
+        return weightB - weightA
+      }
+      
+      const daysA = (a.estHabis && typeof a.estHabis.days === 'number') ? a.estHabis.days : 999999;
+      const daysB = (b.estHabis && typeof b.estHabis.days === 'number') ? b.estHabis.days : 999999;
+      if (daysA !== daysB) {
+        return daysA - daysB
+      }
+      
+      return a.name.localeCompare(b.name)
+    });
+  } else if (stockSort.value === 'est_asc' || stockSort.value === 'est_desc') {
     mapped.sort((a, b) => {
       const daysA = (a.estHabis && typeof a.estHabis.days === 'number') ? a.estHabis.days : 999999;
       const daysB = (b.estHabis && typeof b.estHabis.days === 'number') ? b.estHabis.days : 999999;
@@ -1439,8 +1457,8 @@ const formatDateShort = (dateInput: any) => {
 
 const getStockLevel = (item: any) => {
   if (item.current_stock <= 0) return 'stock-empty'
-  if (item.current_stock <= 10) return 'stock-low'
-  if (item.current_stock <= 50) return 'stock-medium'
+  if (item.rop_status === 'CRITICAL') return 'stock-low'
+  if (item.rop_status === 'REORDER') return 'stock-medium'
   return 'stock-good'
 }
 

@@ -164,7 +164,7 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    const sortFn = sortMap[sort as string] || sortMap.name_asc
+    const sortFn = sortMap[sort as string] || sortMap.rop_status_desc
     enriched.sort(sortFn)
 
     return {
