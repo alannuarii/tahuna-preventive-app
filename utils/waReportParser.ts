@@ -37,12 +37,13 @@ const materialAliases: Array<{
     partNumberHints: ['LF777', '37540-02100'],
   },
   {
-    // "Filter Hsd", "Filter HSD", "F.HSD", "Fuel Filter", "filter solar"
+    // "Filter Hsd", "Filter HSD", "F.HSD", "Fuel Filter", "filter solar", "F. BBM"
     patterns: [
       /f(?:ilter)?[\.\s]*hsd/i,
       /fuel\s*filter/i,
       /filter\s*solar/i,
       /f(?:ilter)?[\.\s]*bahan\s*bakar/i,
+      /f(?:ilter)?[\.\s]*bbm/i,
     ],
     dbName: 'Fuel Filter',
     partNumberHints: ['FS1006', '0117-4423', '32562-60300'],
@@ -285,6 +286,8 @@ function matchMaterial(line: string): string | null {
     { pattern: /\bFS\s*1006\b/i, dbName: 'Fuel Filter' },
     { pattern: /\bAF\s*25278\b/i, dbName: 'Air Filter' },
     { pattern: /\b2020\s*TM\b/i, dbName: 'Racor Filter' },
+    { pattern: /\b32562-60300\b/i, dbName: 'Fuel Filter' },
+    { pattern: /\b60300\b/i, dbName: 'Fuel Filter' },
     { pattern: /\bmeditran/i, dbName: 'Lube Oil' },
     { pattern: /\bmediterania/i, dbName: 'Lube Oil' },
   ]
