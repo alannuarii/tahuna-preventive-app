@@ -21,6 +21,40 @@
 
     <!-- ==================== TAB 1: STOK GUDANG ==================== -->
     <template v-if="activeTab === 'stock'">
+      <!-- ROP Status Summary Grid -->
+      <div class="grid grid-cols-3 gap-3 mb-4">
+        <!-- Safe Card -->
+        <div class="card summary-rop-card rop-card-safe">
+          <div class="card-body py-2 px-3 flex items-center justify-between">
+            <div>
+              <div class="text-[10px] text-muted leading-tight">Stok Aman</div>
+              <div class="text-lg font-bold mt-0.5 text-success">{{ getRopCount('SAFE') }}</div>
+            </div>
+            <div class="summary-rop-icon text-success">✅</div>
+          </div>
+        </div>
+        <!-- Reorder Card -->
+        <div class="card summary-rop-card rop-card-reorder">
+          <div class="card-body py-2 px-3 flex items-center justify-between">
+            <div>
+              <div class="text-[10px] text-muted leading-tight">Perlu Order</div>
+              <div class="text-lg font-bold mt-0.5 text-warning">{{ getRopCount('REORDER') }}</div>
+            </div>
+            <div class="summary-rop-icon text-warning">⚠️</div>
+          </div>
+        </div>
+        <!-- Critical Card -->
+        <div class="card summary-rop-card rop-card-critical">
+          <div class="card-body py-2 px-3 flex items-center justify-between">
+            <div>
+              <div class="text-[10px] text-muted leading-tight">Stok Kritis</div>
+              <div class="text-lg font-bold mt-0.5 text-danger">{{ getRopCount('CRITICAL') }}</div>
+            </div>
+            <div class="summary-rop-icon text-danger">🚨</div>
+          </div>
+        </div>
+      </div>
+
       <div class="flex justify-end mb-3 mobile-only">
         <button class="btn btn-secondary btn-sm" @click="showMobileStockFilter = !showMobileStockFilter">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
@@ -47,6 +81,7 @@
                 <option value="name_desc">Nama Z–A</option>
                 <option value="stock_asc">Stok Terendah</option>
                 <option value="stock_desc">Stok Tertinggi</option>
+                <option value="rop_status_desc">Status ROP (Kritis Teratas)</option>
                 <option value="est_asc">Habis Tercepat</option>
                 <option value="est_desc">Habis Terlama</option>
               </select>
@@ -114,6 +149,24 @@
                 </template>
               </div>
             </div>
+            <!-- ROP Details for Mobile -->
+            <div class="material-stock-rop-details mt-3 pt-3 grid grid-cols-3 gap-2" style="border-top: 1px dashed var(--glass-border);">
+              <div>
+                <div class="text-xs text-muted">ROP</div>
+                <div class="font-semibold text-xs">{{ formatNumber(item.rop) }} {{ item.satuan }}</div>
+                <div v-if="getDrumTextForValue(item.rop, item.satuan)" class="text-[10px] text-muted">{{ getDrumTextForValue(item.rop, item.satuan) }}</div>
+              </div>
+              <div>
+                <div class="text-xs text-muted">ROQ</div>
+                <div class="font-semibold text-xs">{{ formatNumber(item.roq) }} {{ item.satuan }}</div>
+                <div v-if="getDrumTextForValue(item.roq, item.satuan)" class="text-[10px] text-muted">{{ getDrumTextForValue(item.roq, item.satuan) }}</div>
+              </div>
+              <div class="text-right flex items-center justify-end">
+                <span :class="['rop-badge', 'rop-' + (item.rop_status || 'safe').toLowerCase()]" style="padding: 0.15rem 0.4rem; font-size: 0.6rem;">
+                  {{ getRopStatusLabel(item.rop_status) }}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -127,7 +180,10 @@
                   <th>NAMA MATERIAL & SPEK</th>
                   <th class="text-center">PART NUMBER</th>
                   <th class="text-center">STOCK</th>
+                  <th class="text-center">ROP (SAFETY)</th>
+                  <th class="text-center">ROQ</th>
                   <th class="text-center">EST. HABIS</th>
+                  <th class="text-center" style="width: 120px;">STATUS ROP</th>
                 </tr>
               </thead>
               <tbody>
@@ -149,6 +205,18 @@
                     <div v-if="item.drumText" class="text-xs text-muted mt-1">{{ item.drumText }}</div>
                   </td>
                   <td class="text-center">
+                    <div class="font-semibold">{{ formatNumber(item.rop) }} {{ item.satuan }}</div>
+                    <div v-if="getDrumTextForValue(item.rop, item.satuan)" class="text-xs text-muted mt-1">
+                      {{ getDrumTextForValue(item.rop, item.satuan) }}
+                    </div>
+                  </td>
+                  <td class="text-center">
+                    <div class="font-semibold">{{ formatNumber(item.roq) }} {{ item.satuan }}</div>
+                    <div v-if="getDrumTextForValue(item.roq, item.satuan)" class="text-xs text-muted mt-1">
+                      {{ getDrumTextForValue(item.roq, item.satuan) }}
+                    </div>
+                  </td>
+                  <td class="text-center">
                     <template v-if="item.estHabis">
                       <template v-if="item.estHabis.date">
                         <div class="font-semibold" :class="item.estHabis.days < 30 ? 'text-danger' : ''">
@@ -163,6 +231,11 @@
                     <template v-else>
                       <span class="text-muted">-</span>
                     </template>
+                  </td>
+                  <td class="text-center">
+                    <span :class="['rop-badge', 'rop-' + (item.rop_status || 'safe').toLowerCase()]">
+                      {{ getRopStatusLabel(item.rop_status) }}
+                    </span>
                   </td>
                 </tr>
               </tbody>
@@ -939,6 +1012,24 @@ const downloadStockExcel = async () => {
     
     if (!worksheet) throw new Error('Worksheet not found in template')
 
+    // Add ROP/ROQ headers to template worksheet
+    const headerRow = worksheet.getRow(4)
+    if (headerRow) {
+      headerRow.getCell('H').value = 'ROP (SAFETY)'
+      headerRow.getCell('I').value = 'ROQ'
+      headerRow.getCell('J').value = 'STATUS ROP'
+      
+      const srcCell = headerRow.getCell(7) // Copy styling from Column G
+      for (let col = 8; col <= 10; col++) {
+        const destCell = headerRow.getCell(col)
+        if (srcCell.font) destCell.font = { ...srcCell.font }
+        else destCell.font = { bold: true }
+        if (srcCell.fill) destCell.fill = { ...srcCell.fill }
+        if (srcCell.border) destCell.border = { ...srcCell.border }
+        destCell.alignment = { vertical: 'middle', horizontal: 'center' }
+      }
+    }
+
     let currentRow = 5
     enrichedInventory.value.forEach((item, index) => {
       const estHabisText = item.estHabis?.date ? new Date(item.estHabis.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '> 5 Tahun'
@@ -963,6 +1054,9 @@ const downloadStockExcel = async () => {
       row.getCell('E').value = Number(item.current_stock)
       row.getCell('F').value = estHabisText
       row.getCell('G').value = durasiText
+      row.getCell('H').value = item.rop
+      row.getCell('I').value = item.roq
+      row.getCell('J').value = getRopStatusLabel(item.rop_status)
       
       const borderStyle = {
         top: { style: 'thin' as const },
@@ -971,7 +1065,7 @@ const downloadStockExcel = async () => {
         right: { style: 'thin' as const }
       };
 
-      for (let i = 1; i <= 7; i++) {
+      for (let i = 1; i <= 10; i++) {
         const cell = row.getCell(i);
         cell.border = borderStyle;
         cell.font = { bold: false };
@@ -1359,6 +1453,26 @@ const getStockCompare = (item: any) => {
 const getEnoughCount = (item: any) => {
   if (!item.qty_per_pm || item.qty_per_pm === 0) return '∞'
   return Math.floor(item.current_stock / item.qty_per_pm)
+}
+
+const getRopCount = (status: string) => {
+  return enrichedInventory.value.filter((item: any) => item.rop_status === status).length
+}
+
+const getRopStatusLabel = (status?: string) => {
+  if (!status) return '-'
+  if (status === 'SAFE') return 'Aman'
+  if (status === 'REORDER') return 'Order'
+  if (status === 'CRITICAL') return 'Kritis'
+  return status
+}
+
+const getDrumTextForValue = (value: number, satuan: string) => {
+  if (satuan?.toLowerCase() === 'liter' && value > 0) {
+    const drums = Math.ceil(value / 209)
+    return `(≈ ${drums} Drum)`
+  }
+  return ''
 }
 
 // Tab options with icons
@@ -1780,5 +1894,55 @@ const tabOptions = [
   padding: 0.2rem 0.5rem;
   font-size: 0.75rem;
   border-radius: var(--radius-md);
+}
+
+/* ROP & ROQ Custom Styles */
+.rop-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.rop-safe {
+  background: rgba(52, 211, 153, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(52, 211, 153, 0.3);
+}
+.rop-reorder {
+  background: rgba(251, 146, 60, 0.15);
+  color: #fb923c;
+  border: 1px solid rgba(251, 146, 60, 0.3);
+}
+.rop-critical {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.2);
+}
+.summary-rop-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-base);
+}
+.rop-card-safe {
+  border-left: 4px solid var(--success) !important;
+}
+.rop-card-reorder {
+  border-left: 4px solid var(--warning) !important;
+}
+.rop-card-critical {
+  border-left: 4px solid var(--danger) !important;
+}
+.summary-rop-icon {
+  font-size: 1.5rem;
+  opacity: 0.8;
 }
 </style>

@@ -49,7 +49,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 500, statusMessage: 'Failed to fetch template from Aurastorage' })
   }
   const arrayBuffer = await response.arrayBuffer()
-  const templateBuffer = Buffer.from(arrayBuffer)
+  const templateBuffer = Buffer.from(arrayBuffer) as any
 
   const workbook = new ExcelJS.Workbook()
   await workbook.xlsx.load(templateBuffer)
