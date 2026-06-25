@@ -158,7 +158,7 @@
               </div>
               <div>
                 <div class="text-xs text-muted">ROQ</div>
-                <div class="font-semibold text-xs">{{ formatNumber(item.roq) }} {{ item.satuan }}</div>
+                <div class="font-semibold text-xs">{{ formatNumber(Math.round(item.roq)) }} {{ item.satuan }}</div>
                 <div v-if="getDrumTextForValue(item.roq, item.satuan)" class="text-[10px] text-muted">{{ getDrumTextForValue(item.roq, item.satuan) }}</div>
               </div>
               <div class="text-right flex items-center justify-end">
@@ -211,7 +211,7 @@
                     </div>
                   </td>
                   <td class="text-center">
-                    <div class="font-semibold">{{ formatNumber(item.roq) }} {{ item.satuan }}</div>
+                    <div class="font-semibold">{{ formatNumber(Math.round(item.roq)) }} {{ item.satuan }}</div>
                     <div v-if="getDrumTextForValue(item.roq, item.satuan)" class="text-xs text-muted mt-1">
                       {{ getDrumTextForValue(item.roq, item.satuan) }}
                     </div>
