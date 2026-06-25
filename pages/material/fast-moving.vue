@@ -242,6 +242,59 @@
             </table>
           </div>
         </div>
+
+        <!-- Keterangan Asumsi & Parameter ROP/ROQ -->
+        <div class="card mt-4 p-4 text-xs text-muted" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border);">
+          <h3 class="font-semibold text-sm mb-3 flex items-center gap-2" style="color: var(--primary-300); margin: 0 0 12px 0;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            Keterangan Asumsi &amp; Parameter Perhitungan Stok
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div class="flex flex-col gap-1.5">
+              <span class="font-semibold text-gray-300">ROP (Reorder Point)</span>
+              <p class="m-0 text-[11px] leading-relaxed">
+                Batas pemesanan kembali yang setara dengan total kebutuhan material selama <strong>45 hari</strong> (akumulasi Lead Time 30 hari + Safety Stock 15 hari).
+              </p>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <span class="font-semibold text-gray-300">ROQ (Reorder Quantity)</span>
+              <p class="m-0 text-[11px] leading-relaxed">
+                Jumlah pemesanan optimal, dihitung dari estimasi kebutuhan material untuk <strong>90 hari ke depan</strong> ditambah <strong>faktor pengaman (buffer) 5%</strong>.
+              </p>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <span class="font-semibold text-gray-300">Est. Habis</span>
+              <p class="m-0 text-[11px] leading-relaxed">
+                Estimasi tanggal stok material akan habis (&le; 0) berdasarkan simulasi konsumsi stok terhadap rencana jadwal PM secara kronologis.
+              </p>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <span class="font-semibold text-gray-300">Lead Time (Waktu Pengiriman)</span>
+              <p class="m-0 text-[11px] leading-relaxed">
+                Waktu tunggu sejak pemesanan hingga material tiba di lokasi, yang diasumsikan default selama <strong>30 hari</strong>.
+              </p>
+            </div>
+            <div class="flex flex-col gap-2">
+              <span class="font-semibold text-gray-300">Status ROP</span>
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                  <span class="rop-badge rop-safe" style="padding: 2px 6px; font-size: 10px; line-height: 1; flex-shrink: 0; min-width: 60px; text-align: center;">AMAN</span>
+                  <span class="text-[11px] text-muted">Stok &gt; ROP</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="rop-badge rop-reorder" style="padding: 2px 6px; font-size: 10px; line-height: 1; flex-shrink: 0; min-width: 60px; text-align: center;">ORDER</span>
+                  <span class="text-[11px] text-muted">Stok &le; ROP, tapi &gt; Safety Stock (15 hari buffer)</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="rop-badge rop-critical" style="padding: 2px 6px; font-size: 10px; line-height: 1; flex-shrink: 0; min-width: 60px; text-align: center;">KRITIS</span>
+                  <span class="text-[11px] text-muted">Stok &le; Safety Stock (15 hari buffer)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </template>
     </template>
 
