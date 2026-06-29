@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
     }
     
     const items = await query(
-      `SELECT id, payload, is_read, created_at 
+      `SELECT id, payload, is_read, created_at, realization_id 
        FROM pm_notifications 
        WHERE id = $1`,
       [parseInt(id)]

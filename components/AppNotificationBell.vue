@@ -34,7 +34,7 @@
             v-for="item in notifications" 
             :key="item.id" 
             class="notification-item"
-            @click="goToRealisasi(item.id)"
+            @click="goToRealisasi(item)"
           >
             <div class="notification-icon">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -109,9 +109,25 @@ const formatDate = (dateStr: string) => {
   return d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' ' + d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' })
 }
 
-const goToRealisasi = (id: number) => {
+const goToRealisasi = async (item: any) => {
   isOpen.value = false
-  router.push({ path: '/realisasi/input', query: { notificationId: id.toString() } })
+  
+  // Tandai sebagai dibaca secara langsung saat diklik
+  try {
+    await fetch(`/api/notifications/${item.id}/read`, { method: 'PUT' })
+  } catch (err) {
+    console.error('Failed to mark notification as read:', err)
+  }
+  
+  // Ambil ulang notifikasi untuk memperbarui badge lonceng
+  fetchNotifications()
+
+  if (item.realization_id) {
+    router.push(`/realisasi/detail/${item.realization_id}`)
+  } else {
+    // Fallback ke alur lama jika realization_id tidak tersedia
+    router.push({ path: '/realisasi/input', query: { notificationId: item.id.toString() } })
+  }
 }
 </script>
 

@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
     // Only return unread notifications
     // Order by created_at DESC to show newest first
     const items = await query(
-      `SELECT id, payload, is_read, created_at 
+      `SELECT id, payload, is_read, created_at, realization_id 
        FROM pm_notifications 
        WHERE is_read = false 
        ORDER BY created_at DESC 

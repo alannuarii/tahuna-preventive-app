@@ -7,8 +7,13 @@ export default defineNitroPlugin(async (nitroApp) => {
         id SERIAL PRIMARY KEY,
         payload TEXT NOT NULL,
         is_read BOOLEAN DEFAULT FALSE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        realization_id INT
       );
+    `)
+    // Run migration query to add realization_id to existing table if it doesn't exist
+    await query(`
+      ALTER TABLE pm_notifications ADD COLUMN IF NOT EXISTS realization_id INT;
     `)
     console.log('Verified table pm_notifications')
   } catch (err) {
