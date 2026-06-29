@@ -664,7 +664,7 @@ const downloadStockExcel = async () => {
   isDownloading.value = true
   
   try {
-    const response = await fetch('https://aurastorage.serveer.biz.id/api/files/e5cc44ad-fd51-402e-81b0-e110fd785edd.xlsx')
+    const response = await fetch('/api/materials/template-proxy?url=' + encodeURIComponent('https://aurastorage.serveer.biz.id/api/files/e5cc44ad-fd51-402e-81b0-e110fd785edd.xlsx'))
     if (!response.ok) throw new Error('Template file not found')
     const buffer = await response.arrayBuffer()
     
@@ -743,7 +743,7 @@ const downloadStockExcel = async () => {
     URL.revokeObjectURL(url)
   } catch (err) {
     console.error('Failed to download excel', err)
-    alert('Gagal mengunduh Excel')
+    showAlert('Gagal mengunduh Excel', 'error')
   } finally {
     isDownloading.value = false
   }

@@ -231,7 +231,7 @@ const handleDownloadCalendar = async (date: Date) => {
     window.URL.revokeObjectURL(downloadUrl)
   } catch (error) {
     console.error('Error downloading rencana:', error)
-    alert('Gagal mengunduh file Excel.')
+    showAlert('Gagal mengunduh file Excel.', 'error')
   }
 }
 

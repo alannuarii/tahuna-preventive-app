@@ -215,11 +215,11 @@ const saveStatus = async () => {
       // Reload page or inform parent to reload schedule
       window.location.reload()
     } else {
-      alert('Gagal menyimpan status')
+      showAlert('Gagal menyimpan status', 'error')
     }
   } catch (err) {
     console.error(err)
-    alert('Terjadi kesalahan')
+    showAlert('Terjadi kesalahan', 'error')
   } finally {
     saving.value = false
   }

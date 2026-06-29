@@ -112,7 +112,7 @@ export default defineEventHandler(async (event) => {
       )
 
       if (material.material_id && material.jumlah_realisasi > 0) {
-        const notesText = `Penggunaan Realisasi PM ${parseResult.jenisPm} - Unit ${engine.unit} (Otomatis Webhook)`
+        const notesText = `Penggunaan Realisasi PM ${parseResult.jenisPm} - Unit ${engine.unit}`
         const refDoc = `PM_REALIZATION_${realizationId}`
         
         // Log transaksi keluar

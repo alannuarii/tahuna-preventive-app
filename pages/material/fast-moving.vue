@@ -348,6 +348,11 @@
               <div class="flex gap-2 flex-wrap justify-end">
                 <button class="btn btn-primary btn-sm" @click="applyTxnFilters">Filter</button>
                 <button class="btn btn-secondary btn-sm" @click="resetTxnFilters">Reset</button>
+                <button class="btn btn-secondary btn-sm" @click="downloadTxnExcel" :disabled="isDownloadingTxn">
+                  <span v-if="isDownloadingTxn" class="spinner spinner-sm mr-2"></span>
+                  <svg v-else width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  {{ isDownloadingTxn ? 'Menyiapkan...' : 'Download' }}
+                </button>
                 <button class="btn btn-primary btn-sm ml-auto desktop-only" style="background-color: var(--primary-700);" @click="openTxnModal">+ Input Transaksi</button>
               </div>
             </div>
@@ -1073,7 +1078,7 @@ const downloadStockExcel = async () => {
   isDownloading.value = true
   
   try {
-    const response = await fetch('https://aurastorage.serveer.biz.id/api/files/168c5024-a4f5-4e0a-896e-7dacf8041242.xlsx')
+    const response = await fetch('/api/materials/template-proxy?url=' + encodeURIComponent('https://aurastorage.serveer.biz.id/api/files/28b89f3a-cc5a-4505-b6bd-bb5c8083da00.xlsx'))
     if (!response.ok) throw new Error('Template file not found')
     const buffer = await response.arrayBuffer()
     
@@ -1082,24 +1087,6 @@ const downloadStockExcel = async () => {
     const worksheet = workbook.getWorksheet(1)
     
     if (!worksheet) throw new Error('Worksheet not found in template')
-
-    // Add ROP/ROQ headers to template worksheet
-    const headerRow = worksheet.getRow(4)
-    if (headerRow) {
-      headerRow.getCell('H').value = 'ROP (SAFETY)'
-      headerRow.getCell('I').value = 'ROQ'
-      headerRow.getCell('J').value = 'STATUS ROP'
-      
-      const srcCell = headerRow.getCell(7) // Copy styling from Column G
-      for (let col = 8; col <= 10; col++) {
-        const destCell = headerRow.getCell(col)
-        if (srcCell.font) destCell.font = { ...srcCell.font }
-        else destCell.font = { bold: true }
-        if (srcCell.fill) destCell.fill = { ...srcCell.fill }
-        if (srcCell.border) destCell.border = { ...srcCell.border }
-        destCell.alignment = { vertical: 'middle', horizontal: 'center' }
-      }
-    }
 
     let currentRow = 5
     enrichedInventory.value.forEach((item, index) => {
@@ -1122,12 +1109,13 @@ const downloadStockExcel = async () => {
         }).join(', ');
       };
       row.getCell('D').value = getShortName(item.enginesText || '-');
-      row.getCell('E').value = Number(item.current_stock)
-      row.getCell('F').value = estHabisText
-      row.getCell('G').value = durasiText
-      row.getCell('H').value = item.rop
-      row.getCell('I').value = item.roq
-      row.getCell('J').value = getRopStatusLabel(item.rop_status)
+      row.getCell('E').value = item.satuan || '-'
+      row.getCell('F').value = Number(item.current_stock)
+      row.getCell('G').value = item.rop
+      row.getCell('H').value = item.roq
+      row.getCell('I').value = estHabisText
+      row.getCell('J').value = durasiText
+      row.getCell('K').value = getRopStatusLabel(item.rop_status)
       
       const borderStyle = {
         top: { style: 'thin' as const },
@@ -1136,7 +1124,7 @@ const downloadStockExcel = async () => {
         right: { style: 'thin' as const }
       };
 
-      for (let i = 1; i <= 10; i++) {
+      for (let i = 1; i <= 11; i++) {
         const cell = row.getCell(i);
         cell.border = borderStyle;
         cell.font = { bold: false };
@@ -1178,9 +1166,107 @@ const downloadStockExcel = async () => {
     URL.revokeObjectURL(url)
   } catch (err) {
     console.error('Failed to download excel', err)
-    alert('Gagal mengunduh Excel')
+    showAlert('Gagal mengunduh Excel', 'error')
   } finally {
     isDownloading.value = false
+  }
+}
+
+const isDownloadingTxn = ref(false)
+const downloadTxnExcel = async () => {
+  if (isDownloadingTxn.value) return
+  isDownloadingTxn.value = true
+  
+  try {
+    const q = new URLSearchParams()
+    if (txnFilters.start) q.set('start', txnFilters.start)
+    if (txnFilters.end) q.set('end', txnFilters.end)
+    if (txnFilters.type) q.set('type', txnFilters.type)
+    if (txnFilters.material_id) q.set('material_id', txnFilters.material_id)
+    q.set('sort', txnFilters.sort)
+    q.set('page', '1')
+    q.set('limit', '1000000')
+
+    const res = await fetch(`/api/materials/transactions?${q.toString()}`)
+    if (!res.ok) throw new Error('Gagal mengambil data transaksi')
+    const json = await res.json()
+    const txns = json.data || []
+
+    const response = await fetch('/api/materials/template-proxy?url=' + encodeURIComponent('https://aurastorage.serveer.biz.id/api/files/b7fd8fb0-ff58-46ec-8121-f80ff26724d9.xlsx'))
+    if (!response.ok) throw new Error('Template file not found')
+    const buffer = await response.arrayBuffer()
+    
+    const workbook = new ExcelJS.Workbook()
+    await workbook.xlsx.load(buffer)
+    const worksheet = workbook.getWorksheet(1)
+    
+    if (!worksheet) throw new Error('Worksheet not found in template')
+
+    worksheet.getCell('A3').value = `Dari tanggal: ${txnFilters.start ? formatDateShort(txnFilters.start) : '-'}`
+    worksheet.getCell('A4').value = `Sampai Tanggal: ${txnFilters.end ? formatDateShort(txnFilters.end) : '-'}`
+
+    let currentRow = 8
+    txns.forEach((item, index) => {
+      const row = worksheet.getRow(currentRow)
+      row.getCell('A').value = index + 1
+      row.getCell('B').value = formatDateShort(item.transaction_date)
+      row.getCell('C').value = item.material_name
+      row.getCell('D').value = item.part_number || '-'
+      
+      const getShortName = (text: string) => {
+        if (!text || text === '-' || text === 'Common') return text || '-';
+        return text.split(',').map(s => {
+          const t = s.trim().toLowerCase();
+          if (t.includes('mitsubishi')) return 'Mitsubishi';
+          if (t.includes('cummins')) return 'Cummins';
+          if (t.includes('deutz')) return 'Deutz';
+          if (t.includes('swd')) return 'SWD';
+          return s.trim().split(' ')[0];
+        }).join(', ');
+      };
+      const inv = enrichedInventory.value.find(i => Number(i.id) === Number(item.material_id))
+      row.getCell('E').value = getShortName(inv?.enginesText || '-')
+      
+      row.getCell('F').value = item.transaction_type === 'IN' ? 'Masuk' : 'Keluar'
+      row.getCell('G').value = Number(item.quantity)
+      row.getCell('H').value = item.satuan || '-'
+      row.getCell('I').value = (item.notes || '-').replace(' (Otomatis Webhook)', '')
+      
+      const borderStyle = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' }
+      };
+
+      for (let i = 1; i <= 9; i++) {
+        const cell = row.getCell(i);
+        cell.border = borderStyle;
+        cell.font = { bold: false };
+        cell.fill = { type: 'pattern', pattern: 'none' };
+        if (i === 3 || i === 9) {
+          cell.alignment = { vertical: 'middle', horizontal: 'left' };
+        } else {
+          cell.alignment = { vertical: 'middle', horizontal: 'center' };
+        }
+      }
+      
+      currentRow++
+    })
+
+    const outBuffer = await workbook.xlsx.writeBuffer()
+    const blob = new Blob([outBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `Log_Transaksi_Material_Fast_Moving_${new Date().toISOString().slice(0, 10)}.xlsx`
+    a.click()
+    URL.revokeObjectURL(url)
+  } catch (err) {
+    console.error('Failed to download excel', err)
+    showAlert('Gagal mengunduh Excel Transaksi', 'error')
+  } finally {
+    isDownloadingTxn.value = false
   }
 }
 
