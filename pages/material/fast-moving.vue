@@ -2102,4 +2102,41 @@ const tabOptions = [
   font-size: 1.5rem;
   opacity: 0.8;
 }
+
+@media (max-width: 767px) {
+  .summary-rop-card .summary-rop-icon {
+    display: none !important;
+  }
+  
+  .summary-rop-card .card-body {
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    padding: 0.6rem 0.25rem !important;
+  }
+  
+  .summary-rop-card .card-body > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .summary-rop-card {
+    border-radius: var(--radius-lg) !important;
+  }
+
+  .rop-card-safe {
+    border-left-width: 3px !important;
+    background: rgba(34, 197, 94, 0.04) !important;
+  }
+  .rop-card-reorder {
+    border-left-width: 3px !important;
+    background: rgba(245, 158, 11, 0.04) !important;
+  }
+  .rop-card-critical {
+    border-left-width: 3px !important;
+    background: rgba(239, 68, 68, 0.04) !important;
+  }
+}
 </style>
