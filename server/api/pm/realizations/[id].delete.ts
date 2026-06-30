@@ -1,4 +1,4 @@
-import { query } from '~/server/utils/db'
+import { deleteRealization } from '~/server/utils/realization'
 
 export default defineEventHandler(async (event) => {
   const id = parseInt(getRouterParam(event, 'id') || '')
@@ -7,8 +7,8 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const result = await query(`DELETE FROM pm_realizations WHERE id = $1 RETURNING id`, [id])
-    if (result.length === 0) {
+    const success = await deleteRealization(id)
+    if (!success) {
       throw createError({ statusCode: 404, statusMessage: 'Not found' })
     }
 

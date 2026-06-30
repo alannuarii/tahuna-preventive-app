@@ -1,6 +1,7 @@
 import { query } from '~/server/utils/db'
 import { parseWhatsAppReport } from '~/utils/waReportParser'
 import { engines } from '~/server/utils/engineData'
+import { deleteRealization } from '~/server/utils/realization'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -42,6 +43,19 @@ export default defineEventHandler(async (event) => {
         message: `Pesan ditolak: Unit ${parseResult.unit} tidak valid dalam sistem.`
       })
     }
+
+    // Deteksi dan bersihkan duplikasi jika ada realisasi dengan unit, tanggal, dan jenis_pm yang sama
+    const existingRealizations = await query(
+      `SELECT id FROM pm_realizations 
+       WHERE tanggal_pelaksanaan = $1 AND unit = $2 AND jenis_pm = $3`,
+      [parseResult.tanggal, engine.unit, parseResult.jenisPm]
+    )
+
+    for (const existing of existingRealizations) {
+      console.warn(`Menghapus realisasi pemeliharaan duplikat (ID: ${existing.id}) sebelum menyimpan data baru...`)
+      await deleteRealization(existing.id)
+    }
+
 
     // Ambil daftar material terdaftar untuk unit tersebut dari database
     const sqlMaterials = `
