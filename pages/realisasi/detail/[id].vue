@@ -45,15 +45,12 @@
               <span class="detail-label">Mesin</span>
               <span class="detail-value">{{ detail.mesin }}</span>
             </div>
-            <div class="detail-item full-width" v-if="detail.catatan">
-              <span class="detail-label">Catatan</span>
-              <span class="detail-value" style="white-space: pre-wrap;">{{ detail.catatan }}</span>
-            </div>
           </div>
         </div>
       </div>
 
-      <div class="card mb-6">
+      <!-- Material yang Digunakan Card -->
+      <div class="card mb-4">
         <div class="card-header">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary-300)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
@@ -86,6 +83,34 @@
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- Catatan Card -->
+      <div v-if="detail.catatan" class="card mb-6">
+        <div class="card-header flex items-center gap-2">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary-300)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span class="font-semibold">Catatan</span>
+        </div>
+        <div class="card-body" style="padding-top: var(--space-2);">
+          <div class="detail-value catatan-container" style="margin-top: 0;">
+            <div class="catatan-text" style="white-space: pre-wrap; font-weight: normal; line-height: 1.6;">{{ formatCatatanText(detail.catatan) }}</div>
+            <div v-if="hasCatatanWarnings(detail.catatan)" class="catatan-warnings mt-4">
+              <div class="warning-header flex items-center gap-1.5 font-semibold text-xs mb-2">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                  <line x1="12" y1="9" x2="12" y2="13"/>
+                  <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+                Peringatan Sistem (System Warnings)
+              </div>
+              <ul class="warning-list pl-4 list-disc text-xs">
+                <li v-for="(w, idx) in getCatatanWarnings(detail.catatan)" :key="idx" class="mt-1">{{ w }}</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -202,6 +227,27 @@ const deleteRealization = async () => {
 .detail-item { display: flex; flex-direction: column; gap: 0.25rem; }
 .detail-label { font-size: 0.75rem; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.05em; }
 .detail-value { font-size: var(--font-size-base); color: var(--gray-800); font-weight: 500; }
+
+.catatan-container {
+  background: var(--bg-input);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  margin-top: 0.25rem;
+}
+.catatan-warnings {
+  background: var(--warning-light);
+  border: 1px solid var(--warning-glow);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+}
+.warning-header {
+  color: var(--warning);
+}
+.warning-list {
+  color: var(--warning);
+  opacity: 0.9;
+}
 
 .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: var(--space-4); }
 .modal { background: var(--bg-surface); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); width: 100%; max-width: 400px; box-shadow: var(--shadow-lg); }

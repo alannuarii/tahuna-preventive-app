@@ -275,7 +275,7 @@
                 <td>
                   <span :class="['badge', getPMBadgeClass(item.jenis_pm)]">{{ item.jenis_pm }}</span>
                 </td>
-                <td class="text-xs text-muted hidden sm:table-cell truncate" style="max-width: 150px;" :title="item.catatan">{{ item.catatan || '-' }}</td>
+                <td class="text-xs text-muted hidden sm:table-cell truncate" style="max-width: 150px;" :title="formatCatatan(item.catatan)">{{ formatCatatan(item.catatan) }}</td>
                 <td>
                   <div class="flex justify-center">
                     <NuxtLink :to="`/realisasi/detail/${item.id}`" class="btn btn-sm btn-secondary" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">

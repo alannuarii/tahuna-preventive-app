@@ -329,7 +329,7 @@ onMounted(async () => {
         form.tanggal_pelaksanaan = dateStr
         form.unit = String(data.unit)
         form.jenis_pm = data.jenis_pm
-        form.catatan = data.catatan || ''
+        form.catatan = formatCatatan(data.catatan) || ''
 
         await loadMaterials(String(data.unit))
 
