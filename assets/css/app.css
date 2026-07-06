@@ -964,6 +964,9 @@ select {
     font-size: var(--font-size-lg);
     font-weight: 600;
     color: white;
+    min-width: 180px;
+    text-align: center;
+    white-space: nowrap;
 }
 
 .calendar-nav-btn {
@@ -1474,6 +1477,11 @@ select {
         font-size: 8px;
         padding: 1px var(--space-1);
     }
+
+    .calendar-title {
+        min-width: 140px;
+        font-size: var(--font-size-base);
+    }
 }
 
 /* -------------------------
@@ -1727,3 +1735,13 @@ select {
 .btn-back { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; flex-shrink: 0; background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); color: var(--gray-600); cursor: pointer; transition: all var(--transition-base); text-decoration: none; padding: 0; }
 .btn-back:hover { background: var(--bg-hover); border-color: rgba(255,255,255,0.1); color: var(--gray-800); transform: translateX(-2px); }
 .btn-back:active { transform: scale(0.95); }
+
+/* Guest Mode Restrictions */
+.is-guest button[type="submit"],
+.is-guest .btn-danger,
+.is-guest .btn-action-icon.edit,
+.is-guest .btn-action-icon.delete,
+.is-guest a[href^="/realisasi/input"],
+.is-guest .guest-hide {
+    display: none !important;
+}

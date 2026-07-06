@@ -13,7 +13,7 @@
       <div class="login-action">
         <p class="login-instruction">Sign in to access the dashboard</p>
         
-        <a href="/auth/google" class="btn-google">
+        <a href="/auth/google" class="btn-google mb-3">
           <span class="icon-google">
             <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
               <g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)">
@@ -25,6 +25,10 @@
             </svg>
           </span>
           Sign in with Google
+        </a>
+
+        <a href="/auth/guest" class="btn-guest">
+          Sign in as Guest
         </a>
       </div>
       
@@ -145,6 +149,30 @@ onMounted(() => {
 }
 
 .btn-google:active { transform: translateY(0) scale(0.98); }
+
+.btn-guest {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #94a3b8;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-guest:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #e2e8f0;
+}
+.btn-guest:active { transform: translateY(0) scale(0.98); }
 .icon-google { margin-right: 0.75rem; display: flex; }
 .login-footer { font-size: 0.7rem; color: #475569; margin-top: 2rem; letter-spacing: 0.02em; }
 

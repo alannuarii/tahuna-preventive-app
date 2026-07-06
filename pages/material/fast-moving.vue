@@ -302,7 +302,7 @@
     <template v-if="activeTab === 'transactions'">
       <template v-if="!showTxnModal">
         <div class="flex justify-between items-center mb-3">
-          <button class="btn btn-primary btn-sm mobile-only" style="background-color: var(--primary-700);" @click="openTxnModal">+ Input Transaksi</button>
+          <button class="btn btn-primary btn-sm mobile-only guest-hide" style="background-color: var(--primary-700);" @click="openTxnModal">+ Input Transaksi</button>
           <button class="btn btn-secondary btn-sm mobile-only ml-auto" @click="showMobileTxnFilter = !showMobileTxnFilter">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
             {{ showMobileTxnFilter ? 'Sembunyikan Filter' : 'Tampilkan Filter' }}
@@ -353,7 +353,7 @@
                   <svg v-else width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                   {{ isDownloadingTxn ? 'Menyiapkan...' : 'Download' }}
                 </button>
-                <button class="btn btn-primary btn-sm ml-auto desktop-only" style="background-color: var(--primary-700);" @click="openTxnModal">+ Input Transaksi</button>
+                <button class="btn btn-primary btn-sm ml-auto desktop-only guest-hide" style="background-color: var(--primary-700);" @click="openTxnModal">+ Input Transaksi</button>
               </div>
             </div>
           </div>

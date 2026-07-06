@@ -29,7 +29,6 @@
             </svg>
             <span class="font-semibold">Informasi Pelaksanaan</span>
           </div>
-          <span :class="['badge', getPMBadgeClass(detail.jenis_pm)]">{{ detail.jenis_pm }}</span>
         </div>
         <div class="card-body">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -44,6 +43,12 @@
             <div class="detail-item">
               <span class="detail-label">Mesin</span>
               <span class="detail-value">{{ detail.mesin }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Jenis PM</span>
+              <span class="detail-value">
+                <span :class="['badge', getPMBadgeClass(detail.jenis_pm)]" style="display: inline-block;">{{ detail.jenis_pm }}</span>
+              </span>
             </div>
           </div>
         </div>

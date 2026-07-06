@@ -12,7 +12,7 @@
         <p v-if="sop" class="text-sm text-muted m-0 mt-1">{{ sop.mesin }} — {{ sop.jenis_pm }}</p>
       </div>
       <button 
-        v-if="sop && !isEditing" 
+        v-if="sop && !isEditing && !isGuest" 
         class="btn btn-primary btn-sm"
         @click="isEditing = true"
       >
@@ -267,6 +267,7 @@
 <script setup lang="ts">
 const route = useRoute()
 const sopId = route.params.id
+const { isGuest } = useAuth()
 
 const sop = ref<any>(null)
 const loading = ref(true)

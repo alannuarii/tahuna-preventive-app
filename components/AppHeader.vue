@@ -34,7 +34,7 @@
             <div v-if="dropdownOpen" class="dropdown-menu animate-dropdown">
               <div class="dropdown-header">
                 <span class="header-user-name">{{ user?.name || 'User' }}</span>
-                <span class="header-user-role">TL Pemeliharaan</span>
+                <span class="header-user-role">{{ isGuest ? '' : 'TL Pemeliharaan' }}</span>
               </div>
               
               <div class="dropdown-divider"></div>
@@ -88,7 +88,7 @@
         </div>
         <div class="user-details">
           <span class="header-user-name">{{ user?.name || 'User' }}</span>
-          <span class="header-user-role">TL Pemeliharaan</span>
+          <span class="header-user-role">{{ isGuest ? '' : 'TL Pemeliharaan' }}</span>
         </div>
       </div>
       <button class="btn-logout" @click="handleLogout" title="Sign Out">
@@ -104,9 +104,10 @@
 
 <script setup lang="ts">
 import { getUser, logout } from '~/utils/auth'
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, computed } from 'vue'
 
 const user = ref<any>({})
+const isGuest = computed(() => user.value?.role === 'guest')
 const imgError = ref(false)
 const dropdownOpen = ref(false)
 const dropdownRef = ref<HTMLElement | null>(null)

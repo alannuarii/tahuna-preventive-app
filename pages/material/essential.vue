@@ -23,7 +23,7 @@
     <template v-if="activeTab === 'stock'">
       <template v-if="!showMaterialForm">
         <div class="flex justify-between items-center mb-3">
-          <button class="btn btn-primary btn-sm mobile-only" style="background-color: var(--primary-700);" @click="openMaterialForm">+ Tambah Material</button>
+          <button class="btn btn-primary btn-sm mobile-only guest-hide" style="background-color: var(--primary-700);" @click="openMaterialForm">+ Tambah Material</button>
           <button class="btn btn-secondary btn-sm mobile-only ml-auto" @click="showMobileStockFilter = !showMobileStockFilter">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
             {{ showMobileStockFilter ? 'Sembunyikan Filter' : 'Tampilkan Filter' }}
@@ -64,7 +64,7 @@
                     <svg v-else width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                     {{ isDownloading ? 'Menyiapkan...' : 'Download' }}
                   </button>
-                  <button class="btn btn-primary btn-sm ml-auto desktop-only" style="background-color: var(--primary-700);" @click="openMaterialForm">+ Tambah Material</button>
+                  <button class="btn btn-primary btn-sm ml-auto desktop-only guest-hide" style="background-color: var(--primary-700);" @click="openMaterialForm">+ Tambah Material</button>
                 </div>
               </div>
             </div>
@@ -255,7 +255,7 @@
     <template v-if="activeTab === 'transactions'">
       <template v-if="!showTxnModal">
         <div class="flex justify-between items-center mb-3">
-          <button class="btn btn-primary btn-sm mobile-only" style="background-color: var(--primary-700);" @click="openTxnModal">+ Input Transaksi</button>
+          <button class="btn btn-primary btn-sm mobile-only guest-hide" style="background-color: var(--primary-700);" @click="openTxnModal">+ Input Transaksi</button>
           <button class="btn btn-secondary btn-sm mobile-only ml-auto" @click="showMobileTxnFilter = !showMobileTxnFilter">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
             {{ showMobileTxnFilter ? 'Sembunyikan Filter' : 'Tampilkan Filter' }}
@@ -284,7 +284,7 @@
               <div class="form-group mb-0 material-filter-action" style="flex: 1; display: flex; align-items: flex-end; justify-content: flex-end;">
                 <label class="form-label desktop-only">&nbsp;</label>
                 <div class="flex gap-2 flex-wrap justify-end">
-                  <button class="btn btn-primary btn-sm ml-auto desktop-only" style="background-color: var(--primary-700);" @click="openTxnModal">+ Input Transaksi</button>
+                  <button class="btn btn-primary btn-sm ml-auto desktop-only guest-hide" style="background-color: var(--primary-700);" @click="openTxnModal">+ Input Transaksi</button>
                 </div>
               </div>
             </div>

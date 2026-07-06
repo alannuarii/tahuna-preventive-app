@@ -2,7 +2,7 @@
   <div class="card">
     <div class="card-header flex justify-between items-center">
       <span>{{ label }}</span>
-      <button type="button" class="btn btn-sm btn-secondary" @click="addItem" style="padding: 2px 8px; font-size: 0.7rem;">
+      <button type="button" class="btn btn-sm btn-secondary guest-hide" @click="addItem" style="padding: 2px 8px; font-size: 0.7rem;">
         + Tambah
       </button>
     </div>

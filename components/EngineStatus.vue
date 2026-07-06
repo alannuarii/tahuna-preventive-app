@@ -21,7 +21,7 @@
                   <th>Mulai</th>
                   <th>Estimasi Selesai</th>
                   <th>Catatan</th>
-                  <th class="text-center">Aksi</th>
+                  <th v-if="!isGuest" class="text-center">Aksi</th>
                 </tr>
               </thead>
               <tbody>
@@ -37,7 +37,7 @@
                   <td class="truncate" style="max-width: 150px;" :title="getCurrentStatus(unit)?.notes || ''">
                     {{ getCurrentStatus(unit)?.notes || '-' }}
                   </td>
-                  <td class="text-center">
+                  <td v-if="!isGuest" class="text-center">
                     <button @click="openEditModal(unit)" class="btn btn-sm btn-secondary" style="border-radius: 99px;">
                       Ubah Status
                     </button>
@@ -70,7 +70,7 @@
                   <span class="metric-label">Catatan</span>
                   <span class="metric-value text-right" style="max-width: 60%; font-size: 0.8rem; line-height: 1.2;">{{ getCurrentStatus(unit)?.notes }}</span>
                 </div>
-                <div class="mt-4 pt-3 flex justify-end" style="border-top: 1px solid var(--glass-border);">
+                <div v-if="!isGuest" class="mt-4 pt-3 flex justify-end" style="border-top: 1px solid var(--glass-border);">
                   <button @click="openEditModal(unit)" class="btn btn-sm btn-secondary" style="border-radius: 99px; padding: 0.4rem 1rem;">
                     Ubah Status
                   </button>
@@ -129,6 +129,7 @@
 </template>
 
 <script setup lang="ts">
+const { isGuest } = useAuth()
 const allUnits = [1, 4, 5, 6, 7, 8, 9]
 const statuses = ref<any[]>([])
 const pending = ref(false)
