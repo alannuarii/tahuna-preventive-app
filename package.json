@@ -11,6 +11,8 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@qdrant/js-client-rest": "^1.18.0",
     "dotenv": "^17.4.1",
     "exceljs": "^4.4.0",
     "googleapis": "^171.4.0",

@@ -100,12 +100,27 @@
         </span>
         <span class="menu-item-label">Spesifikasi</span>
       </NuxtLink>
+
+      <NuxtLink 
+        v-if="user?.email === 'daengpython@gmail.com'"
+        to="/chat" 
+        class="menu-item desktop-only-nav"
+        :class="{ active: isActive('/chat') }"
+      >
+        <span class="menu-item-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </span>
+        <span class="menu-item-label">Tahuna AI</span>
+      </NuxtLink>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 const route = useRoute()
+const { user } = useAuth()
 
 const isActive = (path: string, exact?: boolean) => {
   if (exact) return route.path === path

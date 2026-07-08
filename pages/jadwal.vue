@@ -72,10 +72,10 @@
           <table class="table table-mobile-optimized">
             <thead>
               <tr>
-                <th style="min-width: 120px;">TANGGAL</th>
-                <th>UNIT</th>
-                <th>JENIS PM</th>
-                <th class="text-right">AKSI</th>
+                <th style="min-width: 90px;">TANGGAL</th>
+                <th style="min-width: 70px;">UNIT</th>
+                <th style="min-width: 80px;">JENIS PM</th>
+                <th style="min-width: 110px;" class="text-right">AKSI</th>
               </tr>
             </thead>
             <tbody>
@@ -88,7 +88,7 @@
                   </span>
                 </td>
                 <td class="text-right">
-                  <button @click="handleEventClick(event)" class="btn btn-sm btn-secondary" style="font-size: 0.75rem; padding: 0.25rem 0.75rem; border-radius: 99px;">
+                  <button @click="handleEventClick(event)" class="btn btn-sm btn-secondary whitespace-nowrap" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 99px;">
                     Lihat Detail &rarr;
                   </button>
                 </td>

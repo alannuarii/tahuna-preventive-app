@@ -56,6 +56,13 @@
                   </svg>
                   <span>Spesifikasi Mesin</span>
                 </NuxtLink>
+
+                <NuxtLink v-if="user?.email === 'daengpython@gmail.com'" to="/chat" class="dropdown-item" @click="dropdownOpen = false">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                  </svg>
+                  <span>Tahuna AI</span>
+                </NuxtLink>
               </div>
 
               <div class="dropdown-divider"></div>

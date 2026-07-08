@@ -394,7 +394,7 @@
             </div>
             <div v-if="item.notes" class="material-txn-notes">{{ item.notes }}</div>
             
-            <div class="material-txn-actions mt-3 pt-3 flex justify-end gap-2" style="border-top: 1px solid var(--glass-border);">
+            <div v-if="!isGuest" class="material-txn-actions mt-3 pt-3 flex justify-end gap-2" style="border-top: 1px solid var(--glass-border);">
               <template v-if="item.reference_doc && item.reference_doc.startsWith('PM_REALIZATION_')">
                 <span class="text-xs text-muted italic flex items-center gap-1">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -430,7 +430,7 @@
                   <th class="text-center" style="width: 100px;">Jumlah</th>
                   <th style="width: 80px;">Satuan</th>
                   <th>Catatan</th>
-                  <th class="text-center" style="width: 100px;">Aksi</th>
+                  <th v-if="!isGuest" class="text-center" style="width: 100px;">Aksi</th>
                 </tr>
               </thead>
               <tbody>
@@ -446,7 +446,7 @@
                   <td class="text-center font-semibold">{{ formatNumber(item.quantity) }}</td>
                   <td>{{ item.satuan }}</td>
                   <td class="text-muted truncate-cell" :title="item.notes">{{ item.notes || '-' }}</td>
-                  <td class="text-center">
+                  <td v-if="!isGuest" class="text-center">
                     <div class="flex justify-center gap-2">
                       <template v-if="item.reference_doc && item.reference_doc.startsWith('PM_REALIZATION_')">
                         <span class="inline-flex items-center justify-center text-gray-500 opacity-60 cursor-help" title="Transaksi otomatis dari Realisasi PM tidak dapat diubah/dihapus">
@@ -836,6 +836,7 @@
 
 <script setup lang="ts">
 const { engines } = useEngines()
+const { isGuest } = useAuth()
 
 const getCycleRange = (baseCycle: string): string => {
   if (!baseCycle) return '-'
@@ -1206,7 +1207,7 @@ const downloadTxnExcel = async () => {
     worksheet.getCell('A4').value = `Sampai Tanggal: ${txnFilters.end ? formatDateShort(txnFilters.end) : '-'}`
 
     let currentRow = 8
-    txns.forEach((item, index) => {
+    txns.forEach((item: any, index: number) => {
       const row = worksheet.getRow(currentRow)
       row.getCell('A').value = index + 1
       row.getCell('B').value = formatDateShort(item.transaction_date)
@@ -1233,10 +1234,10 @@ const downloadTxnExcel = async () => {
       row.getCell('I').value = (item.notes || '-').replace(' (Otomatis Webhook)', '')
       
       const borderStyle = {
-        top: { style: 'thin' },
-        left: { style: 'thin' },
-        bottom: { style: 'thin' },
-        right: { style: 'thin' }
+        top: { style: 'thin' as const },
+        left: { style: 'thin' as const },
+        bottom: { style: 'thin' as const },
+        right: { style: 'thin' as const }
       };
 
       for (let i = 1; i <= 9; i++) {
