@@ -94,14 +94,50 @@ The database schema available to query is:
    Note: To find current service hours, use: SELECT DISTINCT ON (unit) * FROM service_hour ORDER BY unit, id DESC.
 
 7. Table 'pengusahaan_harian':
-   Columns: id (int), waktu (date), unit (varchar), pemakaian_bbm (numeric), pemakaian_oli (numeric), kwh_produksi_nett (numeric), jam_kerja (numeric)
+   Columns: id (int), waktu (date), unit (varchar), pemakaian_bbm (numeric), pemakaian_oli (numeric), kwh_produksi_nett (numeric), jam_kerja (numeric), kwh_produksi_gross (numeric), kwh_ps (numeric), kwh_susut_trafo (numeric)
+   Note: Used for daily operational metrics.
+   Common calculations:
+   - SFC (Specific Fuel Consumption) = pemakaian_bbm / kwh_produksi_nett (or pemakaian_bbm / kwh_produksi_gross)
+   - auxiliary power / Pemakaian Sendiri (PS) % = (kwh_ps / kwh_produksi_gross) * 100
+   - susut trafo % = (kwh_susut_trafo / kwh_produksi_gross) * 100
+   - Lube Oil Consumption Rate = pemakaian_oli / kwh_produksi_nett
+   CRITICAL NOTE: Daily logs in the database might have a delay (e.g. today is July 9, 2026, but the latest record might be July 6, 2026). If the user asks for relative dates like "kemarin" (yesterday) or "hari ini" (today), ALWAYS generate a query that sorts by target date match descending, then by waktu descending, and limits to 1 (e.g. ORDER BY (waktu = CURRENT_DATE - INTERVAL '1 day') DESC, waktu DESC LIMIT 1). DO NOT use UNION because the safety filter blocks the UNION keyword. This ensures it retrieves the target date's data if available, and automatically falls back to the latest available daily record if not, so the synthesis model can report the most recent data to the user.
 
 8. Table 'materials_essential':
    Columns: id (int), name (varchar), part_number (varchar), unit (varchar), status (varchar), current_stock (numeric), notes (text), spesification (text)
    Note: Stores ESSENTIAL materials (e.g. Sensor Water Temperature Switch, Dioda Putar, Magnetic Pick Up, Speed Control, Varistor, Vbelt Alternator, Seal Crankshaft, Flexible Joint). If user asks for essential materials that need ordering, use SQL to find items with current_stock <= 1.
 
+9. Table 'pm_realization_materials':
+   Columns: id (int), realization_id (int), nama_material (varchar), jumlah_standar (numeric), jumlah_realisasi (numeric), satuan (varchar), cycle (varchar)
+   Note: Stores actual usage/replacement of fast-moving materials during PM realizations. Join with pm_realizations on realization_id = pm_realizations.id.
+   CRITICAL: The database stores material names in English. When querying, you MUST map Indonesian terms to these exact canonical English names:
+   - "Air Filter" (for Indonesian "filter udara")
+   - "Lube Oil Filter" (for Indonesian "filter oli" / "saringan oli")
+   - "Lube Oil Filter Bypass" (for Indonesian "filter oli bypass" / "bypass")
+   - "Fuel Filter" (for Indonesian "filter bbm" / "filter solar" / "filter hsd" / "saringan bahan bakar")
+   - "Racor Filter" (for Indonesian "filter racor" / "racor filter" / "raccor")
+   - "Water Filter" (for Indonesian "filter air" / "water filter" / "water coolant filter")
+   - "Lube Oil" (for Indonesian "oli" / "pelumas mesin")
+   For example, use: prm.nama_material ILIKE '%Air Filter%' when user asks about 'filter udara'.
+
+10. Table 'materials':
+    Columns: id (int), name (varchar), part_number (varchar), unit (varchar)
+
+11. Table 'material_transactions':
+    Columns: id (int), material_id (int), transaction_type (varchar like 'IN', 'OUT'), quantity (numeric), related_unit_id (int), notes (text), transaction_date (date)
+
+12. Table 'material_essential_transactions':
+    Columns: id (int), material_id (int), transaction_type (varchar like 'IN', 'OUT'), quantity (numeric), transaction_date (date), notes (text)
+    Note: Stores stock transactions (in/out/usage) for essential materials. To find usage of essential materials for a unit, join with materials_essential on material_id = materials_essential.id and filter by transaction_type = 'OUT'. Since unit information might be in the notes, use ILIKE on notes (e.g. notes ILIKE '%unit 6%' or notes ILIKE '%unit 7%').
+
+13. Table 'material_essential_engines':
+    Columns: id (int), material_id (int), machine_type (varchar)
+    Note: Links essential materials to machine types/units that support them.
+
 Rules for Router:
-- Route "sql": If user asks for downtime, realizations, historical usage (BBM/Oli), list of engines, ESSENTIAL materials (e.g. Sensor Water Temperature, Dioda Putar, Magnetic Pick Up, Speed Control, Varistor, Vbelt, Seal, Flexible Joint), SOP (prosedur, langkah kerja, APD, persiapan), or other data. Generate a read-only SELECT statement. ALWAYS USE POSTGRESQL SYNTAX. Do NOT invent columns!
+- Route "sql": If user asks for downtime, realizations, historical usage (BBM/Oli, fast-moving material usage like 'Racor Filter' from pm_realization_materials, or essential material usage from material_essential_transactions), list of engines, ESSENTIAL materials, SOP (prosedur, langkah kerja, APD, persiapan), or other data. Generate a read-only SELECT statement. ALWAYS USE POSTGRESQL SYNTAX. Do NOT invent columns!
+  CRITICAL 1: When querying material quantities/usage, ALWAYS also select/retrieve the unit of measurement column (e.g., 'satuan' in pm_realization_materials, or 'unit' in materials/materials_essential) in the SELECT clause (either directly or via MAX/MIN/first value, e.g. SELECT SUM(jumlah_realisasi) as total_qty, MAX(satuan) as satuan ...), so that the synthesis model knows the exact unit of measurement (e.g., 'Buah', 'Liter') instead of guessing.
+  CRITICAL 2: When querying daily metrics, operational logs, or occurrences, ALWAYS select/retrieve the date/timestamp column (e.g. 'waktu' in pengusahaan_harian, 'tanggal_pelaksanaan' in pm_realizations, 'transaction_date' in material_transactions) in the SELECT clause, so that the synthesis model knows the exact date of the data and can report to the user if the data belongs to a fallback/latest available date instead of the requested date.
 - Route "pm_schedule": If user specifically asks for UPCOMING PREVENTIVE MAINTENANCE SCHEDULES (Jadwal PM yang akan datang/besok). DO NOT USE SQL.
 - Route "material_inventory": If user asks for FAST-MOVING material stocks, reorder status, material depletion, or which fast moving material needs to be ordered (e.g. Lube Oil, Air Filter, Lube Oil Filter, Fuel Filter / Filter BBM, Lube Oil Filter Bypass, Racor Filter, Water Filter). DO NOT USE SQL.
 - Route "manual_book": If user asks about manual book, troubleshooting, technical specifications, or manual instructions for specific engines (e.g. SWD, Deutz, Mitsubishi, Cummins). Provide a query in 'manual_search_query'.
@@ -262,6 +298,7 @@ Instructions:
 4. Keep your tone professional, neat, and engineering-focused (fokus pada keteknikan dan pemeliharaan mesin).
 5. If query results contain raw JSON arrays for SOPs, format them nicely into step-by-step procedures.
 6. Jawablah langsung "to the point" (langsung ke intinya). JANGAN gunakan kalimat pembuka basa-basi seperti "Halo! Berdasarkan data dari database kami...", "Berikut adalah rincian...", atau pembuka/penutup lainnya yang tidak perlu. Langsung sajikan informasi atau jawab pertanyaan secara padat, lugas, dan terstruktur.
+7. Perhatikan kolom 'satuan' atau 'unit' dari database. Gunakan satuan asli dari database (misal: 'Buah', 'Liter', dll.) dalam tanggapan Anda. JANGAN menggunakan kata "unit" untuk menyebutkan jumlah material/barang (seperti "44 unit filter") agar tidak membingungkan dengan penomoran unit mesin (seperti "Unit 6").
 `
 
   // Construct context prompt for synthesis
