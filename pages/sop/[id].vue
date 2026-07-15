@@ -253,6 +253,69 @@
           <SopEditList v-model="editForm.penormalan" label="📋 Penormalan" numbered />
         </div>
 
+        <!-- Lampiran Formulir Card -->
+        <div class="card mb-4">
+          <div class="card-header flex justify-between items-center">
+            <span class="flex items-center gap-2">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary-300)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+              </svg>
+              Lampiran Formulir
+            </span>
+            <button type="button" class="btn btn-sm btn-secondary guest-hide" @click="addFormulir" style="padding: 2px 8px; font-size: 0.7rem;">
+              + Tambah Formulir
+            </button>
+          </div>
+          <div class="card-body">
+            <div v-if="editForm.lampiran_formulir.length === 0" class="text-center text-muted text-sm py-4">
+              Belum ada lampiran formulir
+            </div>
+            <div v-else class="flex flex-col gap-3">
+              <div 
+                v-for="(form, index) in editForm.lampiran_formulir" 
+                :key="index"
+                class="flex items-start gap-3 p-3 rounded-md border border-glass-border"
+                style="background: rgba(255, 255, 255, 0.02);"
+              >
+                <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div class="form-group m-0">
+                    <label class="form-label text-xs mb-1">Nama Formulir</label>
+                    <input 
+                      type="text" 
+                      v-model="form.title" 
+                      class="form-input form-input-sm" 
+                      placeholder="Contoh: Formulir Pengukuran Tahanan Isolasi"
+                      required
+                    />
+                  </div>
+                  <div class="form-group m-0">
+                    <label class="form-label text-xs mb-1">Link/URL AuraStorage</label>
+                    <input 
+                      type="url" 
+                      v-model="form.path" 
+                      class="form-input form-input-sm" 
+                      placeholder="https://aurastorage.serveer.biz.id/api/files/..."
+                      required
+                    />
+                  </div>
+                </div>
+                <button 
+                  type="button" 
+                  class="btn btn-sm mt-5"
+                  @click="removeFormulir(index)"
+                  style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: none; width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md);"
+                  title="Hapus"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="flex justify-end gap-3 mt-6 pt-5" style="border-top: 1px solid var(--glass-border);">
           <button type="button" class="btn btn-secondary" @click="cancelEdit">Batal</button>
           <button type="submit" class="btn btn-primary" :disabled="saving">
@@ -286,6 +349,7 @@ const editForm = reactive({
   pelaksanaan_mekanik: [] as string[],
   pelaksanaan_listrik: [] as string[],
   penormalan: [] as string[],
+  lampiran_formulir: [] as { title: string; path: string }[],
 })
 
 const loadSop = async () => {
@@ -321,12 +385,23 @@ watch(isEditing, async (val) => {
         editForm.pelaksanaan_mekanik = Array.isArray(rawSop.pelaksanaan_mekanik) ? [...rawSop.pelaksanaan_mekanik] : []
         editForm.pelaksanaan_listrik = Array.isArray(rawSop.pelaksanaan_listrik) ? [...rawSop.pelaksanaan_listrik] : []
         editForm.penormalan = Array.isArray(rawSop.penormalan) ? [...rawSop.penormalan] : []
+        editForm.lampiran_formulir = Array.isArray(rawSop.lampiran_formulir)
+          ? rawSop.lampiran_formulir.map((f: any) => ({ title: f.title || '', path: f.path || '' }))
+          : []
       }
     } catch (err) {
       console.error('Failed to load raw SOP for editing:', err)
     }
   }
 })
+
+const addFormulir = () => {
+  editForm.lampiran_formulir.push({ title: '', path: '' })
+}
+
+const removeFormulir = (index: number) => {
+  editForm.lampiran_formulir.splice(index, 1)
+}
 
 const cancelEdit = () => {
   isEditing.value = false

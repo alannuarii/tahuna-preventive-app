@@ -35,20 +35,33 @@ export function getLampiranFormulir(rows: any[]): any[] {
   const result: any[] = []
 
   for (const doc of rows) {
-    const mekanik = parseJsonField(doc.pelaksanaan_mekanik)
-    const listrik = parseJsonField(doc.pelaksanaan_listrik)
-    const allSteps = [...mekanik, ...listrik]
+    const dbFormulir = parseJsonField(doc.lampiran_formulir)
+    if (dbFormulir.length > 0) {
+      for (const form of dbFormulir) {
+        if (form && form.path && !matchedPaths.has(form.path)) {
+          matchedPaths.add(form.path)
+          result.push({
+            title: form.title || '',
+            path: form.path
+          })
+        }
+      }
+    } else {
+      const mekanik = parseJsonField(doc.pelaksanaan_mekanik)
+      const listrik = parseJsonField(doc.pelaksanaan_listrik)
+      const allSteps = [...mekanik, ...listrik]
 
-    for (const step of allSteps) {
-      if (typeof step !== 'string') continue
-      for (const form of FORMULIR_MAPPING) {
-        if (form.regex.test(step)) {
-          if (!matchedPaths.has(form.path)) {
-            matchedPaths.add(form.path)
-            result.push({
-              title: form.title,
-              path: form.path
-            })
+      for (const step of allSteps) {
+        if (typeof step !== 'string') continue
+        for (const form of FORMULIR_MAPPING) {
+          if (form.regex.test(step)) {
+            if (!matchedPaths.has(form.path)) {
+              matchedPaths.add(form.path)
+              result.push({
+                title: form.title,
+                path: form.path
+              })
+            }
           }
         }
       }

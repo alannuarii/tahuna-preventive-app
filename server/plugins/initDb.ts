@@ -16,7 +16,13 @@ export default defineNitroPlugin(async (nitroApp) => {
       ALTER TABLE pm_notifications ADD COLUMN IF NOT EXISTS realization_id INT;
     `)
     console.log('Verified table pm_notifications')
+
+    // Run migration query to add lampiran_formulir to sop_documents table if it doesn't exist
+    await query(`
+      ALTER TABLE sop_documents ADD COLUMN IF NOT EXISTS lampiran_formulir JSONB;
+    `)
+    console.log('Verified table sop_documents')
   } catch (err) {
-    console.error('Failed to create pm_notifications table:', err)
+    console.error('Failed to run startup migrations:', err)
   }
 })

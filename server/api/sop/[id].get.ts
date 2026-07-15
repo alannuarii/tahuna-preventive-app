@@ -22,12 +22,18 @@ export default defineEventHandler(async (event) => {
       pelaksanaan_mekanik: parseJsonField(doc.pelaksanaan_mekanik),
       pelaksanaan_listrik: parseJsonField(doc.pelaksanaan_listrik),
       penormalan: parseJsonField(doc.penormalan),
+      lampiran_formulir: parseJsonField(doc.lampiran_formulir),
     }
 
     if (raw === 'true') {
+      let forms = parsedDoc.lampiran_formulir
+      if (!forms || forms.length === 0) {
+        const cascaded = await getCascadedSop(doc.mesin, doc.jenis_pm)
+        forms = cascaded ? cascaded.lampiran_formulir : getLampiranFormulir([doc])
+      }
       return {
         ...parsedDoc,
-        lampiran_formulir: getLampiranFormulir([doc])
+        lampiran_formulir: forms
       }
     }
 
