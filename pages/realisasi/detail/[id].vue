@@ -91,6 +91,43 @@
         </div>
       </div>
 
+      <!-- Dokumen Hasil Pengukuran & Realisasi Card (Read-Only) -->
+      <div v-if="detail.dokumen_pdf && getUploadedDocsList().length > 0" class="card mb-4">
+        <div class="card-header flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary-300)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+            <span class="font-semibold">Dokumen Hasil Pengukuran & Realisasi PM (PDF)</span>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="flex flex-col gap-3">
+            <div v-for="doc in getUploadedDocsList()" :key="doc.url" class="document-item flex items-center justify-between p-3 rounded-md border border-glass-border" style="background: rgba(255, 255, 255, 0.015);">
+              <div class="flex-1 min-w-0 mr-3">
+                <div class="font-semibold text-sm text-gray-200 truncate" style="color: var(--gray-700);">{{ doc.title }}</div>
+                <div class="text-xs text-muted mt-1" style="color: var(--gray-400);">
+                  <span>Diunggah pada: {{ formatDateTime(doc.uploaded_at) }}</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button @click="openPdfViewer(doc.url, doc.title)" class="btn btn-secondary btn-sm flex items-center gap-1 px-3 py-1.5" style="font-size: 0.75rem;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                  Buka
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Catatan Card -->
       <div v-if="detail.catatan" class="card mb-6">
         <div class="card-header flex items-center gap-2">
@@ -170,6 +207,36 @@
         </div>
       </div>
     </div>
+
+    <!-- PDF Viewer Modal -->
+    <div v-if="showPdfModal" class="modal-overlay" @click.self="closePdfViewer">
+      <div class="modal pdf-modal animate-scale-up" style="max-width: 900px; width: 90%; height: 85vh; display: flex; flex-direction: column;">
+        <div class="modal-header flex justify-between items-center py-3 px-4" style="background: var(--bg-surface); border-bottom: 1px solid var(--glass-border);">
+          <h3 class="modal-title truncate" style="font-size: var(--font-size-base); max-width: 80%; color: var(--text-color);">📄 {{ activePdfTitle }}</h3>
+          <button @click="closePdfViewer" class="btn btn-sm" style="background: rgba(255,255,255,0.05); border: none; padding: 6px; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: var(--gray-400);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body flex-1 p-0" style="background: #2d2d2d; overflow: hidden; position: relative;">
+          <iframe :src="activePdfUrl" style="width: 100%; height: 100%; border: none;" allow="autoplay"></iframe>
+        </div>
+        <div class="modal-footer py-2.5 px-4 flex justify-between items-center" style="background: var(--bg-surface); border-top: 1px solid var(--glass-border);">
+          <span class="text-xs text-muted">AuraStorage Document Link</span>
+          <div class="flex gap-2">
+            <a :href="activePdfUrl" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm flex items-center gap-1" style="font-size: 0.75rem;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/>
+              </svg>
+              Buka di Tab Baru
+            </a>
+            <button @click="closePdfViewer" class="btn btn-primary btn-sm" style="font-size: 0.75rem;">Tutup</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -182,6 +249,41 @@ const detail = ref<any>(null)
 const pending = ref(true)
 const showDeleteModal = ref(false)
 const deleting = ref(false)
+
+// PDF Viewer state
+const showPdfModal = ref(false)
+const activePdfUrl = ref('')
+const activePdfTitle = ref('')
+
+const openPdfViewer = (url: string, title: string) => {
+  activePdfUrl.value = url
+  activePdfTitle.value = title
+  showPdfModal.value = true
+}
+
+const closePdfViewer = () => {
+  showPdfModal.value = false
+  activePdfUrl.value = ''
+  activePdfTitle.value = ''
+}
+
+const getUploadedDocsList = () => {
+  if (!detail.value || !detail.value.dokumen_pdf) return []
+  return Array.isArray(detail.value.dokumen_pdf)
+    ? detail.value.dokumen_pdf
+    : JSON.parse(detail.value.dokumen_pdf || '[]')
+}
+
+const formatDateTime = (dateStr: string) => {
+  if (!dateStr) return '-'
+  return new Date(dateStr).toLocaleString('id-ID', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
 
 const loadDetail = async () => {
   pending.value = true
@@ -260,4 +362,22 @@ const deleteRealization = async () => {
 .modal-body { padding: var(--space-4); }
 .modal-footer { padding: var(--space-4); border-top: 1px solid var(--glass-border); display: flex; justify-content: flex-end; gap: var(--space-3); }
 .modal-title { font-size: var(--font-size-lg); font-weight: 600; margin: 0; color: var(--gray-800); }
+
+.document-item {
+  transition: all 0.2s ease;
+}
+.document-item:hover {
+  border-color: var(--primary-400) !important;
+  background: rgba(99, 102, 241, 0.04) !important;
+}
+.disabled-btn {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
+.pdf-modal {
+  max-width: 900px;
+  width: 90%;
+  height: 85vh;
+}
 </style>

@@ -259,6 +259,150 @@ Filter udara 2 bh
           </div>
         </div>
 
+        <!-- Dokumen Hasil Pengukuran & Realisasi Card (Hanya Edit) -->
+        <div v-if="isEdit" class="card mt-6" style="border: 1px solid var(--glass-border); border-radius: var(--radius-lg); background: var(--bg-surface); padding: var(--space-4); box-shadow: var(--shadow-sm);">
+          <div class="card-header flex justify-between items-center" style="border-bottom: 1px solid var(--glass-border); padding-bottom: var(--space-3); margin-bottom: var(--space-4);">
+            <div class="flex items-center gap-2">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary-300)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+              </svg>
+              <span class="font-semibold">Dokumen Hasil Pengukuran & Realisasi PM (PDF)</span>
+            </div>
+          </div>
+
+          <div class="card-body p-0">
+            <div v-if="loadingTemplates" class="text-center py-4 text-muted">
+              <div class="spinner spinner-sm mr-2" style="display: inline-block;"></div> Memuat daftar template SOP...
+            </div>
+            
+            <template v-else>
+              <!-- 1. Dokumen Berdasarkan SOP (P5) -->
+              <div class="mb-4">
+                <h5 class="sop-section-subtitle mb-3" style="color: var(--primary-300); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;">📋 Formulir Hasil Pengukuran (SOP P1 - P5)</h5>
+                <div v-if="sopTemplates.length === 0" class="text-xs text-muted py-3 px-4 rounded text-center" style="background: rgba(255,255,255,0.02); border: 1px dashed var(--glass-border);">
+                  Tidak ada lampiran formulir khusus yang diwajibkan untuk jenis mesin ini.
+                </div>
+                <div v-else class="flex flex-col gap-3">
+                  <div v-for="template in sopTemplates" :key="template.title" class="document-item flex items-center justify-between p-3 rounded-md border border-glass-border" style="background: rgba(255, 255, 255, 0.015);">
+                    <div class="flex-1 min-w-0 mr-3">
+                      <div class="font-semibold text-sm text-gray-200 truncate" style="color: var(--gray-700);">{{ template.title }}</div>
+                      <div v-if="getUploadedDoc(template.title)" class="text-xs text-muted mt-1 flex items-center gap-2">
+                        <span class="text-success flex items-center gap-1 font-medium" style="color: var(--success);">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"/>
+                          </svg>
+                          Terunggah
+                        </span>
+                        <span>•</span>
+                        <span>{{ formatDateTime(getUploadedDoc(template.title).uploaded_at) }}</span>
+                      </div>
+                      <div v-else class="text-xs text-muted mt-1" style="color: var(--gray-400);">Belum diunggah</div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                      <template v-if="getUploadedDoc(template.title)">
+                        <button type="button" @click="openPdfViewer(getUploadedDoc(template.title).url, template.title)" class="btn btn-secondary btn-sm flex items-center gap-1 px-3 py-1.5" style="font-size: 0.75rem;">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                          </svg>
+                          Buka
+                        </button>
+                        <button type="button" @click="confirmDeleteDoc(getUploadedDoc(template.title).url)" :disabled="deletingDoc" class="btn btn-danger btn-sm p-1.5 flex items-center justify-center" style="background: rgba(239, 68, 68, 0.1); border: none; color: #ef4444;" title="Hapus">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"/>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                          </svg>
+                        </button>
+                        
+                        <!-- Ganti PDF Button -->
+                        <label class="btn btn-secondary btn-sm cursor-pointer m-0 flex items-center gap-1 px-2.5 py-1.5" style="font-size: 0.75rem; border-color: rgba(99, 102, 241, 0.4); background: transparent; color: var(--primary-300);" :title="`Unggah ulang untuk mengganti dokumen ini`">
+                          <input type="file" accept="application/pdf" style="display:none" @change="handleUpload(template.title, $event)" :disabled="uploadingDocs[template.title]">
+                          <span v-if="uploadingDocs[template.title]" class="spinner spinner-xs mr-1" style="border-width: 2px;"></span>
+                          <template v-else>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                            </svg>
+                            Ganti
+                          </template>
+                        </label>
+                      </template>
+
+                      <template v-else>
+                        <label class="btn btn-primary btn-sm cursor-pointer m-0 flex items-center gap-1 px-3 py-1.5" style="font-size: 0.75rem;">
+                          <input type="file" accept="application/pdf" style="display:none" @change="handleUpload(template.title, $event)" :disabled="uploadingDocs[template.title]">
+                          <span v-if="uploadingDocs[template.title]" class="spinner spinner-xs mr-1" style="border-width: 2px;"></span>
+                          <template v-else>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                            </svg>
+                            Upload PDF
+                          </template>
+                        </label>
+                      </template>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. Dokumen Tambahan -->
+              <div class="mt-4 pt-4 border-t border-glass-border">
+                <h5 class="sop-section-subtitle mb-3" style="color: var(--primary-300); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;">📂 Dokumen Tambahan (Lainnya)</h5>
+                
+                <!-- List of general uploaded docs -->
+                <div v-if="getGeneralDocs().length > 0" class="flex flex-col gap-3 mb-4">
+                  <div v-for="doc in getGeneralDocs()" :key="doc.url" class="document-item flex items-center justify-between p-3 rounded-md border border-glass-border" style="background: rgba(255, 255, 255, 0.015);">
+                    <div class="flex-1 min-w-0 mr-3">
+                      <div class="font-semibold text-sm text-gray-200 truncate" style="color: var(--gray-700);">{{ doc.title }}</div>
+                      <div class="text-xs text-muted mt-1" style="color: var(--gray-400);">
+                        <span>Diunggah pada: {{ formatDateTime(doc.uploaded_at) }}</span>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <button type="button" @click="openPdfViewer(doc.url, doc.title)" class="btn btn-secondary btn-sm flex items-center gap-1 px-3 py-1.5" style="font-size: 0.75rem;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                          <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        Buka
+                      </button>
+                      <button type="button" @click="confirmDeleteDoc(doc.url)" :disabled="deletingDoc" class="btn btn-danger btn-sm p-1.5 flex items-center justify-center" style="background: rgba(239, 68, 68, 0.1); border: none; color: #ef4444;" title="Hapus">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                          <polyline points="3 6 5 6 21 6"/>
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- General upload form -->
+                <div class="flex flex-col sm:flex-row gap-3 items-end p-3 rounded-md border border-glass-border" style="background: rgba(255, 255, 255, 0.01);">
+                  <div class="form-group m-0 flex-1 w-full">
+                    <label class="form-label text-xs mb-1" style="color: var(--gray-400);">Nama Dokumen Baru</label>
+                    <input type="text" v-model="generalDocTitle" class="form-input form-input-sm" style="height: 38px;" placeholder="Contoh: Lampiran Foto Hasil Crane" :disabled="uploadingGeneral" />
+                  </div>
+                  <div class="w-full sm:w-auto">
+                    <label class="btn btn-primary btn-sm cursor-pointer m-0 flex items-center justify-center gap-1 w-full" :class="{ 'disabled-btn': !generalDocTitle.trim() || uploadingGeneral }" style="height: 38px; padding-left: 1rem; padding-right: 1rem; font-size: 0.75rem;">
+                      <input type="file" accept="application/pdf" style="display:none" @change="handleGeneralUpload" :disabled="!generalDocTitle.trim() || uploadingGeneral">
+                      <span v-if="uploadingGeneral" class="spinner spinner-xs mr-1" style="border-width: 2px;"></span>
+                      <template v-else>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                        </svg>
+                        Unggah Dokumen
+                      </template>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+
         <div class="flex justify-end gap-3 mt-8 pt-5 border-top">
           <NuxtLink to="/realisasi" class="btn btn-secondary">Batal</NuxtLink>
           <button type="submit" class="btn btn-primary" :disabled="submitting">
@@ -267,18 +411,249 @@ Filter udara 2 bh
         </div>
       </div>
     </form>
+
+    <!-- PDF Viewer Modal -->
+    <div v-if="showPdfModal" class="modal-overlay" @click.self="closePdfViewer">
+      <div class="modal pdf-modal animate-scale-up" style="max-width: 900px; width: 90%; height: 85vh; display: flex; flex-direction: column;">
+        <div class="modal-header flex justify-between items-center py-3 px-4" style="background: var(--bg-surface); border-bottom: 1px solid var(--glass-border);">
+          <h3 class="modal-title truncate" style="font-size: var(--font-size-base); max-width: 80%; color: var(--text-color);">📄 {{ activePdfTitle }}</h3>
+          <button type="button" @click="closePdfViewer" class="btn btn-sm" style="background: rgba(255,255,255,0.05); border: none; padding: 6px; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: var(--gray-400);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body flex-1 p-0" style="background: #2d2d2d; overflow: hidden; position: relative;">
+          <iframe :src="activePdfUrl" style="width: 100%; height: 100%; border: none;" allow="autoplay"></iframe>
+        </div>
+        <div class="modal-footer py-2.5 px-4 flex justify-between items-center" style="background: var(--bg-surface); border-top: 1px solid var(--glass-border);">
+          <span class="text-xs text-muted">AuraStorage Document Link</span>
+          <div class="flex gap-2">
+            <a :href="activePdfUrl" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm flex items-center gap-1" style="font-size: 0.75rem;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/>
+              </svg>
+              Buka di Tab Baru
+            </a>
+            <button type="button" @click="closePdfViewer" class="btn btn-primary btn-sm" style="font-size: 0.75rem;">Tutup</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useEngines } from '~/composables/useEngines'
 import { parseWhatsAppReport } from '~/utils/waReportParser'
 import type { ParsedReport } from '~/utils/waReportParser'
 
-const { engines } = useEngines()
+const { engines, fetchEngines } = useEngines()
 
 const route = useRoute()
 const router = useRouter()
+
+const getMesinNameFromUnit = (unitId: number | string) => {
+  const parsedId = parseInt(String(unitId))
+  const engine = engines.value.find((e: any) => e.unit === parsedId)
+  return engine ? engine.mesin : null
+}
+
+// SOP templates & upload state
+const sopTemplates = ref<any[]>([])
+const loadingTemplates = ref(false)
+const uploadingDocs = ref<Record<string, boolean>>({})
+const deletingDoc = ref(false)
+const uploadingGeneral = ref(false)
+const generalDocTitle = ref('')
+
+// PDF Viewer state
+const showPdfModal = ref(false)
+const activePdfUrl = ref('')
+const activePdfTitle = ref('')
+
+// Realization data ref to store uploaded documents
+const dokumenPdf = ref<any[]>([])
+
+const openPdfViewer = (url: string, title: string) => {
+  activePdfUrl.value = url
+  activePdfTitle.value = title
+  showPdfModal.value = true
+}
+
+const closePdfViewer = () => {
+  showPdfModal.value = false
+  activePdfUrl.value = ''
+  activePdfTitle.value = ''
+}
+
+const getUploadedDoc = (title: string) => {
+  return dokumenPdf.value.find((d: any) => d.title.toLowerCase() === title.toLowerCase()) || null
+}
+
+const getGeneralDocs = () => {
+  return dokumenPdf.value.filter((d: any) => {
+    return !sopTemplates.value.some((t: any) => t.title.toLowerCase() === d.title.toLowerCase())
+  })
+}
+
+const loadSopTemplates = async (mesinName: string) => {
+  if (!mesinName) return
+  loadingTemplates.value = true
+  try {
+    const res = await fetch(`/api/sop?mesin=${encodeURIComponent(mesinName)}&jenis_pm=P5`)
+    if (res.ok) {
+      const data = await res.json()
+      if (data && data.length > 0) {
+        sopTemplates.value = data[0].lampiran_formulir || []
+      }
+    }
+  } catch (err) {
+    console.error('Failed to load SOP templates:', err)
+  } finally {
+    loadingTemplates.value = false
+  }
+}
+
+const formatDateTime = (dateStr: string) => {
+  if (!dateStr) return '-'
+  return new Date(dateStr).toLocaleString('id-ID', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
+
+const handleUpload = async (title: string, event: Event) => {
+  const target = event.target as HTMLInputElement
+  if (!target.files || target.files.length === 0) return
+  const file = target.files[0]
+  
+  const MAX_SIZE = 10 * 1024 * 1024
+  if (file.size > MAX_SIZE) {
+    showAlert('Ukuran file maksimal adalah 10MB', 'error')
+    target.value = ''
+    return
+  }
+
+  if (file.type !== 'application/pdf') {
+    showAlert('Hanya file PDF yang diperbolehkan', 'error')
+    target.value = ''
+    return
+  }
+
+  uploadingDocs.value[title] = true
+  const formData = new FormData()
+  formData.append('title', title)
+  formData.append('file', file)
+
+  try {
+    const res = await fetch(`/api/pm/realizations/${editId.value}/upload`, {
+      method: 'POST',
+      body: formData
+    })
+
+    if (res.ok) {
+      const json = await res.json()
+      dokumenPdf.value = json.data.dokumen_pdf || []
+      showAlert(`Dokumen "${title}" berhasil diunggah`, 'success')
+    } else {
+      const err = await res.json()
+      showAlert(`Gagal mengunggah berkas: ${err.statusMessage || 'Terjadi kesalahan'}`, 'error')
+    }
+  } catch (err: any) {
+    console.error(err)
+    showAlert('Gagal mengunggah berkas', 'error')
+  } finally {
+    uploadingDocs.value[title] = false
+    target.value = ''
+  }
+}
+
+const handleGeneralUpload = async (event: Event) => {
+  const target = event.target as HTMLInputElement
+  if (!target.files || target.files.length === 0) return
+  const file = target.files[0]
+  const title = generalDocTitle.value.trim()
+  
+  if (!title) {
+    showAlert('Harap isi nama dokumen terlebih dahulu', 'warning')
+    target.value = ''
+    return
+  }
+
+  const MAX_SIZE = 10 * 1024 * 1024
+  if (file.size > MAX_SIZE) {
+    showAlert('Ukuran file maksimal adalah 10MB', 'error')
+    target.value = ''
+    return
+  }
+
+  if (file.type !== 'application/pdf') {
+    showAlert('Hanya file PDF yang diperbolehkan', 'error')
+    target.value = ''
+    return
+  }
+
+  uploadingGeneral.value = true
+  const formData = new FormData()
+  formData.append('title', title)
+  formData.append('file', file)
+
+  try {
+    const res = await fetch(`/api/pm/realizations/${editId.value}/upload`, {
+      method: 'POST',
+      body: formData
+    })
+
+    if (res.ok) {
+      const json = await res.json()
+      dokumenPdf.value = json.data.dokumen_pdf || []
+      generalDocTitle.value = ''
+      showAlert(`Dokumen "${title}" berhasil diunggah`, 'success')
+    } else {
+      const err = await res.json()
+      showAlert(`Gagal mengunggah berkas: ${err.statusMessage || 'Terjadi kesalahan'}`, 'error')
+    }
+  } catch (err: any) {
+    console.error(err)
+    showAlert('Gagal mengunggah berkas', 'error')
+  } finally {
+    uploadingGeneral.value = false
+    target.value = ''
+  }
+}
+
+const confirmDeleteDoc = async (url: string) => {
+  const isConfirmed = await showConfirm('Dokumen ini akan dihapus permanen dari server penyimpanan.', 'Hapus Dokumen?')
+
+  if (isConfirmed) {
+    deletingDoc.value = true
+    try {
+      const res = await fetch(`/api/pm/realizations/${editId.value}/delete-document`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      })
+
+      if (res.ok) {
+        const json = await res.json()
+        dokumenPdf.value = json.data.dokumen_pdf || []
+        showAlert('Dokumen berhasil dihapus', 'success')
+      } else {
+        const err = await res.json()
+        showAlert(`Gagal menghapus dokumen: ${err.statusMessage || 'Terjadi kesalahan'}`, 'error')
+      }
+    } catch (err) {
+      console.error(err)
+      showAlert('Gagal menghapus dokumen', 'error')
+    } finally {
+      deletingDoc.value = false
+    }
+  }
+}
 
 const isEdit = computed(() => !!route.query.edit)
 const editId = computed(() => route.query.edit as string)
@@ -319,6 +694,7 @@ const loadMaterials = async (unitParam: string) => {
 }
 
 onMounted(async () => {
+  await fetchEngines()
   if (isEdit.value && editId.value) {
     loadingData.value = true
     try {
@@ -339,6 +715,14 @@ onMounted(async () => {
             if (savedItem) return { ...m, jumlah_realisasi: savedItem.jumlah_realisasi }
             return m
           })
+        }
+
+        dokumenPdf.value = data.dokumen_pdf || []
+        const mesinName = getMesinNameFromUnit(data.unit)
+        if (mesinName) {
+          await loadSopTemplates(mesinName)
+        } else if (data.mesin) {
+          await loadSopTemplates(data.mesin)
         }
       } else {
         router.replace('/realisasi')
@@ -383,8 +767,17 @@ onMounted(async () => {
 const onUnitChange = async () => {
   if (form.unit) {
     await loadMaterials(form.unit)
+    if (isEdit.value) {
+      const mesinName = getMesinNameFromUnit(form.unit)
+      if (mesinName) {
+        await loadSopTemplates(mesinName)
+      }
+    }
   } else {
     materials.value = []
+    if (isEdit.value) {
+      sopTemplates.value = []
+    }
   }
 }
 
@@ -597,5 +990,36 @@ const handleSubmit = async () => {
   border-color: var(--primary-500) !important;
   background: rgba(16, 185, 129, 0.05) !important;
   font-weight: 600 !important;
+}
+
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: var(--space-4); }
+.modal { background: var(--bg-surface); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); width: 100%; max-width: 400px; box-shadow: var(--shadow-lg); }
+.modal-header { padding: var(--space-4); border-bottom: 1px solid var(--glass-border); }
+.modal-body { padding: var(--space-4); }
+.modal-footer { padding: var(--space-4); border-top: 1px solid var(--glass-border); display: flex; justify-content: flex-end; gap: var(--space-3); }
+.modal-title { font-size: var(--font-size-lg); font-weight: 600; margin: 0; color: var(--gray-800); }
+
+.document-item {
+  transition: all 0.2s ease;
+}
+.document-item:hover {
+  border-color: var(--primary-400) !important;
+  background: rgba(99, 102, 241, 0.04) !important;
+}
+.disabled-btn {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
+.pdf-modal {
+  max-width: 900px;
+  width: 90%;
+  height: 85vh;
+}
+.sop-section-subtitle {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: var(--space-2);
 }
 </style>

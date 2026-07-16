@@ -264,6 +264,7 @@
                 <th style="min-width: 100px;" class="hidden sm:table-cell">Mesin</th>
                 <th>Jenis PM</th>
                 <th class="hidden sm:table-cell" style="min-width: 120px;">Catatan</th>
+                <th style="min-width: 90px;" class="text-center">Dokumen</th>
                 <th style="min-width: 80px;" class="text-center">Aksi</th>
               </tr>
             </thead>
@@ -276,6 +277,31 @@
                   <span :class="['badge', getPMBadgeClass(item.jenis_pm)]">{{ item.jenis_pm }}</span>
                 </td>
                 <td class="text-xs text-muted hidden sm:table-cell truncate" style="max-width: 150px;" :title="formatCatatan(item.catatan)">{{ formatCatatan(item.catatan) }}</td>
+                <td class="text-center">
+                  <div class="flex justify-center items-center">
+                    <span 
+                      v-if="item.dokumen_pdf && getPdfCount(item.dokumen_pdf) > 0"
+                      class="badge flex items-center gap-1 cursor-pointer"
+                      style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); font-size: 0.75rem; padding: 2px 6px;"
+                      :title="`${getPdfCount(item.dokumen_pdf)} dokumen diunggah`"
+                      @click="router.push(`/realisasi/detail/${item.id}`)"
+                    >
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                      </svg>
+                      {{ getPdfCount(item.dokumen_pdf) }}
+                    </span>
+                    <span 
+                      v-else 
+                      class="text-muted" 
+                      style="font-size: 0.75rem; opacity: 0.4;"
+                      title="Belum ada dokumen"
+                    >
+                      -
+                    </span>
+                  </div>
+                </td>
                 <td>
                   <div class="flex justify-center">
                     <NuxtLink :to="`/realisasi/detail/${item.id}`" class="btn btn-sm btn-secondary" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">
@@ -589,6 +615,19 @@ const resetFilters = () => {
   filters.sort = 'desc'
   filters.page = 1
   refresh()
+}
+
+const getPdfCount = (val: any) => {
+  if (!val) return 0
+  if (typeof val === 'string') {
+    try {
+      const parsed = JSON.parse(val)
+      return Array.isArray(parsed) ? parsed.length : 0
+    } catch {
+      return 0
+    }
+  }
+  return Array.isArray(val) ? val.length : 0
 }
 
 const formatDate = (dateStr: string) => {

@@ -55,6 +55,7 @@ export default defineEventHandler(async (event) => {
         r.mesin,
         r.jenis_pm,
         r.catatan,
+        r.dokumen_pdf,
         r.created_at,
         r.updated_at
       FROM pm_realizations r

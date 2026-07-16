@@ -22,6 +22,12 @@ export default defineNitroPlugin(async (nitroApp) => {
       ALTER TABLE sop_documents ADD COLUMN IF NOT EXISTS lampiran_formulir JSONB;
     `)
     console.log('Verified table sop_documents')
+
+    // Run migration query to add dokumen_pdf to pm_realizations table if it doesn't exist
+    await query(`
+      ALTER TABLE pm_realizations ADD COLUMN IF NOT EXISTS dokumen_pdf JSONB DEFAULT '[]'::jsonb;
+    `)
+    console.log('Verified table pm_realizations')
   } catch (err) {
     console.error('Failed to run startup migrations:', err)
   }
