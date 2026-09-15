@@ -1,3 +1,6 @@
+import dns from 'node:dns'
+dns.setDefaultResultOrder('ipv4first')
+
 import { query } from '~/server/utils/db'
 import { QdrantClient } from '@qdrant/js-client-rest'
 import { GoogleGenerativeAI } from '@google/generative-ai'
@@ -31,6 +34,27 @@ function isSafeSql(sql: string): boolean {
   }
 
   return true
+}
+
+async function fetchWithRetry(url: string, options: any, maxRetries = 2): Promise<Response> {
+  let lastError: any
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const res = await fetch(url, options)
+      if (res.ok) return res
+      if (res.status === 429 || res.status >= 500) {
+        await new Promise(resolve => setTimeout(resolve, (attempt + 1) * 1000))
+        continue
+      }
+      return res
+    } catch (err: any) {
+      lastError = err
+      if (attempt < maxRetries) {
+        await new Promise(resolve => setTimeout(resolve, (attempt + 1) * 1000))
+      }
+    }
+  }
+  throw lastError
 }
 
 export default defineEventHandler(async (event) => {
@@ -76,6 +100,11 @@ The database schema available to query is:
 2. Table 'units_profile':
    Columns: unit_id (int), mesin_merek (varchar), mesin_tipe (varchar), mesin_nomor_seri (varchar), mesin_daya_mampu (int), gen_merek (varchar), trafo_merek (varchar)
    Note: Use unit_id to map unit numbers in other tables (e.g. Unit 1 = unit_id 1).
+   PLTD Tahuna Unit to Engine Mapping:
+   - Unit 1: SWD (6FHD 240)
+   - Unit 4 & Unit 5: DEUTZ MWM (TBD 616 V12)
+   - Unit 6 & Unit 7: MITSUBISHI (S16R-PTA)
+   - Unit 8 & Unit 9: CUMMINS (KTA-50-G8)
 
 3. Table 'engine_downtime':
    Columns: id (int), unit (int), status (varchar like 'Gangguan', 'Pemeliharaan'), start_date (date), end_date (date), notes (text)
@@ -135,12 +164,15 @@ The database schema available to query is:
     Note: Links essential materials to machine types/units that support them.
 
 Rules for Router:
-- Route "sql": If user asks for downtime, realizations, historical usage (BBM/Oli, fast-moving material usage like 'Racor Filter' from pm_realization_materials, or essential material usage from material_essential_transactions), list of engines, ESSENTIAL materials, SOP (prosedur, langkah kerja, APD, persiapan), or other data. Generate a read-only SELECT statement. ALWAYS USE POSTGRESQL SYNTAX. Do NOT invent columns!
+- Route "sql": If user asks for downtime, realizations, historical usage (BBM/Oli, fast-moving material usage like 'Racor Filter' from pm_realization_materials, or essential material usage from material_essential_transactions), list of engines, ESSENTIAL materials, or SOP PLN (Standard Operating Procedure internal: prosedur, langkah kerja, APD, persiapan, penormalan teknisi PLN dari tabel 'sop_documents'). Generate a read-only SELECT statement. ALWAYS USE POSTGRESQL SYNTAX. Do NOT invent columns!
   CRITICAL 1: When querying material quantities/usage, ALWAYS also select/retrieve the unit of measurement column (e.g., 'satuan' in pm_realization_materials, or 'unit' in materials/materials_essential) in the SELECT clause (either directly or via MAX/MIN/first value, e.g. SELECT SUM(jumlah_realisasi) as total_qty, MAX(satuan) as satuan ...), so that the synthesis model knows the exact unit of measurement (e.g., 'Buah', 'Liter') instead of guessing.
   CRITICAL 2: When querying daily metrics, operational logs, or occurrences, ALWAYS select/retrieve the date/timestamp column (e.g. 'waktu' in pengusahaan_harian, 'tanggal_pelaksanaan' in pm_realizations, 'transaction_date' in material_transactions) in the SELECT clause, so that the synthesis model knows the exact date of the data and can report to the user if the data belongs to a fallback/latest available date instead of the requested date.
 - Route "pm_schedule": If user specifically asks for UPCOMING PREVENTIVE MAINTENANCE SCHEDULES (Jadwal PM yang akan datang/besok). DO NOT USE SQL.
 - Route "material_inventory": If user asks for FAST-MOVING material stocks, reorder status, material depletion, or which fast moving material needs to be ordered (e.g. Lube Oil, Air Filter, Lube Oil Filter, Fuel Filter / Filter BBM, Lube Oil Filter Bypass, Racor Filter, Water Filter). DO NOT USE SQL.
-- Route "manual_book": If user asks about manual book, troubleshooting, technical specifications, or manual instructions for specific engines (e.g. SWD, Deutz, Mitsubishi, Cummins). Provide a query in 'manual_search_query'.
+- Route "manual_book": If user asks about OEM Manual Books (Buku Manual Pabrikan), technical specifications, manufacturer tolerances, valve clearance (celah katup), tightening torque limits (torsi pengencangan baut), or OEM troubleshooting instructions for specific engines (e.g. Mitsubishi S16R, Cummins, Deutz, SWD).
+  CRITICAL for 'manual_search_query':
+  1. Map the engine unit if mentioned (e.g. Unit 6/Unit 7 -> "Mitsubishi S16R").
+  2. Formulate a BILINGUAL technical search query combining English OEM terms and Indonesian keywords (e.g. "Mitsubishi S16R valve clearance celah katup cold standard limit adjustment").
 - Route "general": If it is a greeting, basic explanation, chat, or doesn't need database knowledge. Provide conversational response in 'direct_reply'.
 
 You MUST respond ONLY in valid JSON format matching this schema:
@@ -155,7 +187,7 @@ You MUST respond ONLY in valid JSON format matching this schema:
   let routeResult: { route: string; sql?: string; sop_search_query?: string; manual_search_query?: string; direct_reply?: string }
 
   try {
-    const response = await fetch(apiEndpoint, {
+    const response = await fetchWithRetry(apiEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -245,11 +277,25 @@ You MUST respond ONLY in valid JSON format matching this schema:
     }
   } else if (routeResult.route === 'manual_book' && routeResult.manual_search_query) {
     try {
-      const genAI = new GoogleGenerativeAI(apiKey)
-      const embedModel = genAI.getGenerativeModel({ model: 'models/gemini-embedding-2' })
-      const embedRes = await embedModel.embedContent(routeResult.manual_search_query)
-      const queryVector = embedRes.embedding.values
-      
+      // Embedding using gemini-embedding-001 (matching Qdrant collection manual_book_engine vector space)
+      const embedUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${apiKey}`
+      const embedRes = await fetchWithRetry(embedUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: { parts: [{ text: routeResult.manual_search_query }] }
+        })
+      })
+
+      if (!embedRes.ok) {
+        const errorText = await embedRes.text()
+        console.error('Gemini Embedding API Error:', errorText)
+        throw new Error(`Embedding API failed: ${embedRes.statusText}`)
+      }
+
+      const embedData = await embedRes.json() as any
+      const queryVector = embedData.embedding?.values
+
       if (!queryVector || queryVector.length === 0) {
         throw new Error('Gagal menghasilkan vector embedding dari Gemini.')
       }
@@ -261,19 +307,25 @@ You MUST respond ONLY in valid JSON format matching this schema:
 
       const searchResult = await qdrantClient.search('manual_book_engine', {
         vector: queryVector,
-        limit: 3,
-        with_payload: true
+        limit: 5,
+        with_payload: true,
+        score_threshold: 0.65
       })
 
-      const mappedResults = searchResult.map(r => ({
-        buku: r.payload?.document_title || 'Unknown',
-        mesin: r.payload?.category || 'Unknown',
-        teks_manual: r.payload?.source_text || '',
-        skor_kemiripan_vektor: r.score
-      }))
+      if (!searchResult || searchResult.length === 0) {
+        dbContext = 'Tidak ditemukan data manual book yang relevan dengan pertanyaan ini (skor kemiripan di bawah ambang batas relevansi).'
+      } else {
+        const mappedResults = searchResult.map(r => ({
+          buku: r.payload?.document_title || 'Unknown',
+          mesin: r.payload?.category || 'Unknown',
+          judul_bagian: r.payload?.section_title || 'General',
+          teks_manual: r.payload?.source_text || '',
+          skor_kemiripan: `${Math.round((r.score || 0) * 100)}%`
+        }))
 
-      dbContext = JSON.stringify(mappedResults, null, 2)
-      queryExecuted = `Qdrant Vector Search: "${routeResult.manual_search_query}"`
+        dbContext = JSON.stringify(mappedResults, null, 2)
+      }
+      queryExecuted = `Qdrant Vector Search: "${routeResult.manual_search_query}" (score_threshold: 0.65)`
     } catch (err: any) {
       console.error('Qdrant Search failed:', err)
       dbContext = `Error searching manual books: ${err.message}`
@@ -289,37 +341,49 @@ You MUST respond ONLY in valid JSON format matching this schema:
   // STAGE 3: SYNTHESIS & RESPONSE GENERATION
   const synthesisInstruction = `
 You are TahunaBot, a friendly and professional AI assistant for the PLTD Tahuna Preventive Maintenance Web Application.
-Your goal is to answer the user's question accurately based on the provided database search results.
+Your goal is to answer the user's question accurately and strictly based on the provided database search results.
 
-Instructions:
+General Instructions:
 1. Respond in Indonesian.
-2. Present lists, stocks, schedules, or SOP steps clearly using Markdown formatting (like bullet points, bold text, or Markdown tables).
-3. If the database context shows an empty array or no results, politely state that the data was not found in the database. DO NOT make up information or invent facts.
-4. Keep your tone professional, neat, and engineering-focused (fokus pada keteknikan dan pemeliharaan mesin).
-5. If query results contain raw JSON arrays for SOPs, format them nicely into step-by-step procedures.
-6. Jawablah langsung "to the point" (langsung ke intinya). JANGAN gunakan kalimat pembuka basa-basi seperti "Halo! Berdasarkan data dari database kami...", "Berikut adalah rincian...", atau pembuka/penutup lainnya yang tidak perlu. Langsung sajikan informasi atau jawab pertanyaan secara padat, lugas, dan terstruktur.
-7. Perhatikan kolom 'satuan' atau 'unit' dari database. Gunakan satuan asli dari database (misal: 'Buah', 'Liter', dll.) dalam tanggapan Anda. JANGAN menggunakan kata "unit" untuk menyebutkan jumlah material/barang (seperti "44 unit filter") agar tidak membingungkan dengan penomoran unit mesin (seperti "Unit 6").
+2. Jawablah langsung "to the point" (langsung ke intinya). JANGAN gunakan kalimat pembuka basa-basi seperti "Halo! Berdasarkan data...", "Berikut adalah...", atau kalimat pembuka/penutup lainnya yang tidak perlu. Langsung sajikan informasi secara padat, lugas, dan terstruktur.
+3. Present lists, stocks, schedules, or SOP steps clearly using Markdown formatting (bullet points, bold text, or Markdown tables).
+4. If the database context shows an empty array or states that data was not found, politely state that the data was not found. DO NOT make up information or invent facts.
+
+Rules for Database PostgreSQL (db_tahuna) Context:
+- Perhatikan kolom 'satuan' atau 'unit' dari database. Gunakan satuan asli dari database (misal: 'Buah', 'Liter', dll.) dalam tanggapan Anda. JANGAN menggunakan kata "unit" untuk menyebutkan jumlah material/barang (seperti "44 unit filter") agar tidak membingungkan dengan penomoran unit mesin (seperti "Unit 6").
+- Jika menyajikan SOP dari database, format tahapan menjadi nomor urut yang rapi (persiapan, pelaksanaan mekanik/listrik, penormalan).
+- Jika menyajikan metrik operasional atau log harian, sebutkan tanggal data yang ditampilkan jika berbeda dari tanggal yang diminta pengguna.
+
+Rules for Manual Book (Qdrant Vector) Context:
+- STRICT ANTI-HALLUCINATION: HANYA gunakan angka spesifikasi (torsi, celah katup, tekanan, temperatur, dll.) dan prosedur yang TERCANTUM EKSPLISIT pada kutipan teks manual. DILARANG KERAS mengarang, mengasumsikan, atau mengekstrapolasi angka teknis.
+- KESESUAIAN MEREK/MESIN: Periksa apakah merek/tipe mesin yang ditanyakan pengguna sesuai dengan merek ('mesin' atau 'buku') pada konteks data manual book. Jika pengguna menanyakan mesin tertentu (misal Caterpillar, Cummins, Deutz) tetapi potongan manual yang tersedia berasal dari mesin lain (misal Mitsubishi S16R), tegaskan secara sopan bahwa manual untuk mesin yang ditanyakan belum tersedia di sistem.
+- INFORMASI TIDAK LENGKAP: Jika prosedur ada namun angka toleransi spesifik tidak tercantum dalam potongan teks manual, nyatakan secara jujur bahwa angka spesifik tersebut tidak tertulis pada kutipan manual yang ditemukan.
+- SITASI SUMBER: Cantumkan rujukan nama buku dan judul bagian/subbab (misal: *Referensi: [Nama Buku] - Bagian: [Judul Bagian]*) di bagian akhir jawaban teknis agar teknisi dapat memverifikasi langsung.
 `
 
   // Construct context prompt for synthesis
+  const sourceLabel = routeResult.route === 'manual_book' 
+    ? 'Manual Book OEM (Qdrant Vector Database)' 
+    : (routeResult.route === 'sql' ? 'PostgreSQL Database (db_tahuna)' : 'Internal Service API')
+
   const synthesisContent = [
     ...geminiHistory,
     {
       role: 'user',
       parts: [{
         text: `[SISTEM CONTEXT RAG]
-Berikut adalah hasil pencarian dari database kami untuk menjawab pertanyaan Anda:
-Query yang Dijalankan: ${queryExecuted || 'None'}
-Hasil Database:
+Sumber Data: ${sourceLabel}
+Query / Operasi: ${queryExecuted || 'None'}
+Data yang Ditemukan:
 ${dbContext || 'Tidak ditemukan kecocokan data.'}
 -------------------
-Berdasarkan data di atas, berikan jawaban akhir yang terstruktur dan mudah dipahami untuk pertanyaan pengguna.`
+Berdasarkan data resmi di atas, berikan jawaban akhir yang terstruktur, akurat, bebas halusinasi, dan mudah dipahami untuk pertanyaan pengguna.`
       }]
     }
   ]
 
   try {
-    const response = await fetch(apiEndpoint, {
+    const response = await fetchWithRetry(apiEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -328,7 +392,7 @@ Berdasarkan data di atas, berikan jawaban akhir yang terstruktur dan mudah dipah
           parts: [{ text: synthesisInstruction }]
         },
         generationConfig: {
-          temperature: 0.2
+          temperature: 0.0
         }
       })
     })

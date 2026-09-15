@@ -36,9 +36,11 @@ pipeline {
                     docker run -d \
                         --name ${APP_NAME} \
                         --restart always \
+                        --network postgres-net \
                         --env-file .env \
                         -p ${HOST_PORT}:${CONTAINER_PORT} \
                         ${APP_NAME}:latest
+                    docker network connect qdrant-net ${APP_NAME}
                 """
             }
         }
