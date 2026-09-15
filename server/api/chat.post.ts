@@ -151,6 +151,7 @@ The database schema available to query is:
 
 10. Table 'materials':
     Columns: id (int), name (varchar), part_number (varchar), unit (varchar)
+    CRITICAL: Stores general warehouse stock items in PLTD Tahuna. It does NOT contain the full engine OEM parts catalog! For engine manufacturer parts and part numbers (nomor part komponen mesin seperti crankshaft, piston, cylinder head, con-rod, turbocharger, dll.), DO NOT use this table; use route "manual_book" to search the Parts Catalogue in the vector database!
 
 11. Table 'material_transactions':
     Columns: id (int), material_id (int), transaction_type (varchar like 'IN', 'OUT'), quantity (numeric), related_unit_id (int), notes (text), transaction_date (date)
@@ -169,10 +170,11 @@ Rules for Router:
   CRITICAL 2: When querying daily metrics, operational logs, or occurrences, ALWAYS select/retrieve the date/timestamp column (e.g. 'waktu' in pengusahaan_harian, 'tanggal_pelaksanaan' in pm_realizations, 'transaction_date' in material_transactions) in the SELECT clause, so that the synthesis model knows the exact date of the data and can report to the user if the data belongs to a fallback/latest available date instead of the requested date.
 - Route "pm_schedule": If user specifically asks for UPCOMING PREVENTIVE MAINTENANCE SCHEDULES (Jadwal PM yang akan datang/besok). DO NOT USE SQL.
 - Route "material_inventory": If user asks for FAST-MOVING material stocks, reorder status, material depletion, or which fast moving material needs to be ordered (e.g. Lube Oil, Air Filter, Lube Oil Filter, Fuel Filter / Filter BBM, Lube Oil Filter Bypass, Racor Filter, Water Filter). DO NOT USE SQL.
-- Route "manual_book": If user asks about OEM Manual Books (Buku Manual Pabrikan), technical specifications, manufacturer tolerances, valve clearance (celah katup), tightening torque limits (torsi pengencangan baut), or OEM troubleshooting instructions for specific engines (e.g. Mitsubishi S16R, Cummins, Deutz, SWD).
+- Route "manual_book": If user asks about OEM Manual Books OR OEM PARTS CATALOGUE (Katalog Suku Cadang / Nomor Part Komponen Mesin Pabrikan seperti nomor part crankshaft, camshaft, piston, con-rod, cylinder head, gasket, turbocharger, nozzle, oil pump, bearing, dll.), technical specifications, manufacturer tolerances, valve clearance (celah katup), tightening torque limits (torsi pengencangan baut), or OEM troubleshooting instructions for specific engines (e.g. Mitsubishi S16R / S16R-PTA-S, Cummins, Deutz, SWD).
   CRITICAL for 'manual_search_query':
   1. Map the engine unit if mentioned (e.g. Unit 6/Unit 7 -> "Mitsubishi S16R").
-  2. Formulate a BILINGUAL technical search query combining English OEM terms and Indonesian keywords (e.g. "Mitsubishi S16R valve clearance celah katup cold standard limit adjustment").
+  2. If asking for part numbers / catalog, include "Parts Catalog [Engine] [Part Name] part number nomor part" (e.g. "Parts Catalog Mitsubishi S16R crankshaft part number nomor part").
+  3. Formulate a BILINGUAL technical search query combining English OEM terms and Indonesian keywords.
 - Route "general": If it is a greeting, basic explanation, chat, or doesn't need database knowledge. Provide conversational response in 'direct_reply'.
 
 You MUST respond ONLY in valid JSON format matching this schema:
@@ -354,16 +356,17 @@ Rules for Database PostgreSQL (db_tahuna) Context:
 - Jika menyajikan SOP dari database, format tahapan menjadi nomor urut yang rapi (persiapan, pelaksanaan mekanik/listrik, penormalan).
 - Jika menyajikan metrik operasional atau log harian, sebutkan tanggal data yang ditampilkan jika berbeda dari tanggal yang diminta pengguna.
 
-Rules for Manual Book (Qdrant Vector) Context:
-- STRICT ANTI-HALLUCINATION: HANYA gunakan angka spesifikasi (torsi, celah katup, tekanan, temperatur, dll.) dan prosedur yang TERCANTUM EKSPLISIT pada kutipan teks manual. DILARANG KERAS mengarang, mengasumsikan, atau mengekstrapolasi angka teknis.
+Rules for Manual Book & Parts Catalog (Qdrant Vector) Context:
+- STRICT ANTI-HALLUCINATION: HANYA gunakan angka spesifikasi (torsi, celah katup, tekanan, dll.) dan nomor part (part number / ref no) yang TERCANTUM EKSPLISIT pada kutipan teks manual atau katalog suku cadang. DILARANG KERAS mengarang, mengasumsikan, atau mengekstrapolasi nomor part atau angka teknis.
 - KESESUAIAN MEREK/MESIN: Periksa apakah merek/tipe mesin yang ditanyakan pengguna sesuai dengan merek ('mesin' atau 'buku') pada konteks data manual book. Jika pengguna menanyakan mesin tertentu (misal Caterpillar, Cummins, Deutz) tetapi potongan manual yang tersedia berasal dari mesin lain (misal Mitsubishi S16R), tegaskan secara sopan bahwa manual untuk mesin yang ditanyakan belum tersedia di sistem.
-- INFORMASI TIDAK LENGKAP: Jika prosedur ada namun angka toleransi spesifik tidak tercantum dalam potongan teks manual, nyatakan secara jujur bahwa angka spesifik tersebut tidak tertulis pada kutipan manual yang ditemukan.
-- SITASI SUMBER: Cantumkan rujukan nama buku dan judul bagian/subbab (misal: *Referensi: [Nama Buku] - Bagian: [Judul Bagian]*) di bagian akhir jawaban teknis agar teknisi dapat memverifikasi langsung.
+- INFORMASI TIDAK LENGKAP: Jika prosedur ada namun angka toleransi spesifik atau nomor part tidak tercantum dalam potongan teks, nyatakan secara jujur bahwa data spesifik tersebut tidak tertulis pada kutipan manual yang ditemukan.
+- PENYAJIAN NOMOR PART: Jika pengguna menanyakan nomor part, sajikan dalam tabel Markdown yang rapi (Ref. No., Part Number, Part Name, Qty).
+- SITASI SUMBER: Cantumkan rujukan nama buku/katalog dan judul bagian/subbab (misal: *Referensi: Parts Catalog S16RPTAS - Bagian: P3780-200 CRANKSHAFT*) di bagian akhir jawaban agar teknisi dapat memverifikasi langsung.
 `
 
   // Construct context prompt for synthesis
   const sourceLabel = routeResult.route === 'manual_book' 
-    ? 'Manual Book OEM (Qdrant Vector Database)' 
+    ? 'Manual Book OEM & Parts Catalog (Qdrant Vector Database)' 
     : (routeResult.route === 'sql' ? 'PostgreSQL Database (db_tahuna)' : 'Internal Service API')
 
   const synthesisContent = [
