@@ -319,6 +319,16 @@
                 </div>
               </div>
               <div v-if="item.notes" class="material-txn-notes">{{ item.notes }}</div>
+              <div class="flex justify-end gap-2 mt-3 pt-2 guest-hide" style="border-top: 1px dashed var(--glass-border);">
+                <button type="button" class="btn btn-secondary btn-xs flex items-center gap-1" @click="openEditTxnModal(item)">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  Edit
+                </button>
+                <button type="button" class="btn btn-xs flex items-center gap-1" style="border: 1px solid #ef4444; color: #ef4444; background: rgba(239,68,68,0.1);" @click="handleDeleteTxn(item)">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  Hapus
+                </button>
+              </div>
             </div>
           </div>
 
@@ -335,6 +345,7 @@
                     <th class="text-center" style="width: 100px;">Jumlah</th>
                     <th style="width: 80px;">Satuan</th>
                     <th>Catatan</th>
+                    <th class="text-center guest-hide" style="width: 100px;">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -350,6 +361,22 @@
                     <td class="text-center font-semibold">{{ formatNumber(item.quantity) }}</td>
                     <td>{{ item.satuan }}</td>
                     <td class="text-muted truncate-cell" :title="item.notes">{{ item.notes || '-' }}</td>
+                    <td class="text-center guest-hide">
+                      <div class="flex justify-center gap-2">
+                        <button type="button" class="btn-action-icon edit" @click="openEditTxnModal(item)" title="Edit Transaksi">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                          </svg>
+                        </button>
+                        <button type="button" class="btn-action-icon delete" @click="handleDeleteTxn(item)" title="Hapus Transaksi">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"/>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                          </svg>
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -367,7 +394,7 @@
               <polyline points="12 19 5 12 12 5"/>
             </svg>
           </button>
-          <h1 class="home-title m-0" style="font-size: 1.5rem;">Input Transaksi Essential</h1>
+          <h1 class="home-title m-0" style="font-size: 1.5rem;">{{ editingTxnId ? 'Edit Transaksi Essential' : 'Input Transaksi Essential' }}</h1>
         </div>
 
         <form @submit.prevent="submitTxn" class="card">
@@ -412,7 +439,7 @@
               <button type="button" class="btn btn-secondary" @click="closeTxnModal">Batal</button>
               <button type="submit" class="btn btn-primary" :disabled="isSubmittingTxn">
                 <span v-if="isSubmittingTxn" class="spinner spinner-sm mr-2" style="border-color: rgba(255,255,255,0.3); border-top-color: white;"></span>
-                {{ isSubmittingTxn ? 'Menyimpan...' : 'Simpan Transaksi' }}
+                {{ isSubmittingTxn ? 'Menyimpan...' : (editingTxnId ? 'Perbarui Transaksi' : 'Simpan Transaksi') }}
               </button>
             </div>
           </div>
@@ -774,6 +801,7 @@ const filteredTxns = computed(() => {
 // ===== TXN MODAL FORM =====
 const showTxnModal = ref(false)
 const isSubmittingTxn = ref(false)
+const editingTxnId = ref<number | null>(null)
 const txnForm = reactive({
   material_id: '',
   transaction_type: 'OUT',
@@ -783,6 +811,7 @@ const txnForm = reactive({
 })
 
 const openTxnModal = () => {
+  editingTxnId.value = null
   txnForm.material_id = ''
   txnForm.transaction_type = 'OUT'
   txnForm.quantity = '1'
@@ -791,8 +820,19 @@ const openTxnModal = () => {
   showTxnModal.value = true
 }
 
+const openEditTxnModal = (item: any) => {
+  editingTxnId.value = item.id
+  txnForm.material_id = item.material_id ? item.material_id.toString() : ''
+  txnForm.transaction_type = item.transaction_type
+  txnForm.quantity = item.quantity ? item.quantity.toString() : '1'
+  txnForm.transaction_date = item.transaction_date ? new Date(item.transaction_date).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10)
+  txnForm.notes = item.notes || ''
+  showTxnModal.value = true
+}
+
 const closeTxnModal = () => {
   showTxnModal.value = false
+  editingTxnId.value = null
 }
 
 const submitTxn = async () => {
@@ -802,14 +842,19 @@ const submitTxn = async () => {
   }
   isSubmittingTxn.value = true
   try {
-    const res = await fetch('/api/materials/essential/transactions', {
-      method: 'POST',
+    const url = editingTxnId.value 
+      ? `/api/materials/essential/transactions/${editingTxnId.value}`
+      : '/api/materials/essential/transactions'
+    const method = editingTxnId.value ? 'PUT' : 'POST'
+
+    const res = await fetch(url, {
+      method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(txnForm)
     })
     if (res.ok) {
       closeTxnModal()
-      showAlert('Transaksi berhasil disimpan.', 'success')
+      showAlert(editingTxnId.value ? 'Transaksi berhasil diperbarui.' : 'Transaksi berhasil disimpan.', 'success')
       // Refresh data to update stock and transaction list
       isFetching.value = true
       const refreshRes: any = await $fetch('/api/materials/essential')
@@ -825,6 +870,35 @@ const submitTxn = async () => {
     showAlert('Gagal menyimpan transaksi', 'error')
   } finally {
     isSubmittingTxn.value = false
+    isFetching.value = false
+  }
+}
+
+const handleDeleteTxn = async (item: any) => {
+  const confirmMsg = `Transaksi ini akan dihapus secara permanen dan stok material "${item.material_name}" akan disesuaikan kembali.`
+  const isConfirmed = await showConfirm(confirmMsg, 'Hapus Transaksi?')
+  if (!isConfirmed) return
+
+  isFetching.value = true
+  try {
+    const res = await fetch(`/api/materials/essential/transactions/${item.id}`, {
+      method: 'DELETE'
+    })
+    if (res.ok) {
+      showAlert('Transaksi berhasil dihapus.', 'success')
+      const refreshRes: any = await $fetch('/api/materials/essential')
+      if (refreshRes && refreshRes.success) {
+        inventoryData.value = refreshRes.inventory || []
+        txnData.value = refreshRes.transactions || []
+      }
+    } else {
+      const err = await res.json()
+      showAlert(err.statusMessage || 'Gagal menghapus transaksi', 'error')
+    }
+  } catch (err) {
+    console.error('Error deleting transaction:', err)
+    showAlert('Gagal menghapus transaksi', 'error')
+  } finally {
     isFetching.value = false
   }
 }
@@ -946,5 +1020,33 @@ const tabOptions = [
   background: rgba(255, 255, 255, 0.06);
   color: var(--gray-600);
   letter-spacing: 0.02em;
+}
+
+.btn-action-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--gray-400);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.btn-action-icon:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+.btn-action-icon.edit:hover {
+  border-color: var(--primary-500);
+  color: var(--primary-400);
+  background: rgba(16, 185, 129, 0.1);
+}
+.btn-action-icon.delete:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
 }
 </style>
