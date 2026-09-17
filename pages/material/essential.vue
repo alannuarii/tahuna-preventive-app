@@ -269,7 +269,7 @@
                 <select v-model="txnFilterData.material_id" class="form-input form-input-sm">
                   <option value="">Semua Material</option>
                   <option v-for="mat in inventoryData" :key="mat.id" :value="mat.id">
-                    {{ mat.name }} ({{ mat.category }})
+                    {{ formatMaterialOption(mat, false) }}
                   </option>
                 </select>
               </div>
@@ -378,7 +378,7 @@
                 <select v-model="txnForm.material_id" class="form-input" required>
                   <option value="">Pilih Material...</option>
                   <option v-for="item in inventoryData" :key="item.id" :value="item.id">
-                    {{ item.name }} - Stock: {{ formatNumber(item.current_stock) }} {{ item.satuan }}
+                    {{ formatMaterialOption(item, true) }}
                   </option>
                 </select>
               </div>
@@ -425,7 +425,7 @@
 </template>
 
 <script setup lang="ts">
-const { engines } = useEngines()
+const { engines, fetchEngines } = useEngines()
 import ExcelJS from 'exceljs'
 
 const isCameraOpen = ref(false)
@@ -579,7 +579,8 @@ const submitMaterial = async () => {
       satuan: materialForm.unit,
       current_stock: materialForm.current_stock,
       min_stock: 0,
-      category: 'Essential'
+      category: 'Essential',
+      mesin: materialForm.isCommon ? 'Common' : materialForm.engines.join(',')
     })
     
     showAlert('Material baru beserta gambar berhasil disimpan.', 'success')
@@ -596,6 +597,7 @@ const inventoryData = ref<any[]>([])
 const txnData = ref<any[]>([])
 
 onMounted(async () => {
+  fetchEngines()
   isFetching.value = true
   try {
     const res: any = await $fetch('/api/materials/essential')
@@ -756,8 +758,7 @@ const filteredTxns = computed(() => {
   let mapped = txnData.value.slice() // Clone
 
   if (txnFilterData.material_id) {
-    const matName = inventoryData.value.find(i => i.id == parseInt(txnFilterData.material_id))?.name
-    if (matName) mapped = mapped.filter(t => t.material_name === matName)
+    mapped = mapped.filter(t => t.material_id == parseInt(txnFilterData.material_id))
   }
   
   if (txnFilterData.type) {
@@ -829,6 +830,16 @@ const submitTxn = async () => {
 }
 
 // ===== HELPERS =====
+const formatMaterialOption = (item: any, showStock = true) => {
+  const machine = getMachineNames(item.mesin)
+  const pn = item.part_number && item.part_number.trim() ? item.part_number.trim() : '-'
+  const base = `${(item.name || '').trim()} - ${machine} (PN: ${pn})`
+  if (showStock) {
+    return `${base} - Stock: ${formatNumber(item.current_stock)} ${item.satuan || ''}`
+  }
+  return base
+}
+
 const formatNumber = (num: any) => parseFloat(num).toLocaleString('id-ID')
 
 const formatDate = (dateStr: string) => {
